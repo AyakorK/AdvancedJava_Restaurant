@@ -1,5 +1,7 @@
 package com.coding.restaurant.restaurant.Model;
 
+import java.util.List;
+
 public class Meal {
     public String getName() {
         return name;
@@ -46,6 +48,7 @@ public class Meal {
     private double price;
     private String image;
     private boolean isActive;
+
 
     public Meal(String name, String description, double price, String image, boolean isActive) {
         this.name = name;
