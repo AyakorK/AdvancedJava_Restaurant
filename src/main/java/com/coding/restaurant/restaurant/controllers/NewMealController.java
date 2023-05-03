@@ -1,4 +1,4 @@
-package com.coding.restaurant.restaurant.Controller;
+package com.coding.restaurant.restaurant.controllers;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -11,7 +11,6 @@ import java.util.ResourceBundle;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class NewMealController implements Initializable {

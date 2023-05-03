@@ -1,11 +1,8 @@
-package com.coding.restaurant.restaurant.Controller;
+package com.coding.restaurant.restaurant.controllers;
 
-import com.coding.restaurant.restaurant.Model.*;
+import com.coding.restaurant.restaurant.models.*;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -56,10 +53,10 @@ public class DatabaseManager {
         try (PreparedStatement statement = this.db.prepareStatement("SELECT * FROM MealsList");
              ResultSet result = statement.executeQuery()) {
             while (result.next()) {
-                Date MenuDate = result.getDate("MenuDate");
+                Date menuDate = result.getDate("MenuDate");
                 String mealListUUID = result.getString("UUID");
                 List<Meal> meals = getMealsItems(mealListUUID);
-                MealsList mealList = new MealsList(meals, MenuDate);
+                MealsList mealList = new MealsList(meals, menuDate);
                 mealsLists.add(mealList);
             }
         } catch (SQLException e) {
@@ -73,14 +70,14 @@ public class DatabaseManager {
     public List<Meal> getMealsItems(String mealListUUID) {
         List<Meal> mealsInList = new ArrayList<>();
         try (PreparedStatement statement = this.db.prepareStatement("SELECT * FROM Meal WHERE uuid IN (SELECT mealUUID FROM MealsListItems WHERE mealsListUUID = ?)")) {
-            SearchItems(mealListUUID, mealsInList, statement);
+            searchItems(mealListUUID, mealsInList, statement);
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return mealsInList;
     }
 
-    private void SearchItems(String mealListUUID, List<Meal> mealsInList, PreparedStatement statement) throws SQLException {
+    private void searchItems(String mealListUUID, List<Meal> mealsInList, PreparedStatement statement) throws SQLException {
         statement.setString(1, mealListUUID);
         ResultSet result = statement.executeQuery();
         while (result.next()) {
@@ -100,11 +97,13 @@ public List<Order> getOrders() {
             boolean isDelivered = result.getBoolean("isDelivered");
             List<Meal> orderItems = getOrdersItems(orderUUID);
             Table table = getTable(result.getString("TableUUID"));
-            Order order = new Order(table, isWaiting, isDelivered, orderItems);
+            Timestamp timestamp = result.getTimestamp("dateCreation");
+            String status = result.getString("finalStatus");
+            Order order = new Order(orderUUID, table, isWaiting, isDelivered, orderItems, timestamp, status);
             orders.add(order);
         }
     } catch (SQLException e) {
-        throw new RuntimeException(e);
+        e.printStackTrace();
     }
     return orders;
 }
@@ -115,14 +114,25 @@ public List<Order> getOrders() {
 
         List<Meal> mealsInList = new ArrayList<>();
         try (PreparedStatement statement = this.db.prepareStatement("SELECT * FROM Meal WHERE uuid IN (SELECT mealUUID FROM OrdersItems WHERE ordersUUID = ?)")) {
-            SearchItems(orderUUID, mealsInList, statement);
+            searchItems(orderUUID, mealsInList, statement);
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return mealsInList;
     }
-//
-//    // Get the tables (Table)
+
+    // Update an order (Order)
+    public void updateOrder(Order order) throws SQLException {
+        try (PreparedStatement statement = this.db.prepareStatement("UPDATE Orders SET isWaiting = ?, isDelivered = ?, finalStatus = ? WHERE UUID = ?")) {
+            statement.setBoolean(1, order.isWaiting());
+            statement.setBoolean(2, order.isDelivered());
+            statement.setString(3, order.getStatus());
+            statement.setString(4, order.getOrderUUID());
+            statement.executeUpdate();
+        }
+    }
+
+    //    // Get the tables (Table)
     public ResultSet getTables() {
         try (PreparedStatement statement = this.db.prepareStatement("SELECT * FROM TableRestaurant");
              ResultSet result = statement.executeQuery()) {

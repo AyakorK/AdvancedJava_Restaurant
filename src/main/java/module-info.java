@@ -14,6 +14,6 @@ module com.coding.restaurant.restaurant {
 
     opens com.coding.restaurant.restaurant to javafx.fxml;
     exports com.coding.restaurant.restaurant;
-    exports com.coding.restaurant.restaurant.Controller;
-    opens com.coding.restaurant.restaurant.Controller to javafx.fxml;
+    exports com.coding.restaurant.restaurant.controllers;
+    opens com.coding.restaurant.restaurant.controllers to javafx.fxml;
 }

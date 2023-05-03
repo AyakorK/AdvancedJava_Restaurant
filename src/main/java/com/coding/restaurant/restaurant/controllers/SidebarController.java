@@ -1,4 +1,4 @@
-package com.coding.restaurant.restaurant.Controller;
+package com.coding.restaurant.restaurant.controllers;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -12,6 +12,7 @@ import java.util.ResourceBundle;
 
 public class SidebarController implements Initializable {
 
+    public AnchorPane acpCommand;
     @FXML
     private Button btnMenu;
 
@@ -36,20 +37,21 @@ public class SidebarController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        acpCentre.getChildren().removeAll(vboxTest, acpMenu);
+        acpCentre.getChildren().removeAll(vboxTest, acpMenu, acpCommand);
 
         imgLogo.setOnMouseClicked(e -> {
-            acpCentre.getChildren().removeAll(vboxTest, acpMenu);
+            acpCentre.getChildren().removeAll(vboxTest, acpMenu, acpCommand);
             acpCentre.getChildren().add(acpHome);
         });
 
         btnMenu.setOnMouseClicked(e -> {
-            acpCentre.getChildren().removeAll(acpHome, vboxTest);
+            acpCentre.getChildren().removeAll(acpHome, vboxTest, acpCommand);
             acpCentre.getChildren().add(acpMenu);
         });
 
         btnCommand.setOnMouseClicked(e -> {
-            acpCentre.getChildren().removeAll(vboxTest, acpHome, acpMenu);
+            acpCentre.getChildren().removeAll(acpHome, acpMenu, acpCommand);
+            acpCentre.getChildren().add(acpCommand);
         });
 
     }

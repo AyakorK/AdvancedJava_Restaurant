@@ -1,6 +1,6 @@
-package com.coding.restaurant.restaurant.Controller;
+package com.coding.restaurant.restaurant.controllers;
 
-import com.coding.restaurant.restaurant.Model.Meal;
+import com.coding.restaurant.restaurant.models.Meal;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;

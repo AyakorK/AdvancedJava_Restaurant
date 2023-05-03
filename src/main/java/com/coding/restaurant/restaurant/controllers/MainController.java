@@ -1,23 +1,11 @@
-package com.coding.restaurant.restaurant.Controller;
+package com.coding.restaurant.restaurant.controllers;
 
-import com.coding.restaurant.restaurant.Model.Meal;
-import com.coding.restaurant.restaurant.Model.MealsList;
-import com.coding.restaurant.restaurant.Model.Order;
+import com.coding.restaurant.restaurant.models.Meal;
+import com.coding.restaurant.restaurant.models.MealsList;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.VBox;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 

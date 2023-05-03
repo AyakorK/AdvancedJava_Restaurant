@@ -1,4 +1,4 @@
-package com.coding.restaurant.restaurant.Model;
+package com.coding.restaurant.restaurant.models;
 
 public class Bill {
     public String getType() {
