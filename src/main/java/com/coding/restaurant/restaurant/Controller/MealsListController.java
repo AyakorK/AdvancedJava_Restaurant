@@ -4,11 +4,17 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Popup;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 
 import java.net.URL;
@@ -48,8 +54,8 @@ public class MealsListController implements Initializable {
                         } else {
                             setText(meal.getName() + " - " + meal.getPrice() + "€");
                             imageView.setImage(new Image(meal.getImage(), true));
-                            imageView.setFitWidth(250); // set the width of the image view to 250
-                            imageView.setPreserveRatio(true);
+                            imageView.setFitWidth(250);
+                            imageView.setFitHeight(200);
                             setGraphic(imageView);
                         }
                     }
@@ -57,8 +63,31 @@ public class MealsListController implements Initializable {
             }
         });
 
-        mealListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            System.out.println("Selected item: " + newValue.getName());
+        mealListView.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2) {
+                Meal selectedMeal = mealListView.getSelectionModel().getSelectedItem();
+                if (selectedMeal != null) {
+                    Stage popupStage = new Stage();
+                    popupStage.initModality(Modality.APPLICATION_MODAL);
+                    popupStage.setTitle(selectedMeal.getName() + " - Description");
+
+                    Label titleLabel = new Label(selectedMeal.getName());
+                    titleLabel.setStyle("-fx-font-size: 24pt; -fx-font-weight: bold;");
+                    Label descriptionLabel = new Label(selectedMeal.getDescription());
+                    descriptionLabel.setStyle("-fx-font-size: 14pt;");
+
+                    VBox vbox = new VBox();
+                    vbox.setPadding(new Insets(10, 10, 10, 10));
+                    vbox.setSpacing(10);
+                    vbox.setAlignment(Pos.CENTER);
+                    vbox.getChildren().addAll(titleLabel, descriptionLabel);
+
+                    Scene popupScene = new Scene(vbox);
+                    popupStage.setScene(popupScene);
+                    popupStage.show();
+                }
+            }
         });
     }
 }
+
