@@ -22,8 +22,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class MainController {
-    @FXML
-    private Label welcomeText;
+  @FXML
+  private Label welcomeText;
 
     @FXML
     protected void onHelloButtonClick() throws SQLException {
