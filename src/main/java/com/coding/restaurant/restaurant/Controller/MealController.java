@@ -22,7 +22,7 @@ public class MealController implements Initializable {
   private Button btnMeal;
 
   public List<Meal> getAllMeal() {
-    try (Connection connexion = ConnectDatabaseController.getConnexion();
+    try (Connection connexion = ConnectDatabaseController.getConnection();
          PreparedStatement statement = connexion.prepareStatement("SELECT * FROM Meal");
          ResultSet resultat = statement.executeQuery()) {
 

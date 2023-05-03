@@ -39,7 +39,7 @@ public class NewMealController implements Initializable {
 
 
   public void addMeal(String name, String description, Double price, String image, Boolean isActive, String type) {
-    try (Connection connexion = ConnectDatabaseController.getConnexion();
+    try (Connection connexion = ConnectDatabaseController.getConnection();
          PreparedStatement statement = connexion.prepareStatement("INSERT INTO Meal (UUID, name, description, price, image, isActive,Type) VALUES (?,?,?, ?, ?, ?, ?)")) {
       statement.setString(1, generateUUID());
       statement.setString(2, name);
@@ -55,10 +55,11 @@ public class NewMealController implements Initializable {
     }
   }
 
-//  function generate UUID
+  //  function generate UUID
   public static String generateUUID() {
     return java.util.UUID.randomUUID().toString();
   }
+
   @Override
   public void initialize(URL location, ResourceBundle resources) {
     btnValidateMeal.setOnAction(event -> {
