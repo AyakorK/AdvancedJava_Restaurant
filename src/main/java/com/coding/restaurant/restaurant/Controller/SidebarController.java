@@ -30,23 +30,26 @@ public class SidebarController implements Initializable {
     @FXML
     private ImageView imgLogo;
 
+    @FXML
+    private AnchorPane acpMenu;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        acpCentre.getChildren().remove(vboxTest);
+        acpCentre.getChildren().removeAll(vboxTest, acpMenu);
 
         imgLogo.setOnMouseClicked(e -> {
-            acpCentre.getChildren().removeAll(vboxTest);
+            acpCentre.getChildren().removeAll(vboxTest, acpMenu);
             acpCentre.getChildren().add(acpHome);
         });
 
         btnMenu.setOnMouseClicked(e -> {
-            acpCentre.getChildren().removeAll(acpHome);
-            acpCentre.getChildren().add(vboxTest);
+            acpCentre.getChildren().removeAll(acpHome, vboxTest);
+            acpCentre.getChildren().add(acpMenu);
         });
 
         btnCommand.setOnMouseClicked(e -> {
-            acpCentre.getChildren().removeAll(vboxTest, acpHome);
+            acpCentre.getChildren().removeAll(vboxTest, acpHome, acpMenu);
         });
 
     }
