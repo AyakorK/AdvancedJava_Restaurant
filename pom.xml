@@ -103,7 +103,7 @@
                         <id>default-cli</id>
                         <configuration>
                             <mainClass>
-                                com.coding.restaurant.restaurant/com.coding.restaurant.restaurant.HelloApplication
+                                com.coding.restaurant.restaurant/com.coding.restaurant.restaurant.MainApplication
                             </mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
