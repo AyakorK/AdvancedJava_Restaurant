@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="489.0"
+            prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.coding.restaurant.restaurant.Controller.NewMealController">
+    <children>
+        <VBox alignment="CENTER" prefHeight="489.0" prefWidth="600.0">
+            <children>
+                <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                    <children>
+                        <Label text="Nom">
+                            <HBox.margin>
+                                <Insets/>
+                            </HBox.margin>
+                        </Label>
+                        <TextField fx:id="txfName">
+                            <HBox.margin>
+                                <Insets left="30.0" right="30.0"/>
+                            </HBox.margin>
+                        </TextField>
+                        <Label text="Url image">
+                            <HBox.margin>
+                                <Insets/>
+                            </HBox.margin>
+                        </Label>
+                        <TextField fx:id="txfImage">
+                            <HBox.margin>
+                                <Insets left="30.0" right="30.0"/>
+                            </HBox.margin>
+                        </TextField>
+                    </children>
+                </HBox>
+                <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                    <children>
+                        <Label text="Description">
+                            <HBox.margin>
+                                <Insets/>
+                            </HBox.margin>
+                        </Label>
+                        <TextField fx:id="txfDescription">
+                            <HBox.margin>
+                                <Insets left="30.0" right="30.0"/>
+                            </HBox.margin>
+                        </TextField>
+                        <Label text="Prix">
+                            <HBox.margin>
+                                <Insets/>
+                            </HBox.margin>
+                        </Label>
+                        <TextField fx:id="txfPrice">
+                            <HBox.margin>
+                                <Insets left="30.0" right="30.0"/>
+                            </HBox.margin>
+                        </TextField>
+                    </children>
+                </HBox>
+                <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                    <children>
+                        <Label text="Type"/>
+                        <TextField fx:id="txfType">
+                            <HBox.margin>
+                                <Insets left="30.0" right="30.0"/>
+                            </HBox.margin>
+                        </TextField>
+                        <CheckBox fx:id="cbxIsActive" mnemonicParsing="false" prefHeight="18.0" prefWidth="118.0"
+                                  text="Disponible">
+                            <HBox.margin>
+                                <Insets left="50.0" right="30.0"/>
+                            </HBox.margin>
+                        </CheckBox>
+                    </children>
+                </HBox>
+                <Button fx:id="btnValidateMeal" text="Validate"/>
+            </children>
+        </VBox>
+    </children>
+</AnchorPane>
