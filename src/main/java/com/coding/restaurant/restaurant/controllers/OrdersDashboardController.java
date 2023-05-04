@@ -50,6 +50,15 @@ public class OrdersDashboardController {
     return filteredOrder;
   }
 
+  public ObservableList<Order> displayLastOrders() throws SQLException {
+    List<Order> orders = displayPassedOrders().stream().limit(5).toList();
+    ObservableList<Order> filteredOrder = FXCollections.observableArrayList();
+    filteredOrder.addAll(orders);
+
+    ordersListView.setItems(filteredOrder);
+    return filteredOrder;
+  }
+
   public void displayCells() {
     ordersListView.setCellFactory(cell -> new OrderListCell());
   }
@@ -63,6 +72,7 @@ public class OrdersDashboardController {
     String outOfTime = "Out of time";
 
     public OrderListCell() {
+
       GridPane gridPane = new GridPane();
       gridPane.add(timerLabel, 1, 0);
       Button validateButton = new Button("Valider");
@@ -91,6 +101,7 @@ public class OrdersDashboardController {
 
     @Override
     protected void updateItem(Order order, boolean empty) {
+
       super.updateItem(order, empty);
 
       if (empty || order == null) {
@@ -98,11 +109,30 @@ public class OrdersDashboardController {
         setGraphic(null);
         timerLabel.setText("");
       } else {
+        // Add space between each lines of text
+        setStyle("-fx-padding: 0 0 0 5;");
+
         setText(order.getOrderDate() + " " + order.getTable().getNumber() + " " + orderState(order) + " " + order.getTotal() + "€");
-        timerLabel.setText(order.getTimer());
-        startTimerThread(order, timerLabel);
-        setGraphic(totalGridPane);
+        setLineSpacing(10);
+        totalGridPane.getChildren().clear();
+
+        if (order.isWaiting()) {
+          generateGridPane(order);
+          setGraphic(totalGridPane);
+        }
       }
+    }
+
+    protected void generateGridPane(Order order) {
+      GridPane gridPane = new GridPane();
+      gridPane.add(timerLabel, 1, 0);
+      Button validateButton = new Button("Valider");
+      gridPane.add(validateButton, 2, 0);
+      Button cancelButton = new Button("Annuler");
+      gridPane.add(cancelButton, 3, 0);
+      timerLabel.setText(order.getTimer());
+      startTimerThread(order, timerLabel);
+      totalGridPane.getChildren().add(gridPane);
     }
 
     private String orderState(Order order) {

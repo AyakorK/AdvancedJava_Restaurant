@@ -6,6 +6,7 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="800.0" prefWidth="1040.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.coding.restaurant.restaurant.controllers.OrdersDashboardController">
@@ -13,26 +14,41 @@
   <padding>
     <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
   </padding>
-  <HBox alignment="TOP_CENTER" prefHeight="21.0" prefWidth="960.0">
-    <opaqueInsets>
-      <Insets />
-    </opaqueInsets>
-  </HBox>
-
-  <Label layoutX="329.0" layoutY="1.0" text="Liste des Commandes">
-      <font>
-         <Font size="40.0" />
-      </font></Label>
-  <ListView fx:id="ordersListView" layoutX="56.0" layoutY="125.0" prefHeight="712.0" prefWidth="960.0" />
-<Button fx:id="activeOrdersButton" layoutX="252.0" layoutY="74.0" onAction="#filteredOrders" text="Commands actives" style="-fx-background-color: transparent; -fx-border-color: #411111; -fx-border-radius: 10px; -fx-border-width: 1px;" textFill="#411111">
-  <font>
-    <Font size="20.0" />
-  </font>
-</Button>
-
-<Button fx:id="allOrdersButton" layoutX="570.0" layoutY="71.0" onAction="#displayPassedOrders" text="Commandes passées" style="-fx-background-color: transparent; -fx-border-color: #411111; -fx-border-radius: 10px; -fx-border-width: 1px;" textFill="#411111">
-  <font>
-    <Font size="20.0" />
-  </font>
-</Button>
+   <VBox alignment="CENTER" prefHeight="800.0" prefWidth="1040.0" spacing="50.0">
+      <children>
+      
+        <Label text="Liste des Commandes">
+            <font>
+               <Font size="40.0" />
+            </font>
+         </Label>
+        <HBox alignment="TOP_CENTER" prefHeight="21.0" prefWidth="960.0" spacing="80.0">
+          <opaqueInsets>
+            <Insets />
+          </opaqueInsets>
+            <children>
+            <Button fx:id="activeOrdersButton" onAction="#filteredOrders" style="-fx-background-color: transparent; -fx-border-color: #411111; -fx-border-radius: 10px; -fx-border-width: 1px;" text="Commands actives" textFill="#411111">
+              <font>
+                <Font size="20.0" />
+              </font>
+            </Button>
+            
+            <Button fx:id="allOrdersButton" onAction="#displayPassedOrders" style="-fx-background-color: transparent; -fx-border-color: #411111; -fx-border-radius: 10px; -fx-border-width: 1px;" text="Commandes passées" textFill="#411111">
+              <font>
+                <Font size="20.0" />
+              </font>
+            </Button>
+               <Button fx:id="lastCommandsButton" onAction="#displayLastOrders" text="Dernières Commandes passées" style="-fx-background-color: transparent; -fx-border-color: #411111; -fx-border-radius: 10px; -fx-border-width: 1px;" textFill="#411111">
+                  <font>
+                     <Font size="20.0" />
+                  </font>
+               </Button>
+            </children>
+        </HBox>
+        <ListView fx:id="ordersListView" prefHeight="712.0" prefWidth="960.0" />
+      </children>
+      <padding>
+         <Insets top="50.0" />
+      </padding>
+   </VBox>
 </AnchorPane>
