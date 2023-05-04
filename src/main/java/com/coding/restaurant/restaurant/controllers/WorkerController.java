@@ -52,6 +52,9 @@ public class WorkerController implements Initializable {
   @FXML
   private TableColumn<Worker, String> colActions;
 
+  @FXML
+  private TableColumn<Worker, String> colAge;
+
   private ObservableList<Worker> observableWorkers;
 
   // Call the method to add a worker
@@ -181,15 +184,15 @@ public class WorkerController implements Initializable {
             pane.getChildren().removeAll(btnDelete, btnActive);
           } else if (worker.isActive()) {
             pane.getChildren().removeAll(btnActive, lblDelete);
-          } else{
-            pane.getChildren().removeAll(btnDelete,  lblDelete);
+          } else {
+            pane.getChildren().removeAll(btnDelete, lblDelete);
           }
 
         }
 
       }
     });
-
+    colAge.setCellValueFactory(new PropertyValueFactory<>("age"));
     addWorkerToList();
 
   }
