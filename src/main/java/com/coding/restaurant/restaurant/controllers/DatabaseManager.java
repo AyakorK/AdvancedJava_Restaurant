@@ -232,6 +232,27 @@ public class DatabaseManager {
         }
     }
 
+  //  delete a worker
+  public void deleteWorker(String workerUUID) {
+    // update isActive in false & update departureDate to now
+    try (PreparedStatement statement = this.db.prepareStatement("UPDATE Worker SET isActive = false, departureDate = NOW() WHERE UUID = ?")) {
+      statement.setString(1, workerUUID);
+      statement.executeUpdate();
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+  }
+
+  public void activeWorker(String workerUUID) {
+    // update isActive in true
+    try (PreparedStatement statement = this.db.prepareStatement("UPDATE Worker SET isActive = true WHERE UUID = ?")) {
+      statement.setString(1, workerUUID);
+      statement.executeUpdate();
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+  }
+
     private boolean findActive(ResultSet result) throws SQLException {
         return result.getBoolean("isActive");
     }
