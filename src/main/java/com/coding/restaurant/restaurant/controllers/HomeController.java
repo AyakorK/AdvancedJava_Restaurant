@@ -48,7 +48,7 @@ public class HomeController {
     Thread timerThread = new Thread(() -> {
       while (true) {
         try {
-          if (service.getTimer(service) == "Service terminé !") break;
+          if (service.getTimer(service).equals("Service terminé !")) break;
         } catch (SQLException e) {
           e.printStackTrace();
           Thread.currentThread().interrupt();

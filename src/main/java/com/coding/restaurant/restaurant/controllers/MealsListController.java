@@ -17,7 +17,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 
 import java.net.URL;
 import java.sql.SQLException;
@@ -48,30 +47,26 @@ public class MealsListController implements Initializable {
       e.printStackTrace();
     }
 
-    mealListView.setCellFactory(new Callback<>() {
+    mealListView.setCellFactory(listView -> new ListCell<Meal>() {
+      private final ImageView imageView = new ImageView();
+
       @Override
-      public ListCell<Meal> call(ListView<Meal> listView) {
-        return new ListCell<>() {
-          private ImageView imageView = new ImageView();
+      protected void updateItem(Meal meal, boolean empty) {
+        super.updateItem(meal, empty);
 
-          @Override
-          protected void updateItem(Meal meal, boolean empty) {
-            super.updateItem(meal, empty);
-
-            if (empty || meal == null) {
-              setText(null);
-              setGraphic(null);
-            } else {
-              setText(meal.getName() + " - " + meal.getPriceString() + "€");
-              imageView.setImage(new Image(meal.getImage(), true));
-              imageView.setFitWidth(250);
-              imageView.setFitHeight(200);
-              setGraphic(imageView);
-            }
-          }
-        };
+        if (empty || meal == null) {
+          setText(null);
+          setGraphic(null);
+        } else {
+          setText(meal.getName() + " - " + meal.getPriceString() + "€");
+          imageView.setImage(new Image(meal.getImage(), true));
+          imageView.setFitWidth(250);
+          imageView.setFitHeight(200);
+          setGraphic(imageView);
+        }
       }
     });
+
 
     mealListView.setOnMouseClicked(event -> {
       if (event.getClickCount() == 2) {

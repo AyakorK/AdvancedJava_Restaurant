@@ -6,8 +6,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -16,9 +19,11 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
+import javafx.stage.Stage;
 import org.kordamp.bootstrapfx.BootstrapFX;
 
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
@@ -29,7 +34,19 @@ public class TableController {
   private ListView<Table> listView;
 
   @FXML
-  private ToggleButton toggleButton;
+  private ToggleButton toggleFreeTables;
+
+  @FXML
+  private ToggleButton toggleIndoorTables;
+
+  @FXML
+  private ToggleButton toggleTerraceTables;
+
+  @FXML
+  private Button createTable;
+
+  @FXML
+  private VBox vbxTable;
 
   public ObservableList<Table> showTables() throws SQLException {
     DatabaseManager db = new DatabaseManager();
@@ -39,10 +56,10 @@ public class TableController {
     return showTables;
   }
 
-  public void showFreeTables(ActionEvent actionEvent) {
-    if (toggleButton.isSelected()) {
+  public void showFreeTables() {
+    if (toggleFreeTables.isSelected()) {
       try {
-        listView.setItems(showTables().filtered(table -> table.isFull()));
+        listView.setItems(showTables().filtered(Table -> !Table.isFull()));
       } catch (SQLException e) {
         e.printStackTrace();
       }
@@ -55,7 +72,54 @@ public class TableController {
     }
   }
 
+  public void showIndoorTables() {
+    if (toggleIndoorTables.isSelected()) {
+      try {
+        listView.setItems(showTables().filtered(table -> table.getLocation().equalsIgnoreCase("Intérieur")));
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
+    } else {
+      try {
+        listView.setItems(showTables());
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
+    }
+  }
+
+  public void showOutdoorTables(ActionEvent actionEvent) {
+    if (toggleTerraceTables.isSelected()) {
+      try {
+        listView.setItems(showTables().filtered(table -> table.getLocation().equals("Terrasse")));
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
+    } else {
+      try {
+        listView.setItems(showTables());
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
+    }
+  }
+
+  public void createTable(ActionEvent actionEvent) throws IOException {
+    // Charge la vue newTable.fxml
+    FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/coding/restaurant/restaurant/newTable-view.fxml"));
+    Parent root = loader.load();
+
+    // Crée une nouvelle fenêtre pour la vue newTable.fxml
+    Stage stage = new Stage();
+    stage.setScene(new Scene(root));
+
+    // Affiche la nouvelle fenêtre
+    stage.show();
+  }
+
+
   public void initialize() {
+
     try {
       listView.setItems(showTables());
     } catch (SQLException e) {
@@ -71,7 +135,6 @@ public class TableController {
         if (empty || item == null) {
           setText(null);
           setGraphic(null);
-          return;
         } else {
           // Créer un conteneur HBox pour contenir les informations de la table et les boutons
           HBox hBox = new HBox();
@@ -91,9 +154,9 @@ public class TableController {
           tableLocation.setFont(Font.font("Arial", FontWeight.BOLD, 15));
 
           // Mettre le statut de la table dans un Text
-          Text tableStatus = new Text(item.isFull() ? "Libre" : "Occupée");
+          Text tableStatus = new Text(item.isFull() ? "Occupée" : "Libre");
           tableStatus.setFont(Font.font("Arial", FontWeight.BOLD, 15));
-          tableStatus.setFill(item.isFull() ? Color.GREEN : Color.RED);
+          tableStatus.setFill(item.isFull() ? Color.RED : Color.GREEN);
 
           // Ajouter les Texts à la HBox
           hBox.getChildren().addAll(tableNumber, tableSeats, tableLocation, tableStatus);
@@ -117,13 +180,17 @@ public class TableController {
             alert.getButtonTypes().setAll(deleteButtonType, cancelButtonType);
             Optional<ButtonType> result = alert.showAndWait();
             if (result.isPresent() && result.get() == deleteButtonType) {
-              // Supprimer la table de la liste
-              listView.getItems().remove(item);
+              // delete table from TableRestaurant and update the ListView
+              try {
+                DatabaseManager db = new DatabaseManager();
+                // delete the chosen table from the database
+                db.deleteTable(item.getNumber());
+                // update the ListView
+                listView.setItems(showTables());
+              } catch (SQLException e) {
+                e.printStackTrace();
+              }
             }
-          });
-          addButton.setOnAction(event -> {
-            // Ajouter une commande pour la table sélectionnée
-            // ...
           });
 
           // Créer un conteneur VBox pour contenir les boutons
@@ -144,16 +211,6 @@ public class TableController {
         }
       }
     });
-  }
-
-
-  public void showIndoorTables(ActionEvent actionEvent) {
-  }
-
-  public void showOutdoorTables(ActionEvent actionEvent) {
-  }
-
-  public void createTable(ActionEvent actionEvent) {
   }
 }
 

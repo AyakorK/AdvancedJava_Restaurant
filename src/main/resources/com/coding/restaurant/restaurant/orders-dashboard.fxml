@@ -1,48 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.GridPane?>
-<?import org.kordamp.bootstrapfx.scene.layout.Panel?>
-
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns:fx="http://www.w3.org/1999/xhtml"
-            xmlns="http://javafx.com/javafx/17"
-            fx:controller="com.coding.restaurant.restaurant.controllers.OrdersDashboardController"
-            prefHeight="800.0" prefWidth="1040.0">
+<AnchorPane prefHeight="800.0" prefWidth="1040.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.coding.restaurant.restaurant.controllers.OrdersDashboardController">
 
-  <Panel fx:id="ordersPanel" styleClass="panel-default">
-    <GridPane.margin>
-      <Insets top="10" left="10" right="10" bottom="0"/>
-    </GridPane.margin>
+  <padding>
+    <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+  </padding>
+  <HBox alignment="TOP_CENTER" prefHeight="21.0" prefWidth="960.0">
+    <opaqueInsets>
+      <Insets />
+    </opaqueInsets>
+  </HBox>
 
+  <Label layoutX="329.0" layoutY="1.0" text="Liste des Commandes">
+      <font>
+         <Font size="40.0" />
+      </font></Label>
+  <ListView fx:id="ordersListView" layoutX="56.0" layoutY="125.0" prefHeight="712.0" prefWidth="960.0" />
+<Button fx:id="activeOrdersButton" layoutX="252.0" layoutY="74.0" onAction="#filteredOrders" text="Commands actives">
+  <font>
+    <Font size="20.0" />
+  </font>
+</Button>
 
-    <!-- Header row -->
-    <GridPane hgap="10" vgap="5" styleClass="panel-heading">
-      <Label text="Order ID" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-      <Label text="Customer Name" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
-      <Label text="Total Amount" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
-      <Label text="Order Date" GridPane.columnIndex="3" GridPane.rowIndex="0"/>
-      <Label text="Status" GridPane.columnIndex="4" GridPane.rowIndex="0"/>
-    </GridPane>
-
-    <!-- Order rows -->
-    <GridPane fx:id="ordersGridPane" hgap="10" vgap="5" styleClass="panel-body" GridPane.rowIndex="1">
-      <!-- Bind the GridPane's rows to the size of the orders list in your controller -->
-      <!--            <GridPane.rowConstraints>-->
-      <!--                <RowConstraints vgrow="ALWAYS" />-->
-      <!--                <RowConstraints vgrow="ALWAYS" />-->
-      <!--                <RowConstraints vgrow="ALWAYS" />-->
-      <!--                &lt;!&ndash; Add as many rows as needed based on your data &ndash;&gt;-->
-      <!--            </GridPane.rowConstraints>-->
-    </GridPane>
-
-    <!-- Footer row with pagination controls -->
-    <!--        <GridPane hgap="10" vgap="5" styleClass="panel-footer">-->
-    <!--            <Button text="Previous" onAction="#previousPage" />-->
-    <!--            <Button text="Next" onAction="#nextPage" />-->
-    <!--        </GridPane>-->
-  </Panel>
-
+<Button fx:id="allOrdersButton" layoutX="570.0" layoutY="71.0" onAction="#displayPassedOrders" text="Commandes passées">
+  <font>
+    <Font size="20.0" />
+  </font>
+</Button>
 </AnchorPane>

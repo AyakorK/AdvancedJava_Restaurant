@@ -1,5 +1,8 @@
 package com.coding.restaurant.restaurant.models;
 
+import com.coding.restaurant.restaurant.controllers.DatabaseManager;
+
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
@@ -13,16 +16,16 @@ public class Order {
     return isWaiting;
   }
 
-  public boolean setWaiting(boolean waiting) {
-    return this.isWaiting = waiting;
+  public void setWaiting(boolean waiting) {
+    this.isWaiting = waiting;
   }
 
   public boolean isDelivered() {
     return isDelivered;
   }
 
-  public boolean setDelivered(boolean delivered) {
-    return this.isDelivered = delivered;
+  public void setDelivered(boolean delivered) {
+    this.isDelivered = delivered;
   }
 
 
@@ -30,8 +33,8 @@ public class Order {
     return orderDate;
   }
 
-  public Timestamp setOrderDate(Timestamp orderDate) {
-    return this.orderDate = orderDate;
+  public void setOrderDate(Timestamp orderDate) {
+    this.orderDate = orderDate;
   }
 
   public List<HashMap> getMeals() {
@@ -48,9 +51,10 @@ public class Order {
   }
 
 
-  public double getTotal() {
+  public double getTotal() throws SQLException {
+    DatabaseManager db = new DatabaseManager();
     return this.meals.stream()
-            .mapToDouble(meal -> ((Meal) meal.get("meal")).getPrice()
+            .mapToDouble(meal -> db.getMeal(meal.get("meal").toString()).getPrice()
                     * (Integer) meal.get("quantity"))
             .reduce(0, Double::sum);
   }
