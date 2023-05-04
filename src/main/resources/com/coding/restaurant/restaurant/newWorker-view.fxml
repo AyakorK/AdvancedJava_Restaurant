@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane fx:id="" prefHeight="500.0" prefWidth="1040.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.coding.restaurant.restaurant.controllers.NewWorkerController">
+
+    <children>
+        <VBox alignment="CENTER" prefHeight="800.0" prefWidth="1040.0">
+            <children>
+            <HBox fx:id="hbxBack" alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="200.0">
+               <children>
+                  <Button fx:id="btnBack" mnemonicParsing="false" text="&lt;-  Go Back" />
+               </children>
+               <VBox.margin>
+                  <Insets left="50.0" />
+               </VBox.margin>
+            </HBox>
+            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@assets/userLogo.jpeg" />
+               </image>
+            </ImageView>
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="50.0">
+               <children>
+                  <VBox alignment="CENTER" prefHeight="200.0" prefWidth="200.0" spacing="10.0">
+                     <children>
+                              <Label alignment="CENTER" text="Nom" />
+                              <TextField fx:id="txfName" alignment="CENTER" />
+                     </children>
+                  </VBox>
+                  <VBox alignment="CENTER" prefHeight="200.0" prefWidth="200.0" spacing="10.0">
+                     <children>
+                              <Label text="Prénom" />
+                              <TextField fx:id="txfFirstName" alignment="CENTER" />
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="50.0">
+               <children>
+                  <VBox alignment="CENTER" prefHeight="200.0" prefWidth="200.0" spacing="10.0">
+                     <children>
+                              <Label text="Age" />
+                              <TextField fx:id="txfAge" alignment="CENTER" />
+                     </children>
+                  </VBox>
+                  <VBox alignment="CENTER" prefHeight="150.0" prefWidth="200.0" spacing="10.0">
+                     <children>
+                        <Label text="Poste" />
+                        <TextField fx:id="txfRole" alignment="CENTER" />
+                     </children></VBox>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="10.0">
+                     <children>
+                        <Label text="Disponibilité" />
+                        <CheckBox fx:id="cbxActive" mnemonicParsing="false" />
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+                <Button fx:id="btnSave" text="Enregistrer" />
+            </children>
+        </VBox>
+    </children>
+
+</AnchorPane>
