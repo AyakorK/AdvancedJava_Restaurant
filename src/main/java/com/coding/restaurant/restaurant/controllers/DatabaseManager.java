@@ -6,9 +6,6 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import static com.coding.restaurant.restaurant.controllers.NewMealController.generateUUID;
-
 public class DatabaseManager {
 
     Connection db;
@@ -49,6 +46,22 @@ public class DatabaseManager {
             e.printStackTrace();
         }
         return meals;
+    }
+
+    public static void addMeal(String name, String description, Double price, String image, Boolean isActive, String type) {
+        try (Connection connexion = ConnectDatabaseController.getConnection();
+             PreparedStatement statement = connexion.prepareStatement("INSERT INTO Meal (UUID, name, description, price, image, isActive,Type) VALUES (?,?,?, ?, ?, ?, ?)")) {
+            statement.setString(1, DatabaseManager.generateUUID());
+            statement.setString(2, name);
+            statement.setString(3, description);
+            statement.setDouble(4, price);
+            statement.setString(5, image);
+            statement.setBoolean(6, isActive);
+            statement.setString(7, type);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     //    // Get the meals list (MealsList)
@@ -211,7 +224,7 @@ public class DatabaseManager {
             ResultSet result = statement.executeQuery();
             if (result.next()) {
                 // If there is one, we return the service
-                return new Service(result.getDate("ServiceDate"), result.getTimestamp("CreatedAt"), result.getString("ServicePeriod"), getServiceWorkers(result.getString("UUID")));
+                return new Service(result.getString("UUID"), result.getDate("ServiceDate"), result.getTimestamp("CreatedAt"), result.getString("ServicePeriod"), getServiceWorkers(result.getString("UUID")));
             } else {
                 // If there is none, we create a new one
                 createNewService(service);
@@ -224,9 +237,8 @@ public class DatabaseManager {
     }
 
     private void createNewService(Service service) throws SQLException {
-        String uuid = generateUUID();
         try (PreparedStatement statement = this.db.prepareStatement("INSERT INTO Service (UUID, ServiceDate, CreatedAt, ServicePeriod) VALUES (?, ?, ?, ?)")) {
-            statement.setString(1, uuid);
+            statement.setString(1, service.getServiceUUID());
             statement.setDate(2, service.getBeginDate());
             statement.setTimestamp(3, service.getCreatedAt());
             statement.setString(4, service.getPeriod());
@@ -235,7 +247,7 @@ public class DatabaseManager {
             e.printStackTrace();
         }
 
-        addWorkersToService(uuid, service.getWorkers());
+        addWorkersToService(service.getServiceUUID(), service.getWorkers());
     }
 
     // Get the workers of a service (Worker[])
@@ -268,6 +280,10 @@ public class DatabaseManager {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public static String generateUUID() {
+        return java.util.UUID.randomUUID().toString();
     }
 }
 

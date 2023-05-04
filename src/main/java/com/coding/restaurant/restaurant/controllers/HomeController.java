@@ -34,8 +34,7 @@ public class HomeController {
         Date beginDate = new Date(System.currentTimeMillis());
         Timestamp createdAt = new Timestamp(System.currentTimeMillis());
         String period = getPeriod(createdAt);
-
-        return db.createService(new Service(beginDate, createdAt, period, activeWorkers));
+        return db.createService(new Service(DatabaseManager.generateUUID(), beginDate, createdAt, period, activeWorkers));
     }
 
     public String getPeriod(Timestamp beginDate) {

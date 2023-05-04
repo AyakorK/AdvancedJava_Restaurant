@@ -37,12 +37,18 @@ public class Service {
         return createdAt;
     }
 
+    public String getServiceUUID() {
+        return serviceUUID;
+    }
+
+    String serviceUUID;
     Date beginDate;
     String period;
     List<Worker> workers;
 
     Timestamp createdAt;
-    public Service(Date beginDate, Timestamp createdAt, String period, List<Worker> workers) {
+    public Service(String serviceUUID, Date beginDate, Timestamp createdAt, String period, List<Worker> workers) {
+        this.serviceUUID = serviceUUID;
         this.beginDate = beginDate;
         this.createdAt = createdAt;
         this.period = period;
