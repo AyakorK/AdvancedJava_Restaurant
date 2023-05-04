@@ -182,7 +182,7 @@ public class DatabaseManager {
       statement.setString(1, tableUUID);
       ResultSet result = statement.executeQuery();
       if (result.next()) {
-        return new Table(result.getString("numero"), result.getString("location"), result.getInt("size"), result.getBoolean("isFull"));
+        return new Table(result.getInt("numero"), result.getString("location"), result.getInt("size"), result.getBoolean("isFull"));
       }
     } catch (SQLException e) {
       e.printStackTrace();
