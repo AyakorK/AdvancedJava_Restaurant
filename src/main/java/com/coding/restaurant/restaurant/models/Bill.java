@@ -1,11 +1,13 @@
 package com.coding.restaurant.restaurant.models;
 
+import java.util.Date;
+
 public class Bill {
-  public String getType() {
+  public Boolean getType() {
     return type;
   }
 
-  public void setType(String type) {
+  public void setType(Boolean type) {
     this.type = type;
   }
 
@@ -17,20 +19,20 @@ public class Bill {
     this.amount = amount;
   }
 
-  public String getBillDate() {
+  public Date getBillDate() {
     return billDate;
   }
 
-  public void setBillDate(String billDate) {
+  public void setBillDate(Date billDate) {
     this.billDate = billDate;
   }
 
   // 	UUID	Type	Amount	BillDate
-  private String type;
+  private Boolean type;
   private double amount;
-  private String billDate;
+  private Date billDate;
 
-  public Bill(String type, double amount, String billDate) {
+  public Bill(Boolean type, double amount, Date billDate) {
     this.type = type;
     this.amount = amount;
     this.billDate = billDate;
