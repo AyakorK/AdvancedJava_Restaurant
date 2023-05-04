@@ -25,6 +25,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import java.util.ResourceBundle;
+import java.util.function.Predicate;
 
 
 public class MealsListController implements Initializable {
@@ -41,12 +42,29 @@ public class MealsListController implements Initializable {
   @FXML
   private Label lblTotalPrice;
 
+  @FXML
+  private TextField txfSearch;
+
   public ObservableList<Meal> filteredMeals() throws SQLException {
     DatabaseManager db = new DatabaseManager();
     List<Meal> meals = db.getMeals().stream().filter(Meal::isActive).toList();
     ObservableList<Meal> filteredMeals = FXCollections.observableArrayList();
     filteredMeals.addAll(meals);
     return filteredMeals;
+  }
+
+  private Predicate<Meal> createSearchFilter(String searchTerm) {
+    return meal -> meal.getDescription().toLowerCase().contains(searchTerm.toLowerCase());
+  }
+
+  public void searchMeal(ActionEvent actionEvent) {
+    // filtrer les plats selon leurs descriptions
+    // afficher les plats filtrés
+    try {
+      mealListView.setItems(filteredMeals().filtered(createSearchFilter(txfSearch.getText())));
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
   }
 
   public void sortAscending(ActionEvent actionEvent) {
