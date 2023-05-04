@@ -15,6 +15,14 @@
   <children>
     <VBox alignment="CENTER" prefHeight="489.0" prefWidth="600.0">
       <children>
+        <HBox fx:id="hbxBack" alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="200.0">
+          <children>
+            <Button fx:id="btnBack" mnemonicParsing="false" text="&lt;-  Go Back" />
+          </children>
+          <VBox.margin>
+            <Insets left="50.0" />
+          </VBox.margin>
+        </HBox>
         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
           <children>
             <Label text="Nom">

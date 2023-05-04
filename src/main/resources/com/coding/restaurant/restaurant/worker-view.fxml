@@ -33,6 +33,6 @@
             <Insets top="75.0" />
          </padding>
         </VBox>
-<!--        <fx:include fx:id="acpNewWorker" source="newWorker-view.fxml" />-->
+        <fx:include fx:id="acpNewWorker" source="newWorker-view.fxml" />
     </children>
 </AnchorPane>
