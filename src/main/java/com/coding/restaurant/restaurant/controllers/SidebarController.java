@@ -17,7 +17,7 @@ public class SidebarController implements Initializable {
   public AnchorPane acpCommand;
 
   @FXML
-  public VBox acpBills;
+  public AnchorPane acpBills;
 
   @FXML
   private Button btnBills;
