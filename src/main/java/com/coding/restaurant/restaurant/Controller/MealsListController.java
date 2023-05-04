@@ -12,6 +12,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Modality;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
@@ -71,16 +73,27 @@ public class MealsListController implements Initializable {
                     popupStage.initModality(Modality.APPLICATION_MODAL);
                     popupStage.setTitle(selectedMeal.getName() + " - Description");
 
+                    ScrollPane scrollPane = new ScrollPane();
+                    scrollPane.setFitToWidth(true);
+                    scrollPane.setFitToHeight(true);
+                    scrollPane.setContent(new Label(selectedMeal.getDescription()));
+
                     Label titleLabel = new Label(selectedMeal.getName());
-                    titleLabel.setStyle("-fx-font-size: 24pt; -fx-font-weight: bold;");
-                    Label descriptionLabel = new Label(selectedMeal.getDescription());
-                    descriptionLabel.setStyle("-fx-font-size: 14pt;");
+                    titleLabel.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+                    titleLabel.setAlignment(Pos.CENTER);
+                    titleLabel.setPadding(new Insets(20, 0, 10, 0));
 
                     VBox vbox = new VBox();
                     vbox.setPadding(new Insets(10, 10, 10, 10));
                     vbox.setSpacing(10);
                     vbox.setAlignment(Pos.CENTER);
-                    vbox.getChildren().addAll(titleLabel, descriptionLabel);
+
+                    VBox textVBox = new VBox();
+                    textVBox.setSpacing(10);
+                    textVBox.setAlignment(Pos.CENTER);
+                    textVBox.getChildren().addAll(titleLabel, scrollPane);
+
+                    vbox.getChildren().addAll(textVBox);
 
                     Scene popupScene = new Scene(vbox);
                     popupStage.setScene(popupScene);
@@ -90,4 +103,3 @@ public class MealsListController implements Initializable {
         });
     }
 }
-
