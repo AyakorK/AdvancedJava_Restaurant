@@ -226,6 +226,31 @@ public class DatabaseManager {
     return tables;
   }
 
+  public static void addTable(int number, String location, int size, boolean isFull) {
+    try (Connection connexion = ConnectDatabaseController.getConnection();
+         PreparedStatement statement = connexion.prepareStatement("INSERT INTO TableRestaurant (uuid, numero, location, size, isFull) VALUES (?, ?, ?, ?, ?)")) {
+      statement.setString(1, DatabaseManager.generateUUID());
+      statement.setInt(2, number);
+      statement.setString(3, location);
+      statement.setInt(4, size);
+      statement.setBoolean(5, isFull);
+      statement.executeUpdate();
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+  }
+
+  public Table deleteTable(int number) {
+    try (PreparedStatement statement = this.db.prepareStatement("DELETE FROM TableRestaurant WHERE numero = ?")) {
+      statement.setInt(1, number);
+      statement.executeUpdate();
+      return new Table(number, null, 0, false);
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    return null;
+  }
+
   // Get the table (Table)
   public Table getTable(String tableUUID) {
     try (PreparedStatement statement = this.db.prepareStatement("SELECT * FROM TableRestaurant WHERE uuid = ?")) {
@@ -416,5 +441,6 @@ public class DatabaseManager {
               }
             });
   }
+
 }
 
