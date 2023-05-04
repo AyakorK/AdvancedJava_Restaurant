@@ -37,7 +37,7 @@ public class DatabaseManager {
       while (result.next()) {
         String name = result.getString("name");
         String description = result.getString("description");
-        float price = result.getFloat("price");
+        double price = result.getDouble("price");
         String image = result.getString("image");
         boolean isActiveMeal = findActive(result);
         Meal meal = new Meal(name, description, price, image, isActiveMeal);
