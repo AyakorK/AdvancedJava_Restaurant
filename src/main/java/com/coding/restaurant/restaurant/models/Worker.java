@@ -1,4 +1,6 @@
-package com.coding.restaurant.restaurant.Model;
+package com.coding.restaurant.restaurant.models;
+
+import java.util.Date;
 
 public class Worker {
     // Worker is composed by Name	FirstName	isActive	HoursWorked	Role	ArrivalDate
@@ -44,35 +46,45 @@ public class Worker {
         this.role = role;
     }
 
-    public String getArrivalDate() {
+    public Date getArrivalDate() {
         return arrivalDate;
     }
 
-    public void setArrivalDate(String arrivalDate) {
+    public void setArrivalDate(Date arrivalDate) {
         this.arrivalDate = arrivalDate;
     }
 
+    public Date getDepartureDate() {
+        return departureDate;
+    }
+
+    public void setDepartureDate(Date departureDate) {
+        this.departureDate = departureDate;
+    }
+
+    public String getWorkerUUID() {
+        return workerUUID;
+    }
     private String firstName;
+
+    private String workerUUID;
+
     private boolean isActive;
     private int hoursWorked;
     private String role;
-    private String arrivalDate;
+    private Date arrivalDate;
 
-    public Worker(String name, String firstName, boolean isActive, int hoursWorked, String role, String arrivalDate) {
+
+    private Date departureDate;
+
+    public Worker(String workerUUID ,String name, String firstName, boolean isActive, int hoursWorked, String role, Date arrivalDate, Date departureDate) {
+        this.workerUUID = workerUUID;
         this.name = name;
         this.firstName = firstName;
         this.isActive = isActive;
         this.hoursWorked = hoursWorked;
         this.role = role;
         this.arrivalDate = arrivalDate;
+        this.departureDate = departureDate;
     }
-
-    public void addWorker(Worker worker) {
-        // TODO -> add worker to database
-    }
-
-    public void removeWorker(Worker worker) {
-        // TODO -> remove worker from database
-    }
-
 }

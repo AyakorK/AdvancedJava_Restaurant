@@ -1,6 +1,4 @@
-package com.coding.restaurant.restaurant.Model;
-
-import java.util.List;
+package com.coding.restaurant.restaurant.models;
 
 public class Meal {
     public String getName() {
