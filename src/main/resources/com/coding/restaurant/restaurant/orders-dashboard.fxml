@@ -9,7 +9,7 @@
 
 <AnchorPane xmlns:fx="http://www.w3.org/1999/xhtml"
             xmlns="http://javafx.com/javafx/17"
-            fx:controller="com.coding.restaurant.restaurant.controllers.CommandsDashboardController"
+            fx:controller="com.coding.restaurant.restaurant.controllers.OrdersDashboardController"
             prefHeight="800.0" prefWidth="1040.0">
 
   <Panel fx:id="ordersPanel" styleClass="panel-default">
