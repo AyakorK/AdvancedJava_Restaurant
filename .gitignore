@@ -36,6 +36,7 @@ replay_pid*
 .idea/**/usage.statistics.xml
 .idea/**/dictionaries
 .idea/**/shelf
+.idea/**/codeStyles
 
 # AWS User-specific
 .idea/**/aws.xml
@@ -212,3 +213,5 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.toptal.com/developers/gitignore/api/jetbrains+all,macos,windows,visualstudiocode,maven
+
+.env
