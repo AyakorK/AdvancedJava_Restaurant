@@ -92,8 +92,7 @@
         <fx:include fx:id="acpMenu" source="menu.fxml"/>
         <fx:include fx:id="acpBills" source="bills-view.fxml"/>
         <fx:include fx:id="acpWorker" source="worker-view.fxml" />
-        <fx:include fx:id="acpCommand" source="commands-dashboard.fxml"/>
-        <fx:include fx:id="vboxTest" source="main-view.fxml"/>
+        <fx:include fx:id="acpCommand" source="orders-dashboard.fxml"/>
       </children>
     </AnchorPane>
   </children>
