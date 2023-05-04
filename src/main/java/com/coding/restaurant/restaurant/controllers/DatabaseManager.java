@@ -3,8 +3,10 @@ package com.coding.restaurant.restaurant.controllers;
 import com.coding.restaurant.restaurant.models.*;
 
 import java.sql.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 public class DatabaseManager {
@@ -20,13 +22,41 @@ public class DatabaseManager {
     try (PreparedStatement statement = this.db.prepareStatement("SELECT * FROM Bill");
          ResultSet result = statement.executeQuery()) {
       while (result.next()) {
-        Bill bill = new Bill(result.getString("type"), result.getDouble("amount"), result.getString("billDate"));
+        Bill bill = new Bill(result.getBoolean("type"), result.getDouble("amount"), result.getDate("billDate"));
         bills.add(bill);
       }
     } catch (SQLException e) {
       e.printStackTrace();
     }
     return bills;
+  }
+
+  public List<Bill> getBillsOfThisMonth() {
+    List<Bill> bills = new ArrayList<>();
+    // Get the bills of this month only
+    try (PreparedStatement statement = this.db.prepareStatement("SELECT * FROM Bill WHERE MONTH(billDate) = MONTH(CURRENT_DATE()) AND YEAR(billDate) = YEAR(CURRENT_DATE())");
+         ResultSet result = statement.executeQuery()) {
+      while (result.next()) {
+        Bill bill = new Bill(result.getBoolean("type"), result.getDouble("amount"), result.getDate("billDate"));
+        bills.add(bill);
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    return bills;
+  }
+
+  public void createBill(double price, boolean type) {
+    try (Connection connexion = ConnectDatabaseController.getConnection();
+         PreparedStatement statement = connexion.prepareStatement("INSERT INTO Bill (UUID, type, amount, billDate) VALUES (?,?,?, ?)")) {
+      statement.setString(1, DatabaseManager.generateUUID());
+      statement.setBoolean(2, type);
+      statement.setDouble(3, price);
+      statement.setString(4, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+      statement.executeUpdate();
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
   }
 
   // Get the meals (Meal)
@@ -37,7 +67,7 @@ public class DatabaseManager {
       while (result.next()) {
         String name = result.getString("name");
         String description = result.getString("description");
-        float price = result.getFloat("price");
+        double price = result.getDouble("price");
         String image = result.getString("image");
         boolean isActiveMeal = findActive(result);
         Meal meal = new Meal(name, description, price, image, isActiveMeal);
@@ -99,7 +129,7 @@ public class DatabaseManager {
     statement.setString(1, mealListUUID);
     ResultSet result = statement.executeQuery();
     while (result.next()) {
-      Meal meal = new Meal(result.getString("name"), result.getString("description"), result.getFloat("price"), result.getString("image"), findActive(result));
+      Meal meal = new Meal(result.getString("name"), result.getString("description"), result.getDouble("price"), result.getString("image"), findActive(result));
       mealsInList.add(meal);
     }
   }
@@ -114,16 +144,38 @@ public class DatabaseManager {
         boolean isWaiting = result.getBoolean("isWaiting");
         boolean isDelivered = result.getBoolean("isDelivered");
         List<Meal> orderItems = getOrdersItems(orderUUID);
+        List<Integer> itemsQuantity = getOrdersItemsQuantity(orderUUID);
+        List<HashMap> orderItemsWithQuantity = new ArrayList<>();
+        orderItems.stream().forEach(meal -> {
+          HashMap<String, Object> map = new HashMap<>();
+          map.put("meal", meal);
+          map.put("quantity", itemsQuantity.get(orderItems.indexOf(meal)));
+          orderItemsWithQuantity.add(map);
+        });
         Table table = getTable(result.getString("TableUUID"));
         Timestamp timestamp = result.getTimestamp("dateCreation");
         String status = result.getString("finalStatus");
-        Order order = new Order(orderUUID, table, isWaiting, isDelivered, orderItems, timestamp, status);
+        Order order = new Order(orderUUID, table, isWaiting, isDelivered, orderItemsWithQuantity, timestamp, status);
         orders.add(order);
       }
     } catch (SQLException e) {
       e.printStackTrace();
     }
     return orders;
+  }
+
+  private List<Integer> getOrdersItemsQuantity(String orderUUID) {
+    List<Integer> itemsQuantity = new ArrayList<>();
+    try (PreparedStatement statement = this.db.prepareStatement("SELECT quantity FROM OrdersItems WHERE ordersUUID = ?")) {
+      statement.setString(1, orderUUID);
+      ResultSet result = statement.executeQuery();
+      while (result.next()) {
+        itemsQuantity.add(result.getInt("Quantity"));
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    return itemsQuantity;
   }
 
 
@@ -151,14 +203,22 @@ public class DatabaseManager {
   }
 
   //    // Get the tables (Table)
-  public ResultSet getTables() {
+  public List<Table> getTables() {
+    List<Table> tables = new ArrayList<>();
     try (PreparedStatement statement = this.db.prepareStatement("SELECT * FROM TableRestaurant");
          ResultSet result = statement.executeQuery()) {
-      return result;
+      while (result.next()) {
+        int number = result.getInt("numero");
+        String location = result.getString("location");
+        int size = result.getInt("size");
+        boolean isFull = result.getBoolean("isFull");
+        Table table = new Table(number, location, size, isFull);
+        tables.add(table);
+      }
     } catch (SQLException e) {
       e.printStackTrace();
     }
-    return null;
+    return tables;
   }
 
   // Get the table (Table)
@@ -167,7 +227,7 @@ public class DatabaseManager {
       statement.setString(1, tableUUID);
       ResultSet result = statement.executeQuery();
       if (result.next()) {
-        return new Table(result.getString("numero"), result.getString("location"), result.getInt("size"), result.getBoolean("isFull"));
+        return new Table(result.getInt("numero"), result.getString("location"), result.getInt("size"), result.getBoolean("isFull"));
       }
     } catch (SQLException e) {
       e.printStackTrace();
@@ -259,12 +319,12 @@ public class DatabaseManager {
 
   public Service createService(Service service) {
     // Search if there is already a service with the same date and the same period AND that has been created more than 3h ago
-    try (PreparedStatement statement = this.db.prepareStatement("SELECT * FROM Service WHERE ServiceDate = ? AND ServicePeriod = ? OR CreatedAt < DATE_SUB(NOW(), INTERVAL 3 HOUR)")) {
+    try (PreparedStatement statement = this.db.prepareStatement("SELECT * FROM Service WHERE ServiceDate = ? AND ServicePeriod = ? OR ? < DATE_SUB(NOW(), INTERVAL 3 HOUR)")) {
       statement.setDate(1, service.getBeginDate());
       statement.setString(2, service.getPeriod());
+      statement.setTimestamp(3, service.getCreatedAt());
       ResultSet result = statement.executeQuery();
       if (result.next()) {
-        // If there is one, we return the service
         return new Service(result.getString("UUID"), result.getDate("ServiceDate"), result.getTimestamp("CreatedAt"), result.getString("ServicePeriod"), getServiceWorkers(result.getString("UUID")), result.getBoolean("isPaid"));
       } else {
         // If there is none, we create a new one

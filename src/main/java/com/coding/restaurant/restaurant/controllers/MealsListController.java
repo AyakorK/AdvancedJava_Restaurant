@@ -62,7 +62,7 @@ public class MealsListController implements Initializable {
               setText(null);
               setGraphic(null);
             } else {
-              setText(meal.getName() + " - " + meal.getPrice() + "€");
+              setText(meal.getName() + " - " + meal.getPriceString() + "€");
               imageView.setImage(new Image(meal.getImage(), true));
               imageView.setFitWidth(250);
               imageView.setFitHeight(200);

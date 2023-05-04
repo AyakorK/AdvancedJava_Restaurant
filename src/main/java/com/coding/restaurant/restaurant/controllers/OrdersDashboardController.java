@@ -13,7 +13,7 @@ import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.List;
 
-public class CommandsDashboardController {
+public class OrdersDashboardController {
   @FXML
   private Panel ordersPanel;
 
@@ -68,7 +68,13 @@ public class CommandsDashboardController {
     row.add(detailsButton, 4, 0);
 
     Button validateButton = new Button("Valider");
-    validateButton.setOnAction(event -> validateOrder(order));
+    validateButton.setOnAction(event -> {
+      try {
+        validateOrder(order);
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
+    });
     row.add(validateButton, 5, 0);
 
     Button cancelButton = new Button("Annuler");
@@ -80,11 +86,12 @@ public class CommandsDashboardController {
     startTimerThread(order, timeLabel);
   }
 
-  private void validateOrder(Order order) {
+  private void validateOrder(Order order) throws SQLException {
     order.setWaiting(false);
     order.setDelivered(true);
     order.setStatus("Payée");
     updateOrderInDatabase(order);
+    createBill(order);
   }
 
   private void cancelOrder(Order order) {
@@ -93,6 +100,15 @@ public class CommandsDashboardController {
     order.setStatus("Annulée");
     updateOrderInDatabase(order);
   }
+
+  private void createBill(Order order) throws SQLException {
+    boolean isLate = order.getTimer().equals("Out of time");
+    double price = isLate ? order.getTotal() / 1.3 : order.getTotal();
+    DatabaseManager db = new DatabaseManager();
+    db.createBill(price, true);
+  }
+
+
 
   private void updateOrderInDatabase(Order order) {
     try {

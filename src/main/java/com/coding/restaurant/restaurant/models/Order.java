@@ -1,6 +1,7 @@
 package com.coding.restaurant.restaurant.models;
 
 import java.sql.Timestamp;
+import java.util.HashMap;
 import java.util.List;
 
 public class Order {
@@ -33,14 +34,15 @@ public class Order {
     return this.orderDate = orderDate;
   }
 
-  public List<Meal> getMeals() {
+  public List<HashMap> getMeals() {
     return meals;
   }
 
-  public String getTotal() {
-    // TODO: Calculate the total of the order using the meals
-    Double sum = this.meals.stream().mapToDouble(Meal::getPrice).reduce(0, Double::sum);
-    return String.format("%.2f", sum);
+  public double getTotal() {
+    return this.meals.stream()
+            .mapToDouble(meal -> ((Meal) meal.get("meal")).getPrice()
+                    * (Integer) meal.get("quantity"))
+            .reduce(0, Double::sum);
   }
 
   public String getTimer() {
@@ -90,9 +92,9 @@ public class Order {
 
   private String status;
 
-  private List<Meal> meals;
+  private List<HashMap> meals;
 
-  public Order(String orderUUID, Table table, boolean isWaiting, boolean isDelivered, List<Meal> meals, Timestamp orderDate, String status) {
+  public Order(String orderUUID, Table table, boolean isWaiting, boolean isDelivered, List<HashMap> meals, Timestamp orderDate, String status) {
     this.orderUUID = orderUUID;
     this.table = table;
     this.isWaiting = isWaiting;
