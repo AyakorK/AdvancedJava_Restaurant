@@ -1,5 +1,6 @@
 package com.coding.restaurant.restaurant.controllers;
 
+
 import com.coding.restaurant.restaurant.models.Meal;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -11,12 +12,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Modality;
-import javafx.stage.Popup;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
@@ -25,8 +24,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
+
 import java.util.ResourceBundle;
 
 import org.kordamp.bootstrapfx.BootstrapFX;

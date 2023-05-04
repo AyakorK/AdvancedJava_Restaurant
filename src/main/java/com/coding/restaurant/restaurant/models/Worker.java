@@ -65,6 +65,15 @@ public class Worker {
     public String getWorkerUUID() {
         return workerUUID;
     }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
     private String firstName;
 
     private String workerUUID;
@@ -74,10 +83,10 @@ public class Worker {
     private String role;
     private Date arrivalDate;
 
-
+    private int age;
     private Date departureDate;
 
-    public Worker(String workerUUID ,String name, String firstName, boolean isActive, int hoursWorked, String role, Date arrivalDate, Date departureDate) {
+    public Worker(String workerUUID ,String name, String firstName, boolean isActive, int hoursWorked, String role, Date arrivalDate, Date departureDate, int age) {
         this.workerUUID = workerUUID;
         this.name = name;
         this.firstName = firstName;
@@ -86,5 +95,6 @@ public class Worker {
         this.role = role;
         this.arrivalDate = arrivalDate;
         this.departureDate = departureDate;
+        this.age = age;
     }
 }
