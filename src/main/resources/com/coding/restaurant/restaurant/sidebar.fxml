@@ -63,7 +63,7 @@
                         <Font name="Avenir Book" size="13.0" />
                      </font>
                   </Button>
-                  <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="108.0" style="-fx-background-color: #f2efbe;" text="Employés">
+                  <Button fx:id="btnWorker" mnemonicParsing="false" prefHeight="40.0" prefWidth="108.0" style="-fx-background-color: #f2efbe;" text="Employés">
                      <font>
                         <Font name="Avenir Book" size="13.0" />
                      </font>
@@ -82,6 +82,7 @@
          <children>
             <fx:include fx:id="acpHome" source="home.fxml" />
             <fx:include fx:id="vboxTest" source="main-view.fxml" />
+            <fx:include fx:id="acpWorker" source="worker-view.fxml" />
          </children>
       </AnchorPane>
    </children>
