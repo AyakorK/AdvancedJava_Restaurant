@@ -48,10 +48,10 @@ public class DatabaseManager {
         return meals;
     }
 
-    public static void addMeal(String name, String description, Double price, String image, Boolean isActive, String type) {
+    public void addMeal(String name, String description, Double price, String image, Boolean isActive, String type) {
         try (Connection connexion = ConnectDatabaseController.getConnection();
              PreparedStatement statement = connexion.prepareStatement("INSERT INTO Meal (UUID, name, description, price, image, isActive,Type) VALUES (?,?,?, ?, ?, ?, ?)")) {
-            statement.setString(1, DatabaseManager.generateUUID());
+            statement.setString(1, this.generateUUID());
             statement.setString(2, name);
             statement.setString(3, description);
             statement.setDouble(4, price);
