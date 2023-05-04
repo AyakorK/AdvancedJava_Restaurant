@@ -63,12 +63,11 @@ public class SidebarController implements Initializable {
     acpCentre.getChildren().removeAll(pages);
     acpCentre.getChildren().add(acpHome);
 
-    for (Node button : pageButtonMap.keySet()) {
-      Node page = pageButtonMap.get(button);
+    pageButtonMap.keySet().stream().forEach(button ->
       button.setOnMouseClicked(event -> {
         acpCentre.getChildren().removeAll(pages);
-        acpCentre.getChildren().add(page);
-      });
-    }
+        acpCentre.getChildren().add(pageButtonMap.get(button));
+      })
+    );
   }
 }
