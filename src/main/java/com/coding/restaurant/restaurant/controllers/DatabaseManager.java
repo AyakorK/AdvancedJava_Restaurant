@@ -184,18 +184,18 @@ public class DatabaseManager {
     return tables;
   }
 
-  public Table createTable(int number, String location, int size, boolean isFull) {
-    try (PreparedStatement statement = this.db.prepareStatement("INSERT INTO TableRestaurant (numero, location, size, isFull) VALUES (?, ?, ?, ?)")) {
-      statement.setInt(1, number);
-      statement.setString(2, location);
-      statement.setInt(3, size);
-      statement.setBoolean(4, isFull);
+  public static void addTable(int number, String location, int size, boolean isFull) {
+    try (Connection connexion = ConnectDatabaseController.getConnection();
+         PreparedStatement statement = connexion.prepareStatement("INSERT INTO TableRestaurant (uuid, numero, location, size, isFull) VALUES (?, ?, ?, ?, ?)")) {
+      statement.setString(1, DatabaseManager.generateUUID());
+      statement.setInt(2, number);
+      statement.setString(3, location);
+      statement.setInt(4, size);
+      statement.setBoolean(5, isFull);
       statement.executeUpdate();
-      return new Table(number, location, size, isFull);
     } catch (SQLException e) {
       e.printStackTrace();
     }
-    return null;
   }
 
   public Table deleteTable(int number) {

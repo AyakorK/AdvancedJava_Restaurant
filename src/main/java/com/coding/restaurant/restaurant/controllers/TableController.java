@@ -6,8 +6,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -16,9 +19,11 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
+import javafx.stage.Stage;
 import org.kordamp.bootstrapfx.BootstrapFX;
 
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
@@ -40,6 +45,9 @@ public class TableController {
   @FXML
   private Button createTable;
 
+  @FXML
+  private VBox vbxTable;
+
   public ObservableList<Table> showTables() throws SQLException {
     DatabaseManager db = new DatabaseManager();
     List<Table> tables = db.getTables();
@@ -51,8 +59,7 @@ public class TableController {
   public void showFreeTables() {
     if (toggleFreeTables.isSelected()) {
       try {
-        showTables().forEach(table -> System.out.println(table.getLocation()));
-        listView.setItems(showTables().filtered(Table::isFull));
+        listView.setItems(showTables().filtered(Table -> !Table.isFull()));
       } catch (SQLException e) {
         e.printStackTrace();
       }
@@ -97,21 +104,22 @@ public class TableController {
     }
   }
 
-  public void createTable(ActionEvent actionEvent) {
-    //créer une nouvelle table
-    TextInputDialog dialog = new TextInputDialog();
-    dialog.setTitle("Créer une nouvelle table");
-    dialog.setHeaderText("Créer une nouvelle table");
-    // ajouter le nombre de la table, un select pour choisir si c'est intérieur ou terrasse, le nombre de place et mettre si elle est pleine ou pas
+  public void createTable(ActionEvent actionEvent) throws IOException {
+    // Charge la vue newTable.fxml
+    FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/coding/restaurant/restaurant/newTable-view.fxml"));
+    Parent root = loader.load();
 
-    Optional<String> result = dialog.showAndWait();
-    if (result.isPresent()) {
-      System.out.println("Your name: " + result.get());
-    }
+    // Crée une nouvelle fenêtre pour la vue newTable.fxml
+    Stage stage = new Stage();
+    stage.setScene(new Scene(root));
 
+    // Affiche la nouvelle fenêtre
+    stage.show();
   }
 
+
   public void initialize() {
+
     try {
       listView.setItems(showTables());
     } catch (SQLException e) {
@@ -146,9 +154,9 @@ public class TableController {
           tableLocation.setFont(Font.font("Arial", FontWeight.BOLD, 15));
 
           // Mettre le statut de la table dans un Text
-          Text tableStatus = new Text(item.isFull() ? "Libre" : "Occupée");
+          Text tableStatus = new Text(item.isFull() ? "Occupée" : "Libre");
           tableStatus.setFont(Font.font("Arial", FontWeight.BOLD, 15));
-          tableStatus.setFill(item.isFull() ? Color.GREEN : Color.RED);
+          tableStatus.setFill(item.isFull() ? Color.RED : Color.GREEN);
 
           // Ajouter les Texts à la HBox
           hBox.getChildren().addAll(tableNumber, tableSeats, tableLocation, tableStatus);

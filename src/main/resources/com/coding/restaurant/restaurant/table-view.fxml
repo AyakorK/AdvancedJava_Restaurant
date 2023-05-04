@@ -8,7 +8,8 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="CENTER" prefHeight="800.0" prefWidth="1040.0" spacing="20.0" xmlns="http://javafx.com/javafx/19"
+<VBox fx:id="vbxTable" alignment="CENTER" prefHeight="800.0" prefWidth="1040.0" spacing="20.0"
+      xmlns="http://javafx.com/javafx/19"
       xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.coding.restaurant.restaurant.controllers.TableController">
     <Label text="Tables"/>
 
