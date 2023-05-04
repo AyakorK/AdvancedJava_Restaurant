@@ -12,34 +12,34 @@ import java.util.ResourceBundle;
 
 public class SidebarController implements Initializable {
 
-    public AnchorPane acpCommand;
-    @FXML
-    private Button btnMenu;
+  public AnchorPane acpCommand;
+  @FXML
+  private Button btnMenu;
 
-    @FXML
-    private Button btnCommand;
+  @FXML
+  private Button btnCommand;
 
     @FXML
     private Button btnWorker;
+  @FXML
+  private AnchorPane acpCentre;
 
-    @FXML
-    private AnchorPane acpCentre;
-    @FXML
-    private AnchorPane acpHome;
+  @FXML
+  private VBox vboxTest;
+
+  @FXML
+  private AnchorPane acpHome;
     @FXML
     private AnchorPane acpWorker;
 
-    @FXML
-    private VBox vboxTest;
+  @FXML
+  private ImageView imgLogo;
 
-    @FXML
-    private ImageView imgLogo;
+  @FXML
+  private AnchorPane acpMenu;
 
-    @FXML
-    private AnchorPane acpMenu;
-
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
+  @Override
+  public void initialize(URL url, ResourceBundle resourceBundle) {
 
         acpCentre.getChildren().removeAll(vboxTest, acpMenu, acpCommand, acpWorker);
 
