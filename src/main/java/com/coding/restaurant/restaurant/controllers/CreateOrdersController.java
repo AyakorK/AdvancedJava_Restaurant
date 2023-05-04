@@ -69,6 +69,8 @@ public class CreateOrdersController implements Initializable {
   @FXML
   private Button btnValidateOrder;
 
+  List<HashMap> meals = new ArrayList<>();
+
   private ObservableList<Meal> observableMeal;
   private ObservableList<Meal> observableOrder;
 
@@ -140,7 +142,7 @@ public class CreateOrdersController implements Initializable {
 //    colRole.setCellValueFactory(new PropertyValueFactory<>("role"));
 //    colArrived.setCellValueFactory(new PropertyValueFactory<>("arrivalDate"));
 //    colDeparture.setCellValueFactory(cellData -> {
-//      Meal meal = cellData.getValue();
+//      Meal meal = cellData.getValue();f
 //      String departureDate = meal.getDepartureDate().equals(worker.getArrivalDate()) ? "Non indiquÃ©" : String.valueOf(worker.getDepartureDate());
 //      return new SimpleStringProperty(departureDate);
 //    });
@@ -157,10 +159,14 @@ public class CreateOrdersController implements Initializable {
 //        });
         btnDelete.setOnAction(event -> {
           Meal meal = getTableView().getItems().get(getIndex());
-          System.out.println("Ajoute de " + meal.getMealUUID());
+          System.out.println("Ajout de " + meal.getMealUUID());
 
-          Meal newMeal = new Meal(meal.getName(), meal.getDescription(), meal.getPrice(), meal.getImage(), meal.isActive(), meal.getMealUUID());
-          observableOrder.add(newMeal);
+          try {
+            addMealToHash(meal, meals);
+          } catch (SQLException e) {
+            e.printStackTrace();
+          }
+
 //          colOrderQuantity.setCellValueFactory(new PropertyValueFactory<>("name"));
 //          tvbWorkers1.refresh();
 //          System.out.println(tvbOrder.getItems());
@@ -175,6 +181,37 @@ public class CreateOrdersController implements Initializable {
         });
       }
 
+      protected void addMealToHash(Meal tempMeal, List<HashMap> meals) throws SQLException {
+        HashMap<String, Object> mealMap = new HashMap<>();
+
+        DatabaseManager db = new DatabaseManager();
+        Meal meal = db.getMeal(tempMeal.getMealUUID());
+        boolean mealAlreadyInList = observableOrder.stream().anyMatch(meal1 -> meal1.getMealUUID().equals(meal.getMealUUID()));
+
+        addToHash(mealMap, meal, mealAlreadyInList, meals);
+        // Search in tvbOrder if meal is already in the list, if yes, increment quantity
+        // if no, add new meal
+        //tvbOrder.getItems().stream()
+        System.out.println(meals);
+      }
+
+      protected void addToHash(HashMap<String, Object> mealMap, Meal meal, boolean mealAlreadyInList, List<HashMap> meals) {
+        if (mealAlreadyInList) {
+          for (HashMap mealMap1 : meals) {
+            if (mealMap1.get("meal").equals(meal.getMealUUID())) {
+              int newQuantity = (int) mealMap1.get("quantity") + 1;
+              mealMap1.put("quantity", newQuantity);
+            }
+          }
+
+        } else {
+          mealMap.put("meal", meal.getMealUUID());
+          mealMap.put("quantity", 1);
+          meals.add(mealMap);
+        }
+        observableOrder.add(meal);
+      }
+
       @Override
       protected void updateItem(String item, boolean empty) {
         super.updateItem(item, empty);
@@ -184,67 +221,19 @@ public class CreateOrdersController implements Initializable {
 
     btnValidateOrder.setOnAction(event -> {
       System.out.println("validate order");
-      System.out.println(tvbOrder.getItems());
-      System.out.println(tvbOrder.getItems());
-      tvbOrder.getItems().forEach(meal -> {
-        System.out.println(meal.getMealUUID());
-      });
-//      System.out.println(tvbOrder.getItems().stream().toList());
-//      List<Meal> meals = tvbOrder.getItems().stream().toList();
-
-//      addMealHash(tvbOrder.getItems().get(0), 1);
-      System.out.println("yooo");
-      System.out.println(addMealHash(tvbOrder.getItems().get(0), 1));
-      List<HashMap> meals = new ArrayList<>();
-
-      tvbOrder.getItems().forEach((meal) -> {
-        System.out.println(meal.getMealUUID());
-        System.out.println(meal);
-      });
-
-      System.out.println("sslfnslkjs");
-      System.out.println(tvbOrder.getItems().stream().map(Meal::getMealUUID).toList());
-//      if (tvbOrder.getItems().stream().map(Meal::getMealUUID).toList().contains("1")) {
-//        System.out.println("yessss");
-//      } else {
-//        System.out.println("nooooo");
-//      }
-
-      List<Meal> meals1 = tvbOrder.getItems().stream().toList();
-
-//      addMealHash2(meals1);
-
-//      List<HashMap> meals = tvbOrder.getItems().stream()
-//              .map(meal -> {
-//                HashMap<String, Object> map = new HashMap<>();
-//                map.put("meal", meal);
-//                map.put("quantity", 1);
-//                return map;
-//              })
-//              .collect(Collectors.toList());
-
-//      System.out.println(meals);
+      meals.stream().forEach(System.out::println);
 
 
-//      List<HashMap> mealsa = tvbOrder.getItems();
+      Table table = new Table("0d86ab6e-e9bd-11ed-a7c3-525400008e03",1, "Terrasse", 4, false);
 
-//      List<HashMap> meals = tvbOrder.getItems().stream()
-//              .map(meal -> {
-//                HashMap<String, Object> map = new HashMap<>();
-//                map.put("name", meal.getName());
-//                map.put("price", meal.getPrice());
-//                map.put("active", meal.isActive());
-//                return map;
-//              })
-//              .collect(Collectors.toList());
+      Order order = new Order(java.util.UUID.randomUUID().toString(), table, true, false, meals, new Timestamp(new Date().getTime()), null);
 
-      List<Order> orders = new ArrayList<>();
-      Table table = new Table(1, "test", 1, false);
-
-//      Order order = new Order(java.util.UUID.randomUUID().toString(), table, true, false, meals
-//              , new Timestamp(new Date().getTime()), null);
-//
-//      System.out.println(order.getMeals());
+      try {
+        DatabaseManager db = new DatabaseManager();
+        db.addOrder(order);
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
     });
 
     try {

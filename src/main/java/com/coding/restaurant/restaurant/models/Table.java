@@ -39,7 +39,14 @@ public class Table {
     private int size;
     private boolean isFull;
 
-    public Table(int numero, String location, int size, boolean isFull) {
+    public String getTableUUID() {
+        return tableUUID;
+    }
+
+    private String tableUUID;
+
+    public Table(String tableUUID, int numero, String location, int size, boolean isFull) {
+        this.tableUUID = tableUUID;
         this.numero = numero;
         this.location = location;
         this.size = size;

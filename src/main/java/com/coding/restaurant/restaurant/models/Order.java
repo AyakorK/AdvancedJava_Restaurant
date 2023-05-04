@@ -1,5 +1,8 @@
 package com.coding.restaurant.restaurant.models;
 
+import com.coding.restaurant.restaurant.controllers.DatabaseManager;
+
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
@@ -48,9 +51,10 @@ public class Order {
   }
 
 
-  public double getTotal() {
+  public double getTotal() throws SQLException {
+    DatabaseManager db = new DatabaseManager();
     return this.meals.stream()
-            .mapToDouble(meal -> ((Meal) meal.get("meal")).getPrice()
+            .mapToDouble(meal -> db.getMeal(meal.get("meal").toString()).getPrice()
                     * (Integer) meal.get("quantity"))
             .reduce(0, Double::sum);
   }

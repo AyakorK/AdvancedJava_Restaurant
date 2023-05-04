@@ -85,6 +85,27 @@ public class DatabaseManager {
     return meals;
   }
 
+  // Get the meals (Meal)
+  public Meal getMeal(String mealUUID) {
+    Meal meal = null;
+    try (Connection connexion = ConnectDatabaseController.getConnection();
+         PreparedStatement statement = connexion.prepareStatement("SELECT * FROM Meal WHERE UUID = ?")) {
+      statement.setString(1, mealUUID);
+      ResultSet result = statement.executeQuery();
+      while (result.next()) {
+        String name = result.getString("name");
+        String description = result.getString("description");
+        double price = result.getDouble("price");
+        String image = result.getString("image");
+        boolean isActiveMeal = findActive(result);
+        meal = new Meal(name, description, price, image, isActiveMeal, mealUUID);
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    return meal;
+  }
+
   public static void addMeal(String name, String description, Double price, String image, Boolean isActive, String type) {
     try (Connection connexion = ConnectDatabaseController.getConnection();
          PreparedStatement statement = connexion.prepareStatement("INSERT INTO Meal (UUID, name, description, price, image, isActive,Type) VALUES (?,?,?, ?, ?, ?, ?)")) {
@@ -170,6 +191,54 @@ public class DatabaseManager {
     return orders;
   }
 
+  public void addOrder(Order order) {
+    try (PreparedStatement statement = this.db.prepareStatement("INSERT INTO Orders (UUID, TableUUID, isWaiting, isDelivered, dateCreation, finalStatus) VALUES (?, ?, ?, ?, ?, ?)")) {
+      statement.setString(1, order.getOrderUUID());
+      statement.setString(2, order.getTable().getTableUUID());
+      statement.setBoolean(3, order.isWaiting());
+      statement.setBoolean(4, order.isDelivered());
+      statement.setTimestamp(5, order.getOrderDate());
+      statement.setString(6, order.getStatus());
+      statement.executeUpdate();
+
+
+      addOrderItems(order);
+      setTableFull(order.getTable().getTableUUID());
+
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+
+  }
+
+  private void addOrderItems(Order order) {
+    try (PreparedStatement statement = this.db.prepareStatement("INSERT INTO OrdersItems (ordersUUID, mealUUID, quantity) VALUES (?, ?, ?)")) {
+
+      order.getMeals().stream().forEach(map -> {
+        try {
+          statement.setString(1, order.getOrderUUID());
+          statement.setString(2, ((String) map.get("meal")));
+          statement.setInt(3, (int) map.get("quantity"));
+          statement.executeUpdate();
+        } catch (SQLException e) {
+          e.printStackTrace();
+        }
+      });
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+  }
+
+  private void setTableFull(String tableUUID) {
+    try (PreparedStatement statement = this.db.prepareStatement("UPDATE TableRestaurant SET isFull = ? WHERE UUID = ?")) {
+      statement.setBoolean(1, true);
+      statement.setString(2, tableUUID);
+      statement.executeUpdate();
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+  }
+
   private List<Integer> getOrdersItemsQuantity(String orderUUID) {
     List<Integer> itemsQuantity = new ArrayList<>();
     try (PreparedStatement statement = this.db.prepareStatement("SELECT quantity FROM OrdersItems WHERE ordersUUID = ?")) {
@@ -214,11 +283,12 @@ public class DatabaseManager {
     try (PreparedStatement statement = this.db.prepareStatement("SELECT * FROM TableRestaurant");
          ResultSet result = statement.executeQuery()) {
       while (result.next()) {
+        String tableUUID = result.getString("UUID");
         int number = result.getInt("numero");
         String location = result.getString("location");
         int size = result.getInt("size");
         boolean isFull = result.getBoolean("isFull");
-        Table table = new Table(number, location, size, isFull);
+        Table table = new Table(tableUUID, number, location, size, isFull);
         tables.add(table);
       }
     } catch (SQLException e) {
@@ -245,7 +315,7 @@ public class DatabaseManager {
     try (PreparedStatement statement = this.db.prepareStatement("DELETE FROM TableRestaurant WHERE numero = ?")) {
       statement.setInt(1, number);
       statement.executeUpdate();
-      return new Table(number, null, 0, false);
+      return new Table(DatabaseManager.generateUUID(), number, null, 0, false);
     } catch (SQLException e) {
       e.printStackTrace();
     }
@@ -258,7 +328,7 @@ public class DatabaseManager {
       statement.setString(1, tableUUID);
       ResultSet result = statement.executeQuery();
       if (result.next()) {
-        return new Table(result.getInt("numero"), result.getString("location"), result.getInt("size"), result.getBoolean("isFull"));
+        return new Table(result.getString("UUID"), result.getInt("numero"), result.getString("location"), result.getInt("size"), result.getBoolean("isFull"));
       }
     } catch (SQLException e) {
       e.printStackTrace();

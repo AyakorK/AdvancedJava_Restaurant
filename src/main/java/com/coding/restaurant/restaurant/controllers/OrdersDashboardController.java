@@ -98,7 +98,11 @@ public class OrdersDashboardController {
         setGraphic(null);
         timerLabel.setText("");
       } else {
-        setText(order.getOrderDate() + " " + order.getTable().getNumber() + " " + orderState(order) + " " + order.getTotal() + "€");
+        try {
+          setText(order.getOrderDate() + " " + order.getTable().getNumber() + " " + orderState(order) + " " + order.getTotal() + "€");
+        } catch (SQLException e) {
+          throw new RuntimeException(e);
+        }
         timerLabel.setText(order.getTimer());
         startTimerThread(order, timerLabel);
         setGraphic(totalGridPane);
