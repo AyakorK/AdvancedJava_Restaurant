@@ -1,12 +1,11 @@
 package com.coding.restaurant.restaurant.controllers;
 
 import com.coding.restaurant.restaurant.models.Table;
+import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -17,10 +16,16 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
+import java.util.Optional;
+
 public class TableController {
 
   @FXML
   private ListView<Table> listView;
+
+  @FXML
+  private ToggleButton toggleButton;
+
 
   public void initialize() {
     // Remplir la ListView avec des données de test
@@ -67,28 +72,51 @@ public class TableController {
               // Créer un nouveau popup pour ajouter une commande ou supprimer la table
               Alert popup = new Alert(Alert.AlertType.CONFIRMATION);
               popup.setTitle("Options de la table");
-              popup.setHeaderText(null);
+              popup.setHeaderText("Table " + item.getNumber());
               popup.setContentText("Que voulez-vous faire avec cette table ?");
 
               // Add buttons to the popup
               ButtonType ajouterCommandeButton = new ButtonType("Ajouter une commande");
               ButtonType supprimerTableButton = new ButtonType("Supprimer la table");
-              popup.getButtonTypes().setAll(ajouterCommandeButton, supprimerTableButton);
+              ButtonType cancelButton = new ButtonType("Annuler");
+              popup.getButtonTypes().setAll(ajouterCommandeButton, supprimerTableButton, cancelButton);
 
               // Add a listener to the popup to handle the result of the user's choice
-              popup.setOnCloseRequest(closeEvent -> {
-                if (popup.getResult() == ajouterCommandeButton) {
+              popup.showAndWait().ifPresent(result -> {
+                if (result == ajouterCommandeButton) {
+                  System.out.println("Ajouter une commande");
+                } else if (result == supprimerTableButton) {
+                  // Créer un nouveau popup pour confirmer la suppression de la table
+                  Alert confirmationPopup = new Alert(Alert.AlertType.CONFIRMATION);
+                  confirmationPopup.setTitle("Supprimer la table");
+                  confirmationPopup.setHeaderText("Table " + item.getNumber());
+                  confirmationPopup.setContentText("Êtes-vous sûr de vouloir supprimer cette table ?");
+                  confirmationPopup.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
 
-                } else if (popup.getResult() == supprimerTableButton) {
-                  listView.getItems().remove(item);
+                  // Add a listener to the confirmation popup to handle the result of the user's choice
+                  confirmationPopup.showAndWait().ifPresent(confirmationResult -> {
+                    if (confirmationResult == ButtonType.YES) {
+                      listView.getItems().remove(item);
+                    }
+                  });
+                } else {
+                  popup.showAndWait();
                 }
               });
-              popup.showAndWait();
             }
           });
-
         }
       }
     });
   }
+
+  public void showFreeTables(ActionEvent actionEvent) {
+  }
+
+  public void showIndoorTables(ActionEvent actionEvent) {
+  }
+
+  public void showOutdoorTables(ActionEvent actionEvent) {
+  }
 }
+
