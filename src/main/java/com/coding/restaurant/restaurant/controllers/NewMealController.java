@@ -9,10 +9,6 @@ import javafx.scene.control.TextField;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-
 public class NewMealController implements Initializable {
 
   @FXML
@@ -51,10 +47,7 @@ public class NewMealController implements Initializable {
       Boolean isActive = cbxIsActive.isSelected();
       String type = txfType.getText();
 
-      System.out.println(name + ' ' + description + ' ' + price + ' ' + image + ' ' + isActive + ' ' + type);
       addMeal(name, description, price, image, isActive, type);
-//      txfName.getText();
-//      System.out.println(txfName.getText());
     });
   }
 }

@@ -13,6 +13,11 @@ public class DatabaseManager {
 
   Connection db;
 
+  String firstNameText = "FirstName";
+  String hoursWorkedText = "HoursWorked";
+  String arrivalDateText = "arrivalDate";
+  String departureDateText = "departureDate";
+
   public DatabaseManager() throws SQLException {
     this.db = ConnectDatabaseController.getConnection();
   }
@@ -243,19 +248,19 @@ public class DatabaseManager {
       while (result.next()) {
         String workerUUID = result.getString("UUID");
         String name = result.getString("Name");
-        String surname = result.getString("FirstName");
+        String surname = result.getString(firstNameText);
         Boolean isActive = findActive(result);
-        Integer hoursWorked = result.getInt("HoursWorked");
+        Integer hoursWorked = result.getInt(hoursWorkedText);
         String role = result.getString("role");
-        Date arrivalDate = result.getDate("arrivalDate");
-        Date departureDate = result.getDate("departureDate");
+        Date arrivalDate = result.getDate(arrivalDateText);
+        Date departureDate = result.getDate(departureDateText);
         int age = result.getInt("Age");
         Worker worker = new Worker(workerUUID, name, surname, isActive, hoursWorked, role, arrivalDate, departureDate, age);
         workers.add(worker);
       }
 
     } catch (SQLException e) {
-      throw new RuntimeException(e);
+      e.printStackTrace();
     }
     return workers;
   }
@@ -266,7 +271,7 @@ public class DatabaseManager {
       statement.setString(2, surname);
       ResultSet result = statement.executeQuery();
       if (result.next()) {
-        return new Worker(result.getString("UUID"), result.getString("Name"), result.getString("FirstName"), findActive(result), result.getInt("HoursWorked"), result.getString("role"), result.getDate("arrivalDate"), result.getDate("departureDate"), result.getInt("Age"));
+        return new Worker(result.getString("UUID"), result.getString("Name"), result.getString(firstNameText), findActive(result), result.getInt(hoursWorkedText), result.getString("role"), result.getDate(arrivalDateText), result.getDate(departureDateText), result.getInt("Age"));
       }
     } catch (SQLException e) {
       e.printStackTrace();
@@ -366,7 +371,7 @@ public class DatabaseManager {
     statement.setString(1, serviceUUID);
     ResultSet result = statement.executeQuery();
     while (result.next()) {
-      Worker worker = new Worker(result.getString("UUID"), result.getString("Name"), result.getString("FirstName"), findActive(result), result.getInt("HoursWorked"), result.getString("role"), result.getDate("arrivalDate"), result.getDate("departureDate"), result.getInt("Age"));
+      Worker worker = new Worker(result.getString("UUID"), result.getString("Name"), result.getString(firstNameText), findActive(result), result.getInt(hoursWorkedText), result.getString("role"), result.getDate(arrivalDateText), result.getDate(departureDateText), result.getInt("Age"));
       workersInService.add(worker);
     }
   }

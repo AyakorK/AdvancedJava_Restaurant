@@ -2,13 +2,14 @@ package com.coding.restaurant.restaurant.controllers;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 
 import java.net.URL;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class SidebarController implements Initializable {
 
@@ -27,8 +28,8 @@ public class SidebarController implements Initializable {
   @FXML
   private Button btnCommand;
 
-    @FXML
-    private Button btnWorker;
+  @FXML
+  private Button btnWorker;
   @FXML
   private AnchorPane acpCentre;
 
@@ -37,8 +38,8 @@ public class SidebarController implements Initializable {
 
   @FXML
   private AnchorPane acpHome;
-    @FXML
-    private AnchorPane acpWorker;
+  @FXML
+  private AnchorPane acpWorker;
 
   @FXML
   private ImageView imgLogo;
@@ -49,41 +50,25 @@ public class SidebarController implements Initializable {
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        acpCentre.getChildren().removeAll(vboxTest, acpMenu, acpCommand, acpWorker, btnBills.setOnMouseClicked(e -> {
-          acpCentre.getChildren().removeAll(acpHome, acpMenu, acpCommand, acpBills);
-          acpCentre.getChildren().add(acpBills);
-        }););
 
-        imgLogo.setOnMouseClicked(e -> {
-            acpCentre.getChildren().removeAll( acpMenu, acpCommand, acpWorker, acpBills);
-            acpCentre.getChildren().add(acpHome);
-        });
 
-        btnMenu.setOnMouseClicked(e -> {
-            acpCentre.getChildren().removeAll(acpHome, acpCommand, acpWorker, acpBills);
-            acpCentre.getChildren().add(acpMenu);
-        });
+    List<Node> pages = Arrays.asList(acpHome, acpMenu, acpCommand, acpWorker, acpBills);
+    Map<Node, Node> pageButtonMap = new HashMap<>();
+    pageButtonMap.put(imgLogo, acpHome);
+    pageButtonMap.put(btnMenu, acpMenu);
+    pageButtonMap.put(btnCommand, acpCommand);
+    pageButtonMap.put(btnWorker, acpWorker);
+    pageButtonMap.put(btnBills, acpBills);
 
-        btnCommand.setOnMouseClicked(e -> {
-            acpCentre.getChildren().removeAll( acpHome, acpMenu, acpWorker, acpBills);
-            acpCentre.getChildren().add(acpCommand);
-        });
+    acpCentre.getChildren().removeAll(pages);
+    acpCentre.getChildren().add(acpHome);
 
-        btnWorker.setOnMouseClicked(e -> {
-            acpCentre.getChildren().removeAll( acpHome, acpMenu, acpCommand, acpBills);
-            acpCentre.getChildren().add(acpWorker);
-        });
-
-        btnBills.setOnMouseClicked(e -> {
-          acpCentre.getChildren().removeAll(acpHome, acpMenu, acpWorker, acpCommand);
-          acpCentre.getChildren().add(acpBills);
-        });
-
+    for (Node button : pageButtonMap.keySet()) {
+      Node page = pageButtonMap.get(button);
+      button.setOnMouseClicked(event -> {
+        acpCentre.getChildren().removeAll(pages);
+        acpCentre.getChildren().add(page);
+      });
     }
-
-
   }
-
-
-
 }
