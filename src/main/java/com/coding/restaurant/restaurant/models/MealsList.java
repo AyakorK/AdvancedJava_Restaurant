@@ -1,4 +1,4 @@
-package com.coding.restaurant.restaurant.Model;
+package com.coding.restaurant.restaurant.models;
 
 import java.util.Date;
 import java.util.List;

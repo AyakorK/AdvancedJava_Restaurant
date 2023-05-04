@@ -1,4 +1,4 @@
-package com.coding.restaurant.restaurant.Controller;
+package com.coding.restaurant.restaurant.controllers;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -11,7 +11,6 @@ import java.util.ResourceBundle;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class NewMealController implements Initializable {
@@ -39,25 +38,7 @@ public class NewMealController implements Initializable {
 
 
   public void addMeal(String name, String description, Double price, String image, Boolean isActive, String type) {
-    try (Connection connexion = ConnectDatabaseController.getConnection();
-         PreparedStatement statement = connexion.prepareStatement("INSERT INTO Meal (UUID, name, description, price, image, isActive,Type) VALUES (?,?,?, ?, ?, ?, ?)")) {
-      statement.setString(1, generateUUID());
-      statement.setString(2, name);
-      statement.setString(3, description);
-      statement.setDouble(4, price);
-      statement.setString(5, image);
-      statement.setBoolean(6, isActive);
-      statement.setString(7, type);
-      statement.executeUpdate();
-      System.out.println("Meal added");
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
-  }
-
-  //  function generate UUID
-  public static String generateUUID() {
-    return java.util.UUID.randomUUID().toString();
+    DatabaseManager.addMeal(name, description, price, image, isActive, type);
   }
 
   @Override
