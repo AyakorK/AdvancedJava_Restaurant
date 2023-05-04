@@ -48,10 +48,10 @@ public class DatabaseManager {
         return meals;
     }
 
-    public void addMeal(String name, String description, Double price, String image, Boolean isActive, String type) {
+    public static void addMeal(String name, String description, Double price, String image, Boolean isActive, String type) {
         try (Connection connexion = ConnectDatabaseController.getConnection();
              PreparedStatement statement = connexion.prepareStatement("INSERT INTO Meal (UUID, name, description, price, image, isActive,Type) VALUES (?,?,?, ?, ?, ?, ?)")) {
-            statement.setString(1, this.generateUUID());
+            statement.setString(1, DatabaseManager.generateUUID());
             statement.setString(2, name);
             statement.setString(3, description);
             statement.setDouble(4, price);
@@ -210,6 +210,24 @@ public class DatabaseManager {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static void addWorker(String name, String firstName, Boolean isActive, Double hoursWorked, String role, java.util.Date arrivalDate, java.util.Date departureDate, Integer age) {
+        try (Connection connexion = ConnectDatabaseController.getConnection();
+             PreparedStatement statement = connexion.prepareStatement("INSERT INTO Worker (UUID, name, firstName, isActive, hoursWorked, role, arrivalDate, departureDate, age ) VALUES (?,?, ?, ?, ?, ?, ?, ?, ?)")) {
+            statement.setString(1, DatabaseManager.generateUUID());
+            statement.setString(2, name);
+            statement.setString(3, firstName);
+            statement.setBoolean(4, isActive);
+            statement.setDouble(5, hoursWorked);
+            statement.setString(6, role);
+            statement.setTimestamp(7, new java.sql.Timestamp(arrivalDate.getTime()));
+            statement.setTimestamp(8, new java.sql.Timestamp(departureDate.getTime()));
+            statement.setInt(9, age);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     private boolean findActive(ResultSet result) throws SQLException {
