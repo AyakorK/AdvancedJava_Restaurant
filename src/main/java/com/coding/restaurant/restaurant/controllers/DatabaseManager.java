@@ -198,6 +198,17 @@ public class DatabaseManager {
     return null;
   }
 
+  public Table deleteTable(int number) {
+    try (PreparedStatement statement = this.db.prepareStatement("DELETE FROM TableRestaurant WHERE numero = ?")) {
+      statement.setInt(1, number);
+      statement.executeUpdate();
+      return new Table(number, null, 0, false);
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    return null;
+  }
+
   // Get the table (Table)
   public Table getTable(String tableUUID) {
     try (PreparedStatement statement = this.db.prepareStatement("SELECT * FROM TableRestaurant WHERE uuid = ?")) {
@@ -349,7 +360,6 @@ public class DatabaseManager {
               }
             });
   }
-
 
 }
 

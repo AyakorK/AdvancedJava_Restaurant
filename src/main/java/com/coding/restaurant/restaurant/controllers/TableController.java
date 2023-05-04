@@ -127,7 +127,6 @@ public class TableController {
         if (empty || item == null) {
           setText(null);
           setGraphic(null);
-          return;
         } else {
           // Créer un conteneur HBox pour contenir les informations de la table et les boutons
           HBox hBox = new HBox();
@@ -176,8 +175,9 @@ public class TableController {
               // delete table from TableRestaurant and update the ListView
               try {
                 DatabaseManager db = new DatabaseManager();
-                List<Table> tables = db.getTables();
-                tables.remove(item);
+                // delete the chosen table from the database
+                db.deleteTable(item.getNumber());
+                // update the ListView
                 listView.setItems(showTables());
               } catch (SQLException e) {
                 e.printStackTrace();
