@@ -12,7 +12,6 @@ import org.kordamp.bootstrapfx.scene.layout.Panel;
 import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.List;
-
 public class CommandsDashboardController {
     @FXML
     private Panel ordersPanel;
@@ -35,10 +34,6 @@ public class CommandsDashboardController {
                     .sorted(Comparator.comparing(Order::getOrderDate))
                     .forEach(this::addOrderRow);
 
-            // If is empty print that this is empty
-            if (ordersGridPane.getChildren().isEmpty()) {
-
-            }
 
         } catch (SQLException e) {
             showError("Error loading orders", e);
@@ -72,11 +67,11 @@ public class CommandsDashboardController {
         row.add(detailsButton, 4, 0);
 
         Button validateButton = new Button("Valider");
-        validateButton.setOnAction(event -> validateOrder(order, timeLabel, statusLabel));
+        validateButton.setOnAction(event -> validateOrder(order));
         row.add(validateButton, 5, 0);
 
         Button cancelButton = new Button("Annuler");
-        cancelButton.setOnAction(event -> cancelOrder(order, timeLabel, statusLabel));
+        cancelButton.setOnAction(event -> cancelOrder(order));
         row.add(cancelButton, 6, 0);
 
         ordersGridPane.addRow(ordersGridPane.getRowCount(), row);
@@ -84,22 +79,18 @@ public class CommandsDashboardController {
         startTimerThread(order, timeLabel);
     }
 
-    private void validateOrder(Order order, Label timeLabel, Label statusLabel) {
+    private void validateOrder(Order order) {
         order.setWaiting(false);
         order.setDelivered(true);
         order.setStatus("Payée");
-        //statusLabel.setText("Servie");
         updateOrderInDatabase(order);
-        //timeLabel.setText("");
     }
 
-    private void cancelOrder(Order order, Label timeLabel, Label statusLabel) {
+    private void cancelOrder(Order order) {
         order.setWaiting(false);
         order.setDelivered(false);
         order.setStatus("Annulée");
-        //statusLabel.setText("Annulée");
         updateOrderInDatabase(order);
-        //timeLabel.setText("");
     }
 
     private void updateOrderInDatabase(Order order) {
@@ -118,13 +109,12 @@ public class CommandsDashboardController {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
+                    Thread.currentThread().interrupt();
                 }
                 Platform.runLater(() -> {
                     // If the order is outdated stop the thread
                     if (order.getTimer().equals("Out of time")) {
-
-                        order.setWaiting(false);
-                        return;
+                        Thread.currentThread().interrupt();
                     }
                     timeLabel.setText(order.getTimer());
                 });
