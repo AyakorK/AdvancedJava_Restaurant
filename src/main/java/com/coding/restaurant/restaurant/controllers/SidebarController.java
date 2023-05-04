@@ -13,46 +13,37 @@ import java.util.ResourceBundle;
 public class SidebarController implements Initializable {
 
   @FXML
-  public AnchorPane acpCommand;
-
-  @FXML
   public VBox acpBills;
-
-  @FXML
-  private Button btnBills;
-
-  @FXML
-  private Button btnMenu;
-
-  @FXML
-  private Button btnCommand;
-
-    @FXML
-    private Button btnWorker;
-  @FXML
-  private AnchorPane acpCentre;
-
   @FXML
   private VBox vboxTest;
 
   @FXML
+  private Button btnBills;
+  @FXML
+  private Button btnMenu;
+  @FXML
+  private Button btnCommand;
+  @FXML
+  private Button btnWorker;
+  @FXML
+  private AnchorPane acpCentre;
+
+  @FXML
   private AnchorPane acpHome;
-    @FXML
-    private AnchorPane acpWorker;
+  @FXML
+  private AnchorPane acpWorker;
+  @FXML
+  private AnchorPane acpMenu;
+  @FXML
+  public AnchorPane acpCommand;
 
   @FXML
   private ImageView imgLogo;
 
-  @FXML
-  private AnchorPane acpMenu;
-
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        acpCentre.getChildren().removeAll(vboxTest, acpMenu, acpCommand, acpWorker, btnBills.setOnMouseClicked(e -> {
-          acpCentre.getChildren().removeAll(acpHome, acpMenu, acpCommand, acpBills);
-          acpCentre.getChildren().add(acpBills);
-        }););
+        acpCentre.getChildren().removeAll(vboxTest, acpMenu, acpCommand, acpWorker, acpBills);
 
         imgLogo.setOnMouseClicked(e -> {
             acpCentre.getChildren().removeAll( acpMenu, acpCommand, acpWorker, acpBills);
@@ -86,4 +77,4 @@ public class SidebarController implements Initializable {
 
 
 
-}
+
