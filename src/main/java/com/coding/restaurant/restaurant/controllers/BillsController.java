@@ -24,6 +24,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 
 public class BillsController {
 
@@ -35,6 +37,17 @@ public class BillsController {
 
   @FXML
   private Button exportAllButton;
+
+  @FXML
+  private AnchorPane acpInBill;
+  @FXML
+  private AnchorPane acpNewBill;
+
+  @FXML
+  private VBox vbxBill;
+
+  @FXML
+  private Button btnNewBill;
 
   @FXML
   Button exportButton;
@@ -65,6 +78,15 @@ public class BillsController {
   }
 
   public void initialize() {
+
+    acpInBill.getChildren().remove(acpNewBill);
+
+    // When the button is clicked, the new worker form is displayed
+    btnNewBill.setOnMouseClicked(e -> {
+      acpInBill.getChildren().remove(vbxBill);
+      acpInBill.getChildren().add(acpNewBill);
+    });
+
     try {
       billsListView.setItems(filteredBills());
     } catch (SQLException e) {

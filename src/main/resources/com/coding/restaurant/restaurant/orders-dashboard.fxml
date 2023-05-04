@@ -24,13 +24,13 @@
          <Font size="40.0" />
       </font></Label>
   <ListView fx:id="ordersListView" layoutX="56.0" layoutY="125.0" prefHeight="712.0" prefWidth="960.0" />
-<Button fx:id="activeOrdersButton" layoutX="252.0" layoutY="74.0" onAction="#filteredOrders" text="Commands actives">
+<Button fx:id="activeOrdersButton" layoutX="252.0" layoutY="74.0" onAction="#filteredOrders" text="Commands actives" style="-fx-background-color: transparent; -fx-border-color: #411111; -fx-border-radius: 10px; -fx-border-width: 1px;" textFill="#411111">
   <font>
     <Font size="20.0" />
   </font>
 </Button>
 
-<Button fx:id="allOrdersButton" layoutX="570.0" layoutY="71.0" onAction="#displayPassedOrders" text="Commandes passées">
+<Button fx:id="allOrdersButton" layoutX="570.0" layoutY="71.0" onAction="#displayPassedOrders" text="Commandes passées" style="-fx-background-color: transparent; -fx-border-color: #411111; -fx-border-radius: 10px; -fx-border-width: 1px;" textFill="#411111">
   <font>
     <Font size="20.0" />
   </font>

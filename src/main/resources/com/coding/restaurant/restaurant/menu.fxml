@@ -1,21 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="800.0" prefWidth="1040.0" xmlns="http://javafx.com/javafx/19"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.coding.restaurant.restaurant.controllers.MenuController"
-            fx:id="acpMenu"
-            >
+<AnchorPane fx:id="acpMenu" prefHeight="800.0" prefWidth="1040.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.coding.restaurant.restaurant.controllers.MenuController">
   <children>
     <VBox fx:id="vBoxMenu" alignment="BOTTOM_CENTER" prefHeight="801.0" prefWidth="1040.0" spacing="25.0">
       <children>
-        <Button fx:id="btnNewMeal" mnemonicParsing="false" text="Créer un nouveau plat"/>
+        <Button fx:id="btnNewMeal" mnemonicParsing="false" style="-fx-background-color: transparent; -fx-border-color: #411111; -fx-border-radius: 10px; -fx-border-width: 1px;" textFill="#411111" text="Créer un nouveau plat"  />
         <AnchorPane maxHeight="1.7976931348623157E308" prefHeight="663.0" prefWidth="1040.0">
           <children>
-            <fx:include source="mealslist-view.fxml"/>
+            <fx:include source="mealslist-view.fxml" />
           </children>
         </AnchorPane>
       </children>
