@@ -79,46 +79,6 @@ public class CreateOrdersController implements Initializable {
     return db.getMeals();
   }
 
-  public List<Order> getOrders() throws SQLException {
-    DatabaseManager db = new DatabaseManager();
-    return db.getOrders();
-  }
-
-  public HashMap addMealHash(Meal meal, int quantity) {
-    HashMap<String, Object> mealMap = new HashMap<>();
-    mealMap.put("meal", meal);
-    mealMap.put("quantity", quantity);
-    return mealMap;
-  }
-
-  public HashMap addMealHash2(Meal meal) {
-    HashMap<String, Object> mealMap = new HashMap<>();
-    mealMap.put("meal", meal);
-//    mealMap.put("quantity", quantity);
-    return mealMap;
-  }
-
-  //      check if mealUUID is already in the list
-//      if yes, increment quantity
-//      if no, add new meal
-  public List<HashMap> addMealToList(List<HashMap> list, Meal meal, int quantity) {
-    List<HashMap> newList = new ArrayList<>();
-    boolean mealAlreadyInList = false;
-    for (HashMap mealMap : list) {
-      if (mealMap.get("meal").equals(meal)) {
-        mealAlreadyInList = true;
-        int newQuantity = (int) mealMap.get("quantity") + quantity;
-        newList.add(addMealHash(meal, newQuantity));
-      } else {
-        newList.add(mealMap);
-      }
-    }
-    if (!mealAlreadyInList) {
-      newList.add(addMealHash(meal, quantity));
-    }
-    return newList;
-  }
-
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
     acpInWorker.getChildren().remove(acpNewWorker);
@@ -138,25 +98,10 @@ public class CreateOrdersController implements Initializable {
       String activeStatus = meal.isActive() ? "actif" : "inactif";
       return new SimpleStringProperty(activeStatus);
     });
-//    colHours.setCellValueFactory(new PropertyValueFactory<>("hoursWorked"));
-//    colRole.setCellValueFactory(new PropertyValueFactory<>("role"));
-//    colArrived.setCellValueFactory(new PropertyValueFactory<>("arrivalDate"));
-//    colDeparture.setCellValueFactory(cellData -> {
-//      Meal meal = cellData.getValue();f
-//      String departureDate = meal.getDepartureDate().equals(worker.getArrivalDate()) ? "Non indiquÃ©" : String.valueOf(worker.getDepartureDate());
-//      return new SimpleStringProperty(departureDate);
-//    });
-    // add 2 boutons in colActions : edit and delete
     colActions.setCellFactory(param -> new TableCell<Meal, String>() {
-      //      private final Button btnEdit = new Button("Modifier");
       private final Button btnDelete = new Button("Ajouter");
-//      private final HBox pane = new HBox(btnDelete);
 
       {
-//        btnEdit.setOnAction(event -> {
-//          Meal meal = getTableView().getItems().get(getIndex());
-//          System.out.println("edit " + meal.getName());
-//        });
         btnDelete.setOnAction(event -> {
           Meal meal = getTableView().getItems().get(getIndex());
           System.out.println("Ajout de " + meal.getMealUUID());
@@ -166,18 +111,6 @@ public class CreateOrdersController implements Initializable {
           } catch (SQLException e) {
             e.printStackTrace();
           }
-
-//          colOrderQuantity.setCellValueFactory(new PropertyValueFactory<>("name"));
-//          tvbWorkers1.refresh();
-//          System.out.println(tvbOrder.getItems());
-
-//                    try {
-//                        DatabaseManager db = new DatabaseManager();
-////                        db.deleteWorker(worker);
-//                        observableWorkers.remove(worker);
-//                    } catch (SQLException e) {
-//                        throw new RuntimeException(e);
-//                    }
         });
       }
 
@@ -224,7 +157,7 @@ public class CreateOrdersController implements Initializable {
       meals.stream().forEach(System.out::println);
 
 
-      Table table = new Table("0d86ab6e-e9bd-11ed-a7c3-525400008e03",1, "Terrasse", 4, false);
+      Table table = new Table("0d86ab6e-e9bd-11ed-a7c3-525400008e03", 1, "Terrasse", 4, false);
 
       Order order = new Order(java.util.UUID.randomUUID().toString(), table, true, false, meals, new Timestamp(new Date().getTime()), null);
 
@@ -238,37 +171,6 @@ public class CreateOrdersController implements Initializable {
 
     try {
       List<Meal> meals = getMeals();
-      List<Order> orders = getOrders();
-      orders.forEach(order -> System.out.println(order.getMeals()));
-//      orders.forEach(order -> order.getMeals().forEach(meal -> System.out.println(meal.getName())));
-//      orders.forEach(order -> order.getMeals().forEach(meal -> System.out.println(((Meal) meal.get("meal")).getName())));
-
-//      List<Order> ordersMeal = orders.forEach(order -> order.getMeals().forEach(meal -> ((Meal) meal.get("meal")).getName()));
-
-      List<String> orderMeals = orders.stream()
-              .flatMap(order -> order.getMeals().stream())
-              .map(meal -> String.valueOf(((Meal) meal.get("meal"))))
-              .toList();
-//      System.out.println(orderMeals);
-
-//      forEach orderMeals print meal's name
-//      orderMeals.forEach(meal -> System.out.println(((Meal) meal.get("meal")).getName()));
-
-
-      orderMeals.forEach(meal -> System.out.println(meal));
-
-      orders.forEach(order -> order.getMeals());
-//      orders.forEach(Order::getMeals);
-//      System.out.println(ordersMeal);
-//
-//      meals.forEach(meal -> System.out.println(meal));
-//      orders.forEach(order -> System.out.println(order));
-
-
-      List<Meal> meals2 = orders.stream()
-              .flatMap(order -> order.getMeals().stream())
-              .map(meal -> (Meal) meal.get("meal"))
-              .toList();
       observableMeal = FXCollections.observableArrayList(meals);
       observableOrder = FXCollections.observableArrayList();
       tvbMeals.setItems(observableMeal);
