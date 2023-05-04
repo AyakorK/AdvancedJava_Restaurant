@@ -12,7 +12,15 @@ import java.util.ResourceBundle;
 
 public class SidebarController implements Initializable {
 
+  @FXML
   public AnchorPane acpCommand;
+
+  @FXML
+  public VBox acpBills;
+
+  @FXML
+  private Button btnBills;
+
   @FXML
   private Button btnMenu;
 
@@ -37,23 +45,30 @@ public class SidebarController implements Initializable {
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
 
-    acpCentre.getChildren().removeAll(vboxTest, acpMenu, acpCommand);
+    acpCentre.getChildren().removeAll(vboxTest, acpMenu, acpCommand, acpBills);
 
     imgLogo.setOnMouseClicked(e -> {
-      acpCentre.getChildren().removeAll(vboxTest, acpMenu, acpCommand);
+      acpCentre.getChildren().removeAll(vboxTest, acpMenu, acpCommand, acpBills);
       acpCentre.getChildren().add(acpHome);
     });
 
     btnMenu.setOnMouseClicked(e -> {
-      acpCentre.getChildren().removeAll(acpHome, vboxTest, acpCommand);
+      acpCentre.getChildren().removeAll(acpHome, vboxTest, acpCommand, acpBills);
       acpCentre.getChildren().add(acpMenu);
     });
 
     btnCommand.setOnMouseClicked(e -> {
-      acpCentre.getChildren().removeAll(acpHome, acpMenu, acpCommand);
+      acpCentre.getChildren().removeAll(acpHome, acpMenu, acpCommand, acpBills);
       acpCentre.getChildren().add(acpCommand);
     });
 
+    btnBills.setOnMouseClicked(e -> {
+      acpCentre.getChildren().removeAll(acpHome, acpMenu, acpCommand, acpBills);
+      acpCentre.getChildren().add(acpBills);
+    });
+
   }
+
+
 
 }
