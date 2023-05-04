@@ -80,7 +80,7 @@ public class NewTableController implements Initializable {
       int number = Integer.parseInt(txfTableNumber.getText());
       String location = (String) cbxLocation.getValue();
       int capacity = Integer.parseInt(txfTableCapacity.getText());
-      boolean isFull = true;
+      boolean isFull = false;
 
       addTable(number, location, capacity, isFull);
 
