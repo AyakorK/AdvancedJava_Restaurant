@@ -12,48 +12,48 @@ import java.util.ResourceBundle;
 
 public class SidebarController implements Initializable {
 
-    public AnchorPane acpCommand;
-    @FXML
-    private Button btnMenu;
+  public AnchorPane acpCommand;
+  @FXML
+  private Button btnMenu;
 
-    @FXML
-    private Button btnCommand;
+  @FXML
+  private Button btnCommand;
 
-    @FXML
-    private AnchorPane acpCentre;
+  @FXML
+  private AnchorPane acpCentre;
 
-    @FXML
-    private VBox vboxTest;
+  @FXML
+  private VBox vboxTest;
 
-    @FXML
-    private AnchorPane acpHome;
+  @FXML
+  private AnchorPane acpHome;
 
-    @FXML
-    private ImageView imgLogo;
+  @FXML
+  private ImageView imgLogo;
 
-    @FXML
-    private AnchorPane acpMenu;
+  @FXML
+  private AnchorPane acpMenu;
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
+  @Override
+  public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        acpCentre.getChildren().removeAll(vboxTest, acpMenu, acpCommand);
+    acpCentre.getChildren().removeAll(vboxTest, acpMenu, acpCommand);
 
-        imgLogo.setOnMouseClicked(e -> {
-            acpCentre.getChildren().removeAll(vboxTest, acpMenu, acpCommand);
-            acpCentre.getChildren().add(acpHome);
-        });
+    imgLogo.setOnMouseClicked(e -> {
+      acpCentre.getChildren().removeAll(vboxTest, acpMenu, acpCommand);
+      acpCentre.getChildren().add(acpHome);
+    });
 
-        btnMenu.setOnMouseClicked(e -> {
-            acpCentre.getChildren().removeAll(acpHome, vboxTest, acpCommand);
-            acpCentre.getChildren().add(acpMenu);
-        });
+    btnMenu.setOnMouseClicked(e -> {
+      acpCentre.getChildren().removeAll(acpHome, vboxTest, acpCommand);
+      acpCentre.getChildren().add(acpMenu);
+    });
 
-        btnCommand.setOnMouseClicked(e -> {
-            acpCentre.getChildren().removeAll(acpHome, acpMenu, acpCommand);
-            acpCentre.getChildren().add(acpCommand);
-        });
+    btnCommand.setOnMouseClicked(e -> {
+      acpCentre.getChildren().removeAll(acpHome, acpMenu, acpCommand);
+      acpCentre.getChildren().add(acpCommand);
+    });
 
-    }
+  }
 
 }
