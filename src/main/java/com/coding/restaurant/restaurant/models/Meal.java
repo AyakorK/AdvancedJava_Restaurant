@@ -18,8 +18,13 @@ public class Meal {
     this.description = description;
   }
 
-  public double getPrice() {
+  public
+  double getPrice() {
     return price;
+  }
+
+  public String getPriceString() {
+    return String.format("%.2f", getPrice());
   }
 
   public void setPrice(double price) {

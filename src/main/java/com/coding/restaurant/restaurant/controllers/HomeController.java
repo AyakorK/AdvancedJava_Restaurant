@@ -18,7 +18,6 @@ public class HomeController {
   public void initialize() throws SQLException {
     Service service = startService();
 
-    System.out.println(service.getWorkers());
     serviceTimeLeft.setText(service.getTimer(service));
 
     startTimerThread(service, serviceTimeLeft);

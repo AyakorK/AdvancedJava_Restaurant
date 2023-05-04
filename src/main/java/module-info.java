@@ -10,6 +10,7 @@ module com.coding.restaurant.restaurant {
   requires java.naming;
   requires mysql.connector.java;
   requires dotenv.java;
+  requires itextpdf;
   //requires eu.hansolo.tilesfx;
 
   opens com.coding.restaurant.restaurant to javafx.fxml;
