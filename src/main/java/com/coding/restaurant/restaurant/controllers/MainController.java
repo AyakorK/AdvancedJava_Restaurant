@@ -13,16 +13,17 @@ public class MainController {
   @FXML
   private Label welcomeText;
 
-    @FXML
-    protected void onHelloButtonClick() throws SQLException {
+  @FXML
+  protected void onHelloButtonClick() throws SQLException {
 //        welcomeText.setText("Welcome to JavaFX Application!");
-        listMeal();
-    }
-    public void listMeal() throws SQLException {
-        DatabaseManager db = new DatabaseManager();
-        List<MealsList> mealsLists = db.getMealsList();
-        List<Meal> meals = mealsLists.stream().map(MealsList::getMeals).flatMap(List::stream).collect(Collectors.toList());
-        meals.stream().forEach(meal -> System.out.println(meal.getName()));
+    listMeal();
+  }
 
-    }
+  public void listMeal() throws SQLException {
+    DatabaseManager db = new DatabaseManager();
+    List<MealsList> mealsLists = db.getMealsList();
+    List<Meal> meals = mealsLists.stream().map(MealsList::getMeals).flatMap(List::stream).collect(Collectors.toList());
+    meals.stream().forEach(meal -> System.out.println(meal.getName()));
+
+  }
 }

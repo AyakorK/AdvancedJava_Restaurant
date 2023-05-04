@@ -37,54 +37,62 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.coding.restaurant.restaurant.controllers.SidebarController">
-   <children>
-      <AnchorPane prefHeight="800.0" prefWidth="170.0" style="-fx-background-color: #411111;">
-         <children>
-            <VBox alignment="CENTER" prefHeight="530.0" prefWidth="170.0" spacing="50.0">
-               <children>
-                  <ImageView fx:id="imgLogo" fitHeight="170.0" fitWidth="210.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@assets/logoBuffle.png" />
-                     </image>
-                  </ImageView>
-                  <Button fx:id="btnMenu" mnemonicParsing="false" prefHeight="40.0" prefWidth="108.0" style="-fx-background-color: #f2efbe;" text="Menu">
-                     <font>
-                        <Font name="Avenir Book" size="13.0" />
-                     </font>
-                  </Button>
-                  <Button fx:id="btnCommand" mnemonicParsing="false" prefHeight="40.0" prefWidth="108.0" style="-fx-background-color: #f2efbe;" text="Commandes">
-                     <font>
-                        <Font name="Avenir Book" size="13.0" />
-                     </font>
-                  </Button>
-                  <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="108.0" style="-fx-background-color: #f2efbe;" text="Facture">
-                     <font>
-                        <Font name="Avenir Book" size="13.0" />
-                     </font>
-                  </Button>
-                  <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="108.0" style="-fx-background-color: #f2efbe;" text="Employés">
-                     <font>
-                        <Font name="Avenir Book" size="13.0" />
-                     </font>
-                  </Button>
-                  <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="108.0" style="-fx-background-color: #f2efbe;" text="Tables" textAlignment="CENTER">
-                     <font>
-                        <Font name="Avenir Book" size="13.0" />
-                     </font>
-                  </Button>
-               </children>
-            </VBox>
-         </children>
-      </AnchorPane>
-      <Separator layoutX="169.0" orientation="VERTICAL" prefHeight="800.0" prefWidth="0.0" />
-      <AnchorPane fx:id="acpCentre" layoutX="169.0" prefHeight="800.0" prefWidth="1040.0">
-         <children>
-            <fx:include fx:id="acpHome" source="home.fxml" />
-            <fx:include fx:id="acpMenu" source="menu.fxml" />
-            <fx:include fx:id="acpCommand" source="commands-dashboard.fxml" />
-            <fx:include fx:id="vboxTest" source="main-view.fxml" />
-         </children>
-      </AnchorPane>
-   </children>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0"
+            prefWidth="1200.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.coding.restaurant.restaurant.controllers.SidebarController">
+    <children>
+        <AnchorPane prefHeight="800.0" prefWidth="170.0" style="-fx-background-color: #411111;">
+            <children>
+                <VBox alignment="CENTER" prefHeight="530.0" prefWidth="170.0" spacing="50.0">
+                    <children>
+                        <ImageView fx:id="imgLogo" fitHeight="170.0" fitWidth="210.0" pickOnBounds="true"
+                                   preserveRatio="true">
+                            <image>
+                                <Image url="@assets/logoBuffle.png"/>
+                            </image>
+                        </ImageView>
+                        <Button fx:id="btnMenu" mnemonicParsing="false" prefHeight="40.0" prefWidth="108.0"
+                                style="-fx-background-color: #f2efbe;" text="Menu">
+                            <font>
+                                <Font name="Avenir Book" size="13.0"/>
+                            </font>
+                        </Button>
+                        <Button fx:id="btnCommand" mnemonicParsing="false" prefHeight="40.0" prefWidth="108.0"
+                                style="-fx-background-color: #f2efbe;" text="Commandes">
+                            <font>
+                                <Font name="Avenir Book" size="13.0"/>
+                            </font>
+                        </Button>
+                        <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="108.0"
+                                style="-fx-background-color: #f2efbe;" text="Facture">
+                            <font>
+                                <Font name="Avenir Book" size="13.0"/>
+                            </font>
+                        </Button>
+                        <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="108.0"
+                                style="-fx-background-color: #f2efbe;" text="Employés">
+                            <font>
+                                <Font name="Avenir Book" size="13.0"/>
+                            </font>
+                        </Button>
+                        <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="108.0"
+                                style="-fx-background-color: #f2efbe;" text="Tables" textAlignment="CENTER">
+                            <font>
+                                <Font name="Avenir Book" size="13.0"/>
+                            </font>
+                        </Button>
+                    </children>
+                </VBox>
+            </children>
+        </AnchorPane>
+        <Separator layoutX="169.0" orientation="VERTICAL" prefHeight="800.0" prefWidth="0.0"/>
+        <AnchorPane fx:id="acpCentre" layoutX="169.0" prefHeight="800.0" prefWidth="1040.0">
+            <children>
+                <fx:include fx:id="acpHome" source="home.fxml"/>
+                <fx:include fx:id="acpMenu" source="menu.fxml"/>
+                <fx:include fx:id="acpCommand" source="commands-dashboard.fxml"/>
+                <fx:include fx:id="vboxTest" source="main-view.fxml"/>
+            </children>
+        </AnchorPane>
+    </children>
 </AnchorPane>
