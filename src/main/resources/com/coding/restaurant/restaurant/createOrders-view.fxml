@@ -40,14 +40,19 @@
                               <Insets bottom="10.0" />
                            </VBox.margin>
                         </Label>
-                        <TableView fx:id="tvbWorkers1" maxWidth="-Infinity" prefHeight="459.0">
+                        <TableView fx:id="tvbOrder" maxWidth="-Infinity" prefHeight="459.0">
                            <columns>
                               <TableColumn fx:id="colOrderName" prefWidth="130.0" style="-fx-alignment: center" text="Nom" />
                               <TableColumn fx:id="colOrderPrice" prefWidth="130.0" style="-fx-alignment: center" text="Prix" />
-                              <TableColumn fx:id="colOrderQuantity" prefWidth="75.0" style="-fx-alignment: center" text="Quantiter" />
+                              <TableColumn fx:id="colOrderQuantity" prefWidth="75.0" style="-fx-alignment: center" text="Actif" />
                               <TableColumn fx:id="colActions1" prefWidth="141.666015625" style="-fx-alignment: center" text="Actions" />
                            </columns>
                         </TableView>
+                        <Button fx:id="btnValidateOrder" mnemonicParsing="false" text="Valider la commande">
+                           <VBox.margin>
+                              <Insets top="10.0" />
+                           </VBox.margin>
+                        </Button>
                      </children>
                   </VBox>
                </children>

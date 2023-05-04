@@ -70,7 +70,8 @@ public class DatabaseManager {
         double price = result.getDouble("price");
         String image = result.getString("image");
         boolean isActiveMeal = findActive(result);
-        Meal meal = new Meal(name, description, price, image, isActiveMeal);
+        String mealUUID = result.getString("UUID");
+        Meal meal = new Meal(name, description, price, image, isActiveMeal, mealUUID);
         meals.add(meal);
       }
     } catch (SQLException e) {
@@ -129,7 +130,7 @@ public class DatabaseManager {
     statement.setString(1, mealListUUID);
     ResultSet result = statement.executeQuery();
     while (result.next()) {
-      Meal meal = new Meal(result.getString("name"), result.getString("description"), result.getDouble("price"), result.getString("image"), findActive(result));
+      Meal meal = new Meal(result.getString("name"), result.getString("description"), result.getDouble("price"), result.getString("image"), findActive(result), result.getString("UUID"));
       mealsInList.add(meal);
     }
   }

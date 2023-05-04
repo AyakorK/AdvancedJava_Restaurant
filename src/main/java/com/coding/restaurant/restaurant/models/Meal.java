@@ -18,8 +18,7 @@ public class Meal {
     this.description = description;
   }
 
-  public
-  double getPrice() {
+  public double getPrice() {
     return price;
   }
 
@@ -53,8 +52,14 @@ public class Meal {
   private String image;
   private boolean isActive;
 
+  private String mealUUID;
 
-  public Meal(String name, String description, double price, String image, boolean isActive) {
+  public String getMealUUID() {
+    return mealUUID;
+  }
+
+  public Meal(String name, String description, double price, String image, boolean isActive, String mealUUID) {
+    this.mealUUID = mealUUID;
     this.name = name;
     this.description = description;
     this.price = price;
