@@ -2,143 +2,192 @@ package com.coding.restaurant.restaurant.controllers;
 
 import com.coding.restaurant.restaurant.models.Order;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
-import org.kordamp.bootstrapfx.scene.layout.Panel;
 
 import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.List;
 
+import static java.lang.Integer.parseInt;
+
 public class OrdersDashboardController {
   @FXML
-  private Panel ordersPanel;
-
+  public Button allOrdersButton;
   @FXML
-  private GridPane ordersGridPane;
+  private ListView<Order> ordersListView;
 
   public void initialize() {
-    displayOrders();
-  }
-
-  private void displayOrders() {
-    // Remove ordersGridPane rows
-    ordersGridPane.getChildren().clear();
     try {
-      List<Order> orders = new DatabaseManager().getOrders();
-
-      orders.stream()
-              .filter(Order::isWaiting)
-              .sorted(Comparator.comparing(Order::getOrderDate))
-              .forEach(this::addOrderRow);
-
-
+      ordersListView.setItems(filteredOrders());
     } catch (SQLException e) {
-      showError("Error loading orders", e);
+      e.printStackTrace();
     }
+
+    displayCells();
   }
 
-  private void showError(String errorLoadingOrders, SQLException e) {
-    Alert alert = new Alert(Alert.AlertType.ERROR);
-    alert.setTitle("Error");
-    alert.setHeaderText(errorLoadingOrders);
-    alert.setContentText(e.getMessage());
-    alert.showAndWait();
-  }
-
-  private void addOrderRow(Order order) {
-    GridPane row = new GridPane();
-
-    Label tableNumberLabel = new Label(String.valueOf(order.getTable().getNumber()));
-    row.add(tableNumberLabel, 0, 0);
-
-    Label timeLabel = new Label(order.getTimer());
-    row.add(timeLabel, 1, 0);
-
-    Label statusLabel = new Label(order.isWaiting() ? "En Attente" : "Servi");
-    row.add(statusLabel, 2, 0);
-
-    Label totalLabel = new Label(String.valueOf(order.getTotal()));
-    row.add(totalLabel, 3, 0);
-
-    Button detailsButton = new Button("Voir détails");
-    row.add(detailsButton, 4, 0);
-
-    Button validateButton = new Button("Valider");
-    validateButton.setOnAction(event -> {
-      try {
-        validateOrder(order);
-      } catch (SQLException e) {
-        e.printStackTrace();
-      }
-    });
-    row.add(validateButton, 5, 0);
-
-    Button cancelButton = new Button("Annuler");
-    cancelButton.setOnAction(event -> cancelOrder(order));
-    row.add(cancelButton, 6, 0);
-
-    ordersGridPane.addRow(ordersGridPane.getRowCount(), row);
-
-    startTimerThread(order, timeLabel);
-  }
-
-  private void validateOrder(Order order) throws SQLException {
-    order.setWaiting(false);
-    order.setDelivered(true);
-    order.setStatus("Payée");
-    updateOrderInDatabase(order);
-    createBill(order);
-  }
-
-  private void cancelOrder(Order order) {
-    order.setWaiting(false);
-    order.setDelivered(false);
-    order.setStatus("Annulée");
-    updateOrderInDatabase(order);
-  }
-
-  private void createBill(Order order) throws SQLException {
-    boolean isLate = order.getTimer().equals("Out of time");
-    double price = isLate ? order.getTotal() / 1.3 : order.getTotal();
+  public ObservableList<Order> filteredOrders() throws SQLException {
     DatabaseManager db = new DatabaseManager();
-    db.createBill(price, true);
+    List<Order> orders = db.getOrders().stream().filter(Order::isWaiting).sorted(Comparator.comparing(Order::getTimer)).toList();
+    ObservableList<Order> filteredOrder = FXCollections.observableArrayList();
+    filteredOrder.addAll(orders);
+
+    ordersListView.setItems(filteredOrder);
+    return filteredOrder;
   }
 
+  public ObservableList<Order> displayPassedOrders() throws SQLException {
+    DatabaseManager db = new DatabaseManager();
+    List<Order> orders = db.getOrders().stream().filter(order -> !order.isWaiting()).sorted(Comparator.comparing(Order::getTimer)).toList();
+    ObservableList<Order> filteredOrder = FXCollections.observableArrayList();
+    filteredOrder.addAll(orders);
 
-
-  private void updateOrderInDatabase(Order order) {
-    try {
-      new DatabaseManager().updateOrder(order);
-      displayOrders();
-    } catch (SQLException e) {
-      showError("Error updating order in database", e);
-    }
+    ordersListView.setItems(filteredOrder);
+    return filteredOrder;
   }
 
-  private void startTimerThread(Order order, Label timeLabel) {
-    Thread thread = new Thread(() -> {
-      while (order.isWaiting()) {
+  public void displayCells() {
+    ordersListView.setCellFactory(cell -> new OrderListCell());
+  }
+
+  private class OrderListCell extends ListCell<Order> {
+
+    private final GridPane totalGridPane = new GridPane();
+
+    private final Label timerLabel = new Label();
+
+    String outOfTime = "Out of time";
+
+    public OrderListCell() {
+      GridPane gridPane = new GridPane();
+      gridPane.add(timerLabel, 1, 0);
+      Button validateButton = new Button("Valider");
+      gridPane.add(validateButton, 2, 0);
+      Button cancelButton = new Button("Annuler");
+      gridPane.add(cancelButton, 3, 0);
+      totalGridPane.getChildren().add(gridPane);
+
+      validateButton.setOnAction(event -> {
         try {
-          Thread.sleep(1000);
-        } catch (InterruptedException e) {
+          validateOrder(getItem());
+          filteredOrders();
+        } catch (SQLException e) {
           e.printStackTrace();
-          Thread.currentThread().interrupt();
         }
-        Platform.runLater(() -> {
-          // If the order is outdated stop the thread
-          if (order.getTimer().equals("Out of time")) {
+      });
+
+      cancelButton.setOnAction(event -> {
+        try {
+          cancelOrder(getItem());
+        } catch (SQLException e) {
+          e.printStackTrace();
+        }
+      });
+    }
+
+    @Override
+    protected void updateItem(Order order, boolean empty) {
+      super.updateItem(order, empty);
+
+      if (empty || order == null) {
+        setText(null);
+        setGraphic(null);
+        timerLabel.setText("");
+      } else {
+        setText(order.getOrderDate() + " " + order.getTable().getNumber() + " " + orderState(order) + " " + order.getTotal() + "€");
+        timerLabel.setText(order.getTimer());
+        startTimerThread(order, timerLabel);
+        setGraphic(totalGridPane);
+      }
+    }
+
+    private String orderState(Order order) {
+      return order.isWaiting() ? "En Attente" : isDelivered(order);
+    }
+
+    private String isDelivered(Order order) {
+      return order.isDelivered() ? "Commande Servie" : "Commande annulée";
+    }
+
+    private void validateOrder(Order order) throws SQLException {
+      order.setWaiting(false);
+      order.setDelivered(true);
+      order.setStatus("Payée");
+      updateOrderInDatabase(order);
+      createBill(order);
+      filteredOrders();
+    }
+
+    private void cancelOrder(Order order) throws SQLException {
+      order.setWaiting(false);
+      order.setDelivered(false);
+      order.setStatus("Annulée");
+      updateOrderInDatabase(order);
+      filteredOrders();
+    }
+
+    private void createBill(Order order) throws SQLException {
+      boolean isLate = order.getTimer().equals(outOfTime);
+      double price = isLate ? order.getTotal() / 1.3 : order.getTotal();
+      DatabaseManager db = new DatabaseManager();
+      db.createBill(price, true);
+    }
+
+
+
+    private void updateOrderInDatabase(Order order) {
+      try {
+        new DatabaseManager().updateOrder(order);
+        displayCells();
+      } catch (SQLException e) {
+        showError(e);
+      }
+    }
+
+    private void startTimerThread(Order order, Label label) {
+      Thread thread = new Thread(() -> {
+        while (order.isWaiting()) {
+          try {
+            Thread.sleep(1000);
+          } catch (InterruptedException e) {
+            e.printStackTrace();
             Thread.currentThread().interrupt();
           }
-          timeLabel.setText(order.getTimer());
-        });
-      }
-    });
+          Platform.runLater(() -> {
+            if (order.getTimer().equals(outOfTime)) {
+              Thread.currentThread().interrupt();
+            }
+            label.setText(order.getTimer());
+            checkColor(label, order);
+          });
+        }
+      });
 
-    thread.setDaemon(true);
-    thread.start();
+      thread.setDaemon(true);
+      thread.start();
+    }
+
+    private void checkColor(Label label, Order order) {
+      if (order.getTimer().equals(outOfTime)) {
+        label.setStyle("-fx-text-fill: red");
+      } else if (order.getTimer().split(":")[0].matches("\\d+") && parseInt(order.getTimer().split(":")[0]) < 3) {
+        label.setStyle("-fx-text-fill: orange");
+      } else {
+        label.setStyle("-fx-text-fill: green");
+      }
+    }
+
+
+    private void showError(SQLException e) {
+      Alert alert = new Alert(Alert.AlertType.ERROR);
+      alert.setTitle("Error");
+      alert.setHeaderText("Error updating order in database");
+      alert.setContentText(e.getMessage());
+      alert.showAndWait();
+    }
   }
 }

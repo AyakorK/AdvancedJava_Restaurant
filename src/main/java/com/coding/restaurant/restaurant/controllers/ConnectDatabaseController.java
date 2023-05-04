@@ -8,7 +8,11 @@ import io.github.cdimascio.dotenv.Dotenv;
 
 public class ConnectDatabaseController {
 
+
   private static MysqlDataSource dataSource;
+
+  private ConnectDatabaseController() {
+  }
 
   public static Connection getConnection() throws SQLException {
     if (dataSource == null) {

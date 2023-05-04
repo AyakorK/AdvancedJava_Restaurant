@@ -13,6 +13,11 @@ public class DatabaseManager {
 
   Connection db;
 
+  String firstNameText = "FirstName";
+  String hoursWorkedText = "HoursWorked";
+  String arrivalDateText = "arrivalDate";
+  String departureDateText = "departureDate";
+
   public DatabaseManager() throws SQLException {
     this.db = ConnectDatabaseController.getConnection();
   }
@@ -222,6 +227,31 @@ public class DatabaseManager {
     return tables;
   }
 
+  public static void addTable(int number, String location, int size, boolean isFull) {
+    try (Connection connexion = ConnectDatabaseController.getConnection();
+         PreparedStatement statement = connexion.prepareStatement("INSERT INTO TableRestaurant (uuid, numero, location, size, isFull) VALUES (?, ?, ?, ?, ?)")) {
+      statement.setString(1, DatabaseManager.generateUUID());
+      statement.setInt(2, number);
+      statement.setString(3, location);
+      statement.setInt(4, size);
+      statement.setBoolean(5, isFull);
+      statement.executeUpdate();
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+  }
+
+  public Table deleteTable(int number) {
+    try (PreparedStatement statement = this.db.prepareStatement("DELETE FROM TableRestaurant WHERE numero = ?")) {
+      statement.setInt(1, number);
+      statement.executeUpdate();
+      return new Table(number, null, 0, false);
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    return null;
+  }
+
   // Get the table (Table)
   public Table getTable(String tableUUID) {
     try (PreparedStatement statement = this.db.prepareStatement("SELECT * FROM TableRestaurant WHERE uuid = ?")) {
@@ -244,19 +274,19 @@ public class DatabaseManager {
       while (result.next()) {
         String workerUUID = result.getString("UUID");
         String name = result.getString("Name");
-        String surname = result.getString("FirstName");
+        String surname = result.getString(firstNameText);
         Boolean isActive = findActive(result);
-        Integer hoursWorked = result.getInt("HoursWorked");
+        Integer hoursWorked = result.getInt(hoursWorkedText);
         String role = result.getString("role");
-        Date arrivalDate = result.getDate("arrivalDate");
-        Date departureDate = result.getDate("departureDate");
+        Date arrivalDate = result.getDate(arrivalDateText);
+        Date departureDate = result.getDate(departureDateText);
         int age = result.getInt("Age");
         Worker worker = new Worker(workerUUID, name, surname, isActive, hoursWorked, role, arrivalDate, departureDate, age);
         workers.add(worker);
       }
 
     } catch (SQLException e) {
-      throw new RuntimeException(e);
+      e.printStackTrace();
     }
     return workers;
   }
@@ -267,7 +297,7 @@ public class DatabaseManager {
       statement.setString(2, surname);
       ResultSet result = statement.executeQuery();
       if (result.next()) {
-        return new Worker(result.getString("UUID"), result.getString("Name"), result.getString("FirstName"), findActive(result), result.getInt("HoursWorked"), result.getString("role"), result.getDate("arrivalDate"), result.getDate("departureDate"), result.getInt("Age"));
+        return new Worker(result.getString("UUID"), result.getString("Name"), result.getString(firstNameText), findActive(result), result.getInt(hoursWorkedText), result.getString("role"), result.getDate(arrivalDateText), result.getDate(departureDateText), result.getInt("Age"));
       }
     } catch (SQLException e) {
       e.printStackTrace();
@@ -275,9 +305,48 @@ public class DatabaseManager {
     return null;
   }
 
-  private boolean findActive(ResultSet result) throws SQLException {
-    return result.getBoolean("isActive");
+    public static void addWorker(String name, String firstName, Boolean isActive, Double hoursWorked, String role, java.util.Date arrivalDate, java.util.Date departureDate, Integer age) {
+        try (Connection connexion = ConnectDatabaseController.getConnection();
+             PreparedStatement statement = connexion.prepareStatement("INSERT INTO Worker (UUID, name, firstName, isActive, hoursWorked, role, arrivalDate, departureDate, age ) VALUES (?,?, ?, ?, ?, ?, ?, ?, ?)")) {
+            statement.setString(1, DatabaseManager.generateUUID());
+            statement.setString(2, name);
+            statement.setString(3, firstName);
+            statement.setBoolean(4, isActive);
+            statement.setDouble(5, hoursWorked);
+            statement.setString(6, role);
+            statement.setTimestamp(7, new java.sql.Timestamp(arrivalDate.getTime()));
+            statement.setTimestamp(8, new java.sql.Timestamp(departureDate.getTime()));
+            statement.setInt(9, age);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+  //  delete a worker
+  public void deleteWorker(String workerUUID) {
+    // update isActive in false & update departureDate to now
+    try (PreparedStatement statement = this.db.prepareStatement("UPDATE Worker SET isActive = false, departureDate = NOW() WHERE UUID = ?")) {
+      statement.setString(1, workerUUID);
+      statement.executeUpdate();
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
   }
+
+  public void activeWorker(String workerUUID) {
+    // update isActive in true
+    try (PreparedStatement statement = this.db.prepareStatement("UPDATE Worker SET isActive = true WHERE UUID = ?")) {
+      statement.setString(1, workerUUID);
+      statement.executeUpdate();
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+  }
+
+    private boolean findActive(ResultSet result) throws SQLException {
+        return result.getBoolean("isActive");
+    }
 
   public Service createService(Service service) {
     // Search if there is already a service with the same date and the same period AND that has been created more than 3h ago
@@ -328,7 +397,7 @@ public class DatabaseManager {
     statement.setString(1, serviceUUID);
     ResultSet result = statement.executeQuery();
     while (result.next()) {
-      Worker worker = new Worker(result.getString("UUID"), result.getString("Name"), result.getString("FirstName"), findActive(result), result.getInt("HoursWorked"), result.getString("role"), result.getDate("arrivalDate"), result.getDate("departureDate"), result.getInt("Age"));
+      Worker worker = new Worker(result.getString("UUID"), result.getString("Name"), result.getString(firstNameText), findActive(result), result.getInt(hoursWorkedText), result.getString("role"), result.getDate(arrivalDateText), result.getDate(departureDateText), result.getInt("Age"));
       workersInService.add(worker);
     }
   }
@@ -373,5 +442,6 @@ public class DatabaseManager {
               }
             });
   }
+
 }
 

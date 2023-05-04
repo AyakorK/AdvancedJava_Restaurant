@@ -8,15 +8,16 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="CENTER" prefHeight="800.0" prefWidth="1040.0" spacing="20.0" xmlns="http://javafx.com/javafx/19"
+<VBox fx:id="vbxTable" alignment="CENTER" prefHeight="800.0" prefWidth="1040.0" spacing="20.0"
+      xmlns="http://javafx.com/javafx/19"
       xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.coding.restaurant.restaurant.controllers.TableController">
     <Label text="Tables"/>
 
     <HBox alignment="TOP_CENTER" spacing="20">
-        <ToggleButton fx:id="toggleButton" onAction="#showFreeTables" text="Voir les tables libres"/>
-        <Button onAction="#showIndoorTables" text="Tables en intérieur"/>
-        <Button onAction="#showOutdoorTables" text="Tables en terrasse"/>
-        <Button onAction="#createTable" text="Créer une table"/>
+        <ToggleButton fx:id="toggleFreeTables" onAction="#showFreeTables" text="Voir les tables libres"/>
+        <ToggleButton fx:id="toggleIndoorTables" onAction="#showIndoorTables" text="Tables en intérieur"/>
+        <ToggleButton fx:id="toggleTerraceTables" onAction="#showOutdoorTables" text="Tables en terrasse"/>
+        <Button fx:id="createTable" onAction="#createTable" text="Créer une table"/>
     </HBox>
 
     <ListView fx:id="listView"/>

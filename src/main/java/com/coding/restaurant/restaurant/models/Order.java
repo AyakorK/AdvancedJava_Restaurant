@@ -13,16 +13,16 @@ public class Order {
     return isWaiting;
   }
 
-  public boolean setWaiting(boolean waiting) {
-    return this.isWaiting = waiting;
+  public void setWaiting(boolean waiting) {
+    this.isWaiting = waiting;
   }
 
   public boolean isDelivered() {
     return isDelivered;
   }
 
-  public boolean setDelivered(boolean delivered) {
-    return this.isDelivered = delivered;
+  public void setDelivered(boolean delivered) {
+    this.isDelivered = delivered;
   }
 
 
@@ -30,8 +30,8 @@ public class Order {
     return orderDate;
   }
 
-  public Timestamp setOrderDate(Timestamp orderDate) {
-    return this.orderDate = orderDate;
+  public void setOrderDate(Timestamp orderDate) {
+    this.orderDate = orderDate;
   }
 
   public List<HashMap> getMeals() {
