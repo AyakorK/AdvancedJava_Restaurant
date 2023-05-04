@@ -1,5 +1,8 @@
 package com.coding.restaurant.restaurant.Controller;
 
+import com.coding.restaurant.restaurant.Model.Meal;
+import com.coding.restaurant.restaurant.Model.MealsList;
+import com.coding.restaurant.restaurant.Model.Order;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -14,27 +17,24 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class MainController {
-    @FXML
-    private Label welcomeText;
+  @FXML
+  private Label welcomeText;
 
     @FXML
-    protected void onHelloButtonClick() {
+    protected void onHelloButtonClick() throws SQLException {
 //        welcomeText.setText("Welcome to JavaFX Application!");
-        listerUtilisateurs();
+        listMeal();
     }
-    public void listerUtilisateurs() {
-        try (Connection connexion = ConnectDatabaseController.getConnexion();
-             PreparedStatement statement = connexion.prepareStatement("SELECT * FROM Bill");
-             ResultSet resultat = statement.executeQuery()) {
-            while (resultat.next()) {
-                System.out.println(resultat.getString("amount"));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    public void listMeal() throws SQLException {
+        DatabaseManager db = new DatabaseManager();
+        List<MealsList> mealsLists = db.getMealsList();
+        List<Meal> meals = mealsLists.stream().map(MealsList::getMeals).flatMap(List::stream).collect(Collectors.toList());
+        meals.stream().forEach(meal -> System.out.println(meal.getName()));
+
     }
-
-
 }

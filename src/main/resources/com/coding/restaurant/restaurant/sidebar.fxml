@@ -81,6 +81,7 @@
       <AnchorPane fx:id="acpCentre" layoutX="169.0" prefHeight="800.0" prefWidth="1040.0">
          <children>
             <fx:include fx:id="acpHome" source="home.fxml" />
+            <fx:include fx:id="acpMenu" source="menu.fxml" />
             <fx:include fx:id="vboxTest" source="main-view.fxml" />
             <fx:include fx:id="acpWorker" source="worker-view.fxml" />
          </children>

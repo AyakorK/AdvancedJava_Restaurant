@@ -7,6 +7,7 @@ module com.coding.restaurant.restaurant {
     requires net.synedra.validatorfx;
     requires org.kordamp.bootstrapfx.core;
     requires java.sql;
+    requires java.naming;
     requires mysql.connector.java;
     requires dotenv.java;
     //requires eu.hansolo.tilesfx;

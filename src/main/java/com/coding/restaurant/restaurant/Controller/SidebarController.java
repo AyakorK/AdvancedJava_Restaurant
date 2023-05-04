@@ -14,8 +14,10 @@ public class SidebarController implements Initializable {
 
     @FXML
     private Button btnMenu;
+
     @FXML
     private Button btnCommand;
+
     @FXML
     private Button btnWorker;
 
@@ -32,28 +34,33 @@ public class SidebarController implements Initializable {
     @FXML
     private ImageView imgLogo;
 
+    @FXML
+    private AnchorPane acpMenu;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        acpCentre.getChildren().removeAll(vboxTest, acpWorker);
+        acpCentre.getChildren().removeAll(vboxTest, acpMenu, acpWorker);
 
         imgLogo.setOnMouseClicked(e -> {
-            acpCentre.getChildren().removeAll(vboxTest, acpWorker);
+            acpCentre.getChildren().removeAll(vboxTest, acpMenu, acpWorker);
             acpCentre.getChildren().add(acpHome);
         });
 
         btnMenu.setOnMouseClicked(e -> {
-            acpCentre.getChildren().removeAll(acpHome, acpWorker);
-            acpCentre.getChildren().add(vboxTest);
+            acpCentre.getChildren().removeAll(acpHome, vboxTest, acpWorker);
+            acpCentre.getChildren().add(acpMenu);
         });
 
-        btnCommand.setOnMouseClicked(e -> acpCentre.getChildren().removeAll(vboxTest, acpHome, acpWorker));
+        btnCommand.setOnMouseClicked(e -> {
+            acpCentre.getChildren().removeAll(vboxTest, acpHome, acpMenu, acpWorker);
+        });
 
         btnWorker.setOnMouseClicked(e -> {
             acpCentre.getChildren().removeAll(vboxTest, acpHome);
             acpCentre.getChildren().add(acpWorker);
         });
+
     }
 
 }
