@@ -184,6 +184,20 @@ public class DatabaseManager {
     return tables;
   }
 
+  public Table createTable(int number, String location, int size, boolean isFull) {
+    try (PreparedStatement statement = this.db.prepareStatement("INSERT INTO TableRestaurant (numero, location, size, isFull) VALUES (?, ?, ?, ?)")) {
+      statement.setInt(1, number);
+      statement.setString(2, location);
+      statement.setInt(3, size);
+      statement.setBoolean(4, isFull);
+      statement.executeUpdate();
+      return new Table(number, location, size, isFull);
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    return null;
+  }
+
   // Get the table (Table)
   public Table getTable(String tableUUID) {
     try (PreparedStatement statement = this.db.prepareStatement("SELECT * FROM TableRestaurant WHERE uuid = ?")) {
@@ -335,5 +349,7 @@ public class DatabaseManager {
               }
             });
   }
+
+
 }
 

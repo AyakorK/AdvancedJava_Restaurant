@@ -29,7 +29,16 @@ public class TableController {
   private ListView<Table> listView;
 
   @FXML
-  private ToggleButton toggleButton;
+  private ToggleButton toggleFreeTables;
+
+  @FXML
+  private ToggleButton toggleIndoorTables;
+
+  @FXML
+  private ToggleButton toggleTerraceTables;
+
+  @FXML
+  private Button createTable;
 
   public ObservableList<Table> showTables() throws SQLException {
     DatabaseManager db = new DatabaseManager();
@@ -39,10 +48,11 @@ public class TableController {
     return showTables;
   }
 
-  public void showFreeTables(ActionEvent actionEvent) {
-    if (toggleButton.isSelected()) {
+  public void showFreeTables() {
+    if (toggleFreeTables.isSelected()) {
       try {
-        listView.setItems(showTables().filtered(table -> table.isFull()));
+        showTables().forEach(table -> System.out.println(table.getLocation()));
+        listView.setItems(showTables().filtered(Table::isFull));
       } catch (SQLException e) {
         e.printStackTrace();
       }
@@ -53,6 +63,52 @@ public class TableController {
         e.printStackTrace();
       }
     }
+  }
+
+  public void showIndoorTables() {
+    if (toggleIndoorTables.isSelected()) {
+      try {
+        listView.setItems(showTables().filtered(table -> table.getLocation().equalsIgnoreCase("Intérieur")));
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
+    } else {
+      try {
+        listView.setItems(showTables());
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
+    }
+  }
+
+  public void showOutdoorTables(ActionEvent actionEvent) {
+    if (toggleTerraceTables.isSelected()) {
+      try {
+        listView.setItems(showTables().filtered(table -> table.getLocation().equals("Terrasse")));
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
+    } else {
+      try {
+        listView.setItems(showTables());
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
+    }
+  }
+
+  public void createTable(ActionEvent actionEvent) {
+    //créer une nouvelle table
+    TextInputDialog dialog = new TextInputDialog();
+    dialog.setTitle("Créer une nouvelle table");
+    dialog.setHeaderText("Créer une nouvelle table");
+    // ajouter le nombre de la table, un select pour choisir si c'est intérieur ou terrasse, le nombre de place et mettre si elle est pleine ou pas
+
+    Optional<String> result = dialog.showAndWait();
+    if (result.isPresent()) {
+      System.out.println("Your name: " + result.get());
+    }
+
   }
 
   public void initialize() {
@@ -117,13 +173,16 @@ public class TableController {
             alert.getButtonTypes().setAll(deleteButtonType, cancelButtonType);
             Optional<ButtonType> result = alert.showAndWait();
             if (result.isPresent() && result.get() == deleteButtonType) {
-              // Supprimer la table de la liste
-              listView.getItems().remove(item);
+              // delete table from TableRestaurant and update the ListView
+              try {
+                DatabaseManager db = new DatabaseManager();
+                List<Table> tables = db.getTables();
+                tables.remove(item);
+                listView.setItems(showTables());
+              } catch (SQLException e) {
+                e.printStackTrace();
+              }
             }
-          });
-          addButton.setOnAction(event -> {
-            // Ajouter une commande pour la table sélectionnée
-            // ...
           });
 
           // Créer un conteneur VBox pour contenir les boutons
@@ -144,16 +203,6 @@ public class TableController {
         }
       }
     });
-  }
-
-
-  public void showIndoorTables(ActionEvent actionEvent) {
-  }
-
-  public void showOutdoorTables(ActionEvent actionEvent) {
-  }
-
-  public void createTable(ActionEvent actionEvent) {
   }
 }
 
