@@ -1,7 +1,9 @@
 package com.coding.restaurant.restaurant.controllers;
 
+import com.coding.restaurant.restaurant.models.Meal;
 import com.coding.restaurant.restaurant.models.Table;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -16,6 +18,9 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import org.kordamp.bootstrapfx.BootstrapFX;
 
+
+import java.sql.SQLException;
+import java.util.List;
 import java.util.Optional;
 
 public class TableController {
@@ -26,14 +31,36 @@ public class TableController {
   @FXML
   private ToggleButton toggleButton;
 
+  public ObservableList<Table> showTables() throws SQLException {
+    DatabaseManager db = new DatabaseManager();
+    List<Table> tables = db.getTables();
+    ObservableList<Table> showTables = FXCollections.observableArrayList();
+    showTables.addAll(tables);
+    return showTables;
+  }
+
+  public void showFreeTables(ActionEvent actionEvent) {
+    if (toggleButton.isSelected()) {
+      try {
+        listView.setItems(showTables().filtered(table -> table.isFull()));
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
+    } else {
+      try {
+        listView.setItems(showTables());
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
+    }
+  }
 
   public void initialize() {
-    // Remplir la ListView avec des données de test
-    Table table1 = new Table(1, "Terrasse", 4, false);
-    Table table2 = new Table(2, "Intérieur", 6, true);
-    Table table3 = new Table(3, "Terrasse", 2, true);
-    Table table4 = new Table(4, "Intérieur", 8, false);
-    listView.getItems().addAll(table1, table2, table3, table4);
+    try {
+      listView.setItems(showTables());
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
 
     // Personnaliser l'apparence de chaque cellule de la ListView
     listView.setCellFactory(param -> new ListCell<>() {
@@ -119,8 +146,6 @@ public class TableController {
     });
   }
 
-  public void showFreeTables(ActionEvent actionEvent) {
-  }
 
   public void showIndoorTables(ActionEvent actionEvent) {
   }
