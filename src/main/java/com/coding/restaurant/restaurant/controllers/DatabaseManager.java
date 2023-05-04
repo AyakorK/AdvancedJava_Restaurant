@@ -166,14 +166,22 @@ public class DatabaseManager {
   }
 
   //    // Get the tables (Table)
-  public ResultSet getTables() {
+  public List<Table> getTables() {
+    List<Table> tables = new ArrayList<>();
     try (PreparedStatement statement = this.db.prepareStatement("SELECT * FROM TableRestaurant");
          ResultSet result = statement.executeQuery()) {
-      return result;
+      while (result.next()) {
+        int number = result.getInt("numero");
+        String location = result.getString("location");
+        int size = result.getInt("size");
+        boolean isFull = result.getBoolean("isFull");
+        Table table = new Table(number, location, size, isFull);
+        tables.add(table);
+      }
     } catch (SQLException e) {
       e.printStackTrace();
     }
-    return null;
+    return tables;
   }
 
   // Get the table (Table)
