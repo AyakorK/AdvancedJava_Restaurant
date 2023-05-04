@@ -38,6 +38,16 @@ public class Order {
     return meals;
   }
 
+//  addMeal
+
+  public void addMeal(Meal meal, int quantity) {
+    HashMap<String, Object> mealMap = new HashMap<>();
+    mealMap.put("meal", meal);
+    mealMap.put("quantity", quantity);
+    this.meals.add(mealMap);
+  }
+
+
   public double getTotal() {
     return this.meals.stream()
             .mapToDouble(meal -> ((Meal) meal.get("meal")).getPrice()

@@ -1,6 +1,7 @@
 package com.coding.restaurant.restaurant.controllers;
 
 import com.coding.restaurant.restaurant.models.Meal;
+import com.coding.restaurant.restaurant.models.Order;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -19,6 +20,7 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 public class CreateOrdersController implements Initializable {
 
@@ -34,7 +36,9 @@ public class CreateOrdersController implements Initializable {
   private VBox vbxWorker;
 
   @FXML
-  private TableView<Meal> tvbWorkers;
+  private TableView<Meal> tvbMeals;
+  @FXML
+  private TableView<Meal> tvbWorkers1;
 
   @FXML
   private TableColumn<Meal, String> colName;
@@ -53,11 +57,26 @@ public class CreateOrdersController implements Initializable {
   @FXML
   private TableColumn<Meal, String> colActions;
 
+  @FXML
+  private TableColumn<Meal, String> colOrderName;
+
+  @FXML
+  private TableColumn<Meal, String> colOrderPrice;
+
+  @FXML
+  private TableColumn<Meal, String> colOrderQuantity;
+
   private ObservableList<Meal> observableMeal;
+  private ObservableList<Meal> observableOrder;
 
   public List<Meal> getMeals() throws SQLException {
     DatabaseManager db = new DatabaseManager();
     return db.getMeals();
+  }
+
+  public List<Order> getOrders() throws SQLException {
+    DatabaseManager db = new DatabaseManager();
+    return db.getOrders();
   }
 
   @Override
@@ -71,6 +90,7 @@ public class CreateOrdersController implements Initializable {
 
 //    colFirstName.setCellValueFactory(new PropertyValueFactory<>("firstName"));
     colName.setCellValueFactory(new PropertyValueFactory<>("name"));
+    colOrderName.setCellValueFactory(new PropertyValueFactory<>("name"));
     colPrice.setCellValueFactory(new PropertyValueFactory<>("price"));
     colActive.setCellValueFactory(cellData -> {
       Meal meal = cellData.getValue();
@@ -87,18 +107,20 @@ public class CreateOrdersController implements Initializable {
 //    });
     // add 2 boutons in colActions : edit and delete
     colActions.setCellFactory(param -> new TableCell<Meal, String>() {
-      private final Button btnEdit = new Button("Modifier");
-      private final Button btnDelete = new Button("Supprimer");
-      private final HBox pane = new HBox(btnEdit, btnDelete);
+      //      private final Button btnEdit = new Button("Modifier");
+      private final Button btnDelete = new Button("Ajouter");
+//      private final HBox pane = new HBox(btnDelete);
 
       {
-        btnEdit.setOnAction(event -> {
-          Meal meal = getTableView().getItems().get(getIndex());
-          System.out.println("edit " + meal.getName());
-        });
+//        btnEdit.setOnAction(event -> {
+//          Meal meal = getTableView().getItems().get(getIndex());
+//          System.out.println("edit " + meal.getName());
+//        });
         btnDelete.setOnAction(event -> {
           Meal meal = getTableView().getItems().get(getIndex());
-          System.out.println("delete " + meal.getName());
+          System.out.println("Ajoute de " + meal.getName());
+//          colOrderQuantity.setCellValueFactory(new PropertyValueFactory<>("name"));
+//          tvbWorkers1.refresh();
 //                    try {
 //                        DatabaseManager db = new DatabaseManager();
 ////                        db.deleteWorker(worker);
@@ -112,15 +134,48 @@ public class CreateOrdersController implements Initializable {
       @Override
       protected void updateItem(String item, boolean empty) {
         super.updateItem(item, empty);
-        setGraphic(empty ? null : pane);
+        setGraphic(empty ? null : btnDelete);
       }
     });
 
 
     try {
       List<Meal> meals = getMeals();
+      List<Order> orders = getOrders();
+      orders.forEach(order -> System.out.println(order.getMeals()));
+//      orders.forEach(order -> order.getMeals().forEach(meal -> System.out.println(meal.getName())));
+//      orders.forEach(order -> order.getMeals().forEach(meal -> System.out.println(((Meal) meal.get("meal")).getName())));
+
+//      List<Order> ordersMeal = orders.forEach(order -> order.getMeals().forEach(meal -> ((Meal) meal.get("meal")).getName()));
+
+      List<String> orderMeals = orders.stream()
+              .flatMap(order -> order.getMeals().stream())
+              .map(meal -> String.valueOf(((Meal) meal.get("meal"))))
+              .toList();
+//      System.out.println(orderMeals);
+
+//      forEach orderMeals print meal's name
+//      orderMeals.forEach(meal -> System.out.println(((Meal) meal.get("meal")).getName()));
+
+
+      orderMeals.forEach(meal -> System.out.println(meal));
+
+      orders.forEach(order -> order.getMeals());
+//      orders.forEach(Order::getMeals);
+//      System.out.println(ordersMeal);
+//
+//      meals.forEach(meal -> System.out.println(meal));
+//      orders.forEach(order -> System.out.println(order));
+
+
+      List<Meal> meals2 = orders.stream()
+              .flatMap(order -> order.getMeals().stream())
+              .map(meal -> (Meal) meal.get("meal"))
+              .toList();
       observableMeal = FXCollections.observableArrayList(meals);
-      tvbWorkers.setItems(observableMeal);
+      observableOrder = FXCollections.observableArrayList(meals2);
+      tvbMeals.setItems(observableMeal);
+      tvbWorkers1.setItems(observableOrder);
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }

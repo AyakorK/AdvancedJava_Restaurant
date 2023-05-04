@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -15,26 +16,36 @@
         <Button fx:id="btnNewWorker" mnemonicParsing="false" text="Ajouter un nouvel employé" />
             <HBox prefHeight="593.0" prefWidth="1040.0">
                <children>
-                  <VBox>
+                  <VBox alignment="CENTER" prefHeight="593.0" prefWidth="545.0">
                      <children>
-                    <TableView fx:id="tvbWorkers" maxWidth="-Infinity" prefHeight="593.0" prefWidth="515.0">
+                        <Label prefHeight="30.0" prefWidth="30.0" text="Plats">
+                           <VBox.margin>
+                              <Insets bottom="10.0" />
+                           </VBox.margin>
+                        </Label>
+                    <TableView fx:id="tvbMeals" maxWidth="-Infinity" prefHeight="554.0" prefWidth="517.0">
                       <columns>
                         <TableColumn fx:id="colName" prefWidth="130.0" style="-fx-alignment: center" text="Nom" />
                         <TableColumn fx:id="colPrice" prefWidth="130.0" style="-fx-alignment: center" text="Prix" />
-                        <TableColumn fx:id="colActive" prefWidth="75.0" style="-fx-alignment: center" text="Actif" />
-                        <TableColumn fx:id="colActions" prefWidth="180.0" style="-fx-alignment: center" text="Actions" />
+                        <TableColumn fx:id="colActive" prefWidth="93.56158447265625" style="-fx-alignment: center" text="Actif" />
+                        <TableColumn fx:id="colActions" prefWidth="162.0" style="-fx-alignment: center" text="Actions" />
                       </columns>
                     </TableView>
                      </children>
                   </VBox>
-                  <VBox prefHeight="593.0" prefWidth="509.0">
+                  <VBox alignment="TOP_CENTER" prefHeight="593.0" prefWidth="509.0">
                      <children>
-                        <TableView fx:id="tvbWorkers1" maxWidth="-Infinity" prefHeight="500.0" prefWidth="506.0">
+                        <Label prefHeight="30.0" prefWidth="72.0" text="Commande">
+                           <VBox.margin>
+                              <Insets bottom="10.0" />
+                           </VBox.margin>
+                        </Label>
+                        <TableView fx:id="tvbWorkers1" maxWidth="-Infinity" prefHeight="459.0">
                            <columns>
-                              <TableColumn fx:id="colName1" prefWidth="130.0" style="-fx-alignment: center" text="Nom" />
-                              <TableColumn fx:id="colPrice1" prefWidth="130.0" style="-fx-alignment: center" text="Prix" />
-                              <TableColumn fx:id="colActive1" prefWidth="75.0" style="-fx-alignment: center" text="Actif" />
-                              <TableColumn fx:id="colActions1" prefWidth="180.0" style="-fx-alignment: center" text="Actions" />
+                              <TableColumn fx:id="colOrderName" prefWidth="130.0" style="-fx-alignment: center" text="Nom" />
+                              <TableColumn fx:id="colOrderPrice" prefWidth="130.0" style="-fx-alignment: center" text="Prix" />
+                              <TableColumn fx:id="colOrderQuantity" prefWidth="75.0" style="-fx-alignment: center" text="Quantiter" />
+                              <TableColumn fx:id="colActions1" prefWidth="141.666015625" style="-fx-alignment: center" text="Actions" />
                            </columns>
                         </TableView>
                      </children>
