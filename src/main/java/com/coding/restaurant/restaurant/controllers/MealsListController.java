@@ -1,4 +1,4 @@
-package com.coding.restaurant.restaurant.Controller;
+package com.coding.restaurant.restaurant.controllers;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -24,7 +24,7 @@ import java.util.ResourceBundle;
 
 import org.kordamp.bootstrapfx.BootstrapFX;
 
-import com.coding.restaurant.restaurant.Model.Meal;
+import com.coding.restaurant.restaurant.models.Meal;
 
 public class MealsListController implements Initializable {
 

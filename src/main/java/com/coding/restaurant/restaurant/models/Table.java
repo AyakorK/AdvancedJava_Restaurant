@@ -1,11 +1,11 @@
 package com.coding.restaurant.restaurant.models;
 
 public class Table {
-    public String getNumber() {
+    public int getNumber() {
         return numero;
     }
 
-    public void setNumber(String numero) {
+    public void setNumber(int numero) {
         this.numero = numero;
     }
 
@@ -34,12 +34,12 @@ public class Table {
     }
 
     // UUID	Numero	Location	Size	isFull
-    private String numero;
+    private int numero;
     private String location;
     private int size;
     private boolean isFull;
 
-    public Table(String numero, String location, int size, boolean isFull) {
+    public Table(int numero, String location, int size, boolean isFull) {
         this.numero = numero;
         this.location = location;
         this.size = size;
