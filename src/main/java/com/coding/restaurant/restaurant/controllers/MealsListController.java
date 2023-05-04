@@ -4,6 +4,7 @@ package com.coding.restaurant.restaurant.controllers;
 import com.coding.restaurant.restaurant.models.Meal;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -20,6 +21,7 @@ import javafx.stage.Stage;
 
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.Comparator;
 import java.util.List;
 
 import java.util.ResourceBundle;
@@ -30,6 +32,15 @@ public class MealsListController implements Initializable {
   @FXML
   private ListView<Meal> mealListView;
 
+  @FXML
+  private Button btnAscending;
+
+  @FXML
+  private Button btnDescending;
+
+  @FXML
+  private Label lblTotalPrice;
+
   public ObservableList<Meal> filteredMeals() throws SQLException {
     DatabaseManager db = new DatabaseManager();
     List<Meal> meals = db.getMeals().stream().filter(Meal::isActive).toList();
@@ -37,6 +48,37 @@ public class MealsListController implements Initializable {
     filteredMeals.addAll(meals);
     return filteredMeals;
   }
+
+  public void sortAscending(ActionEvent actionEvent) {
+    // trier les plats par prix croissant
+    // afficher les plats triés
+    try {
+      mealListView.setItems(filteredMeals().sorted(Comparator.comparing(Meal::getPrice)));
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+  }
+
+  public void sortDescending(ActionEvent actionEvent) {
+    // trier les plats par prix décroissant
+    // afficher les plats triés
+    try {
+      mealListView.setItems(filteredMeals().sorted(Comparator.comparing(Meal::getPrice).reversed()));
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+  }
+
+  public void showTotalPrice(ActionEvent actionEvent) {
+    // afficher le prix total des plats
+    try {
+      Double totalPrice = filteredMeals().stream().mapToDouble(Meal::getPrice).sum();
+      lblTotalPrice.setText("Prix total de la carte: " + totalPrice + "€");
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+  }
+
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
@@ -46,6 +88,8 @@ public class MealsListController implements Initializable {
     } catch (SQLException e) {
       e.printStackTrace();
     }
+
+    showTotalPrice(null);
 
     mealListView.setCellFactory(listView -> new ListCell<Meal>() {
       private final ImageView imageView = new ImageView();
@@ -105,4 +149,6 @@ public class MealsListController implements Initializable {
       }
     });
   }
+
+
 }
