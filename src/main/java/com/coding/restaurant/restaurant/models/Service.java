@@ -1,5 +1,8 @@
 package com.coding.restaurant.restaurant.models;
 
+import com.coding.restaurant.restaurant.controllers.DatabaseManager;
+
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.sql.Date;
 import java.util.List;
@@ -41,29 +44,45 @@ public class Service {
         return serviceUUID;
     }
 
+    public Boolean isPaid() {
+        return isPaid;
+    }
+
+    public void setIsPaid(Boolean isPaid) {
+        this.isPaid = isPaid;
+    }
+
     String serviceUUID;
     Date beginDate;
     String period;
     List<Worker> workers;
 
+    Boolean isPaid;
+
     Timestamp createdAt;
-    public Service(String serviceUUID, Date beginDate, Timestamp createdAt, String period, List<Worker> workers) {
+    public Service(String serviceUUID, Date beginDate, Timestamp createdAt, String period, List<Worker> workers, Boolean isPaid) {
         this.serviceUUID = serviceUUID;
         this.beginDate = beginDate;
         this.createdAt = createdAt;
         this.period = period;
         this.workers = workers;
+        this.isPaid = isPaid;
     }
 
-    public String getTimer() {
+    public String getTimer(Service service) throws SQLException {
         Timestamp now = new Timestamp(System.currentTimeMillis());
 
         long maxTime = this.createdAt.getTime() + (3 * 60 * 60 * 1000);
         long nowTime = now.getTime();
 
         if (nowTime > maxTime) {
+
+            if (Boolean.TRUE.equals(!service.isPaid())) {
+                service.setIsPaid(true);
+                DatabaseManager db = new DatabaseManager();
+                db.endService(service);
+            }
             return "Service terminé !";
-            // TODO: End the Service + Give 3 hours to the workers
         }
 
         long diff = maxTime - nowTime;

@@ -18,7 +18,8 @@ public class HomeController {
     public void initialize() throws SQLException {
         Service service = startService();
 
-        serviceTimeLeft.setText(service.getTimer());
+        System.out.println(service.getWorkers());
+        serviceTimeLeft.setText(service.getTimer(service));
 
         startTimerThread(service, serviceTimeLeft);
     }
@@ -34,7 +35,8 @@ public class HomeController {
         Date beginDate = new Date(System.currentTimeMillis());
         Timestamp createdAt = new Timestamp(System.currentTimeMillis());
         String period = getPeriod(createdAt);
-        return db.createService(new Service(DatabaseManager.generateUUID(), beginDate, createdAt, period, activeWorkers));
+        Boolean isPaid = false;
+        return db.createService(new Service(DatabaseManager.generateUUID(), beginDate, createdAt, period, activeWorkers, isPaid));
     }
 
     public String getPeriod(Timestamp beginDate) {
@@ -45,13 +47,27 @@ public class HomeController {
 
     public void startTimerThread(Service service, Label serviceTimeLeft) {
         Thread timerThread = new Thread(() -> {
-            while(service.getTimer() != "Service terminé !") {
+            while(true) {
+                try {
+                    if (service.getTimer(service) == "Service terminé !") break;
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    Thread.currentThread().interrupt();
+                }
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
+                    Thread.currentThread().interrupt();
                 }
-                Platform.runLater(() -> serviceTimeLeft.setText(service.getTimer()));
+                Platform.runLater(() -> {
+                    try {
+                        serviceTimeLeft.setText(service.getTimer(service));
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                        Thread.currentThread().interrupt();
+                    }
+                });
             }
         });
         timerThread.start();
