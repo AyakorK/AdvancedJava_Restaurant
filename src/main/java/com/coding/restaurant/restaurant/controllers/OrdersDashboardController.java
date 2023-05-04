@@ -2,43 +2,53 @@ package com.coding.restaurant.restaurant.controllers;
 
 import com.coding.restaurant.restaurant.models.Order;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
-import org.kordamp.bootstrapfx.scene.layout.Panel;
+import javafx.util.Callback;
 
 import java.sql.SQLException;
 import java.util.Comparator;
 import java.util.List;
 
+import static java.lang.Integer.parseInt;
+
 public class OrdersDashboardController {
   @FXML
-  private Panel ordersPanel;
-
+  public Button allOrdersButton;
   @FXML
-  private GridPane ordersGridPane;
+  private ListView<Order> ordersListView;
 
   public void initialize() {
-    displayOrders();
+    try {
+      ordersListView.setItems(filteredOrders());
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+
+    displayCells();
   }
 
-  private void displayOrders() {
-    // Remove ordersGridPane rows
-    ordersGridPane.getChildren().clear();
-    try {
-      List<Order> orders = new DatabaseManager().getOrders();
+  public ObservableList<Order> filteredOrders() throws SQLException {
+    DatabaseManager db = new DatabaseManager();
+    List<Order> orders = db.getOrders().stream().filter(Order::isWaiting).sorted(Comparator.comparing(Order::getTimer)).toList();
+    ObservableList<Order> filteredOrder = FXCollections.observableArrayList();
+    filteredOrder.addAll(orders);
 
-      orders.stream()
-              .filter(Order::isWaiting)
-              .sorted(Comparator.comparing(Order::getOrderDate))
-              .forEach(this::addOrderRow);
+    ordersListView.setItems(filteredOrder);
+    return filteredOrder;
+  }
 
+  public ObservableList<Order> displayPassedOrders() throws SQLException {
+    DatabaseManager db = new DatabaseManager();
+    List<Order> orders = db.getOrders().stream().filter(order -> !order.isWaiting()).sorted(Comparator.comparing(Order::getTimer)).toList();
+    ObservableList<Order> filteredOrder = FXCollections.observableArrayList();
+    filteredOrder.addAll(orders);
 
-    } catch (SQLException e) {
-      showError("Error loading orders", e);
-    }
+    ordersListView.setItems(filteredOrder);
+    return filteredOrder;
   }
 
   private void showError(String errorLoadingOrders, SQLException e) {
@@ -49,41 +59,66 @@ public class OrdersDashboardController {
     alert.showAndWait();
   }
 
-  private void addOrderRow(Order order) {
-    GridPane row = new GridPane();
+  public void displayCells() {
+    ordersListView.setCellFactory(new Callback<>() {
+      @Override
+      public ListCell<Order> call(ListView<Order> listView) {
+        GridPane totalGridPane = new GridPane();
+        return new ListCell<>() {
+          @Override
+          protected void updateItem(Order order, boolean empty) {
+            super.updateItem(order, empty);
+            if (empty || order == null) {
+              setText(null);
+              setGraphic(null);
+            } else {
 
-    Label tableNumberLabel = new Label(String.valueOf(order.getTable().getNumber()));
-    row.add(tableNumberLabel, 0, 0);
+              setText(String.valueOf(order.getOrderDate()) + " " + String.valueOf(order.getTable().getNumber()) + " " + (order.isWaiting() ? "En Attente" : order.isDelivered() ? "Commande Servie" : "Commande annulée") + " " + order.getTotal() + "€");
+              Label timerLabel = new Label(order.getTimer());
+              // Add a label for the timer
+              // Launch a new thread to update the timer using the function startTimerThread
+              Platform.runLater(() -> startTimerThread(order, timerLabel));
 
-    Label timeLabel = new Label(order.getTimer());
-    row.add(timeLabel, 1, 0);
+              // Add buttons to each cell to validate or cancel the order
+              Button validateButton = new Button("Valider");
+              validateButton.setOnAction(event -> {
+                try {
+                  validateOrder(order);
+                  filteredOrders();
+                } catch (SQLException e) {
+                  e.printStackTrace();
+                }
+              });
+              Button cancelButton = new Button("Annuler");
+              try {
+                cancelButton.setOnAction(event -> {
+                  try {
+                    cancelOrder(order);
+                  } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                  }
+                });
+              } catch (Exception e) {
+                e.printStackTrace();
+              }
 
-    Label statusLabel = new Label(order.isWaiting() ? "En Attente" : "Servi");
-    row.add(statusLabel, 2, 0);
-
-    Label totalLabel = new Label(String.valueOf(order.getTotal()));
-    row.add(totalLabel, 3, 0);
-
-    Button detailsButton = new Button("Voir détails");
-    row.add(detailsButton, 4, 0);
-
-    Button validateButton = new Button("Valider");
-    validateButton.setOnAction(event -> {
-      try {
-        validateOrder(order);
-      } catch (SQLException e) {
-        e.printStackTrace();
+              GridPane gridPane = new GridPane();
+              totalGridPane.getChildren().clear();
+              if (order.isWaiting() && totalGridPane.getChildren().isEmpty()) {
+                gridPane.add(timerLabel, 1, 0);
+                gridPane.add(validateButton, 2, 0);
+                gridPane.add(cancelButton, 3, 0);
+                setGraphic(gridPane);
+                totalGridPane.add(gridPane, 0, 0);
+              } else {
+                gridPane.getChildren().clear();
+              }
+              setGraphic(totalGridPane);
+            }
+          }
+        };
       }
     });
-    row.add(validateButton, 5, 0);
-
-    Button cancelButton = new Button("Annuler");
-    cancelButton.setOnAction(event -> cancelOrder(order));
-    row.add(cancelButton, 6, 0);
-
-    ordersGridPane.addRow(ordersGridPane.getRowCount(), row);
-
-    startTimerThread(order, timeLabel);
   }
 
   private void validateOrder(Order order) throws SQLException {
@@ -92,13 +127,15 @@ public class OrdersDashboardController {
     order.setStatus("Payée");
     updateOrderInDatabase(order);
     createBill(order);
+    filteredOrders();
   }
 
-  private void cancelOrder(Order order) {
+  private void cancelOrder(Order order) throws SQLException {
     order.setWaiting(false);
     order.setDelivered(false);
     order.setStatus("Annulée");
     updateOrderInDatabase(order);
+    filteredOrders();
   }
 
   private void createBill(Order order) throws SQLException {
@@ -113,13 +150,13 @@ public class OrdersDashboardController {
   private void updateOrderInDatabase(Order order) {
     try {
       new DatabaseManager().updateOrder(order);
-      displayOrders();
+      displayCells();
     } catch (SQLException e) {
       showError("Error updating order in database", e);
     }
   }
 
-  private void startTimerThread(Order order, Label timeLabel) {
+  private void startTimerThread(Order order, Label label) {
     Thread thread = new Thread(() -> {
       while (order.isWaiting()) {
         try {
@@ -129,16 +166,26 @@ public class OrdersDashboardController {
           Thread.currentThread().interrupt();
         }
         Platform.runLater(() -> {
-          // If the order is outdated stop the thread
           if (order.getTimer().equals("Out of time")) {
             Thread.currentThread().interrupt();
           }
-          timeLabel.setText(order.getTimer());
+          label.setText(order.getTimer());
+          checkColor(label, order);
         });
       }
     });
 
     thread.setDaemon(true);
     thread.start();
+  }
+
+  private void checkColor(Label label, Order order) {
+    if (order.getTimer().equals("Out of time")) {
+      label.setStyle("-fx-text-fill: red");
+    } else if (parseInt(order.getTimer().split(":")[0]) < 3) {
+      label.setStyle("-fx-text-fill: orange");
+    } else {
+      label.setStyle("-fx-text-fill: green");
+    }
   }
 }

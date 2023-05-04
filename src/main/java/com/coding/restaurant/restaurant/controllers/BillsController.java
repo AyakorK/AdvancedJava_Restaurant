@@ -33,13 +33,7 @@ public class BillsController {
   private ListView<Bill> billsListView;
 
   @FXML
-  private Button exportAllButton;
-
-  @FXML
   Button exportButton;
-
-  @FXML
-  private Button monthBillsButton;
 
   public ObservableList<Bill> filteredBills() throws SQLException {
     DatabaseManager db = new DatabaseManager();
@@ -98,13 +92,12 @@ public class BillsController {
       // Initialize document
       Document document = new Document(PageSize.A4, 50, 50, 50, 50);
       String saveName = exportButton.getText().equals("Exporter (Mois)") ? "Factures_" + new SimpleDateFormat("MMMM_yyyy").format(new Date()) : "Toutes_les_factures";
-      // save into the folder Factures (create it if it doesn't exist)
+      // Save into the folder Factures (create it if it doesn't exist)
       PdfWriter.getInstance(document, new FileOutputStream("Factures/" + saveName + ".pdf"));
       document.open();
 
       // Add title and date
-      Font titleFont = new Font(FontFamily.TIMES_ROMAN, 24, Font.BOLD);
-//      Paragraph title = new Paragraph("Bills for " + new SimpleDateFormat("MMMM yyyy").format(new Date()), titleFont);
+      Font titleFont = new Font(FontFamily.TIMES_ROMAN, 24, Font.BOLD);//      Paragraph title = new Paragraph("Bills for " + new SimpleDateFormat("MMMM yyyy").format(new Date()), titleFont);
       String message = exportButton.getText().equals("Exporter (Mois)") ? "Factures de " + new SimpleDateFormat("MMMM yyyy").format(new Date()) : "Toutes les factures";
       Paragraph title = new Paragraph(message, titleFont);
       // Title will be "Bills for Month Year" if the user clicked on "Mois" button
@@ -126,8 +119,6 @@ public class BillsController {
                   throw new RuntimeException(e);
                 }
               });
-
-      System.out.println("Bills exported successfully!");
 
       // Close document
       document.close();
