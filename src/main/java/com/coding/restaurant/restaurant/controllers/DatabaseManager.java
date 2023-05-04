@@ -274,9 +274,48 @@ public class DatabaseManager {
     return null;
   }
 
-  private boolean findActive(ResultSet result) throws SQLException {
-    return result.getBoolean("isActive");
+    public static void addWorker(String name, String firstName, Boolean isActive, Double hoursWorked, String role, java.util.Date arrivalDate, java.util.Date departureDate, Integer age) {
+        try (Connection connexion = ConnectDatabaseController.getConnection();
+             PreparedStatement statement = connexion.prepareStatement("INSERT INTO Worker (UUID, name, firstName, isActive, hoursWorked, role, arrivalDate, departureDate, age ) VALUES (?,?, ?, ?, ?, ?, ?, ?, ?)")) {
+            statement.setString(1, DatabaseManager.generateUUID());
+            statement.setString(2, name);
+            statement.setString(3, firstName);
+            statement.setBoolean(4, isActive);
+            statement.setDouble(5, hoursWorked);
+            statement.setString(6, role);
+            statement.setTimestamp(7, new java.sql.Timestamp(arrivalDate.getTime()));
+            statement.setTimestamp(8, new java.sql.Timestamp(departureDate.getTime()));
+            statement.setInt(9, age);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+  //  delete a worker
+  public void deleteWorker(String workerUUID) {
+    // update isActive in false & update departureDate to now
+    try (PreparedStatement statement = this.db.prepareStatement("UPDATE Worker SET isActive = false, departureDate = NOW() WHERE UUID = ?")) {
+      statement.setString(1, workerUUID);
+      statement.executeUpdate();
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
   }
+
+  public void activeWorker(String workerUUID) {
+    // update isActive in true
+    try (PreparedStatement statement = this.db.prepareStatement("UPDATE Worker SET isActive = true WHERE UUID = ?")) {
+      statement.setString(1, workerUUID);
+      statement.executeUpdate();
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+  }
+
+    private boolean findActive(ResultSet result) throws SQLException {
+        return result.getBoolean("isActive");
+    }
 
   public Service createService(Service service) {
     // Search if there is already a service with the same date and the same period AND that has been created more than 3h ago
