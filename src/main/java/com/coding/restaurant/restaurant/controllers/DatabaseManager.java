@@ -20,7 +20,22 @@ public class DatabaseManager {
     try (PreparedStatement statement = this.db.prepareStatement("SELECT * FROM Bill");
          ResultSet result = statement.executeQuery()) {
       while (result.next()) {
-        Bill bill = new Bill(result.getString("type"), result.getDouble("amount"), result.getString("billDate"));
+        Bill bill = new Bill(result.getBoolean("type"), result.getDouble("amount"), result.getDate("billDate"));
+        bills.add(bill);
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    return bills;
+  }
+
+  public List<Bill> getBillsOfThisMonth() {
+    List<Bill> bills = new ArrayList<>();
+    // Get the bills of this month only
+    try (PreparedStatement statement = this.db.prepareStatement("SELECT * FROM Bill WHERE MONTH(billDate) = MONTH(CURRENT_DATE()) AND YEAR(billDate) = YEAR(CURRENT_DATE())");
+         ResultSet result = statement.executeQuery()) {
+      while (result.next()) {
+        Bill bill = new Bill(result.getBoolean("type"), result.getDouble("amount"), result.getDate("billDate"));
         bills.add(bill);
       }
     } catch (SQLException e) {
