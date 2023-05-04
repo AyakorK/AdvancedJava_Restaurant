@@ -20,15 +20,10 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 
 import java.net.URL;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
 import java.util.ResourceBundle;
-
-import org.kordamp.bootstrapfx.BootstrapFX;
 
 
 public class MealsListController implements Initializable {
@@ -36,28 +31,22 @@ public class MealsListController implements Initializable {
   @FXML
   private ListView<Meal> mealListView;
 
-  public List<Meal> getAllMeal() {
-    try (Connection connexion = ConnectDatabaseController.getConnection();
-         PreparedStatement statement = connexion.prepareStatement("SELECT * FROM Meal");
-         ResultSet resultat = statement.executeQuery()) {
-
-      ObservableList<Meal> meals = FXCollections.observableArrayList();
-
-      while (resultat.next()) {
-        Meal meal = new Meal(resultat.getString("name"), resultat.getString("description"), resultat.getDouble("price"), resultat.getString("image"), resultat.getBoolean("isActive"));
-        meals.add(meal);
-      }
-      return meals;
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
-    return null;
+  public ObservableList<Meal> filteredMeals() throws SQLException {
+    DatabaseManager db = new DatabaseManager();
+    List<Meal> meals = db.getMeals().stream().filter(Meal::isActive).toList();
+    ObservableList<Meal> filteredMeals = FXCollections.observableArrayList();
+    filteredMeals.addAll(meals);
+    return filteredMeals;
   }
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
-    List<Meal> meals = getAllMeal();
-    mealListView.setItems((ObservableList<Meal>) meals);
+
+    try {
+      mealListView.setItems(filteredMeals());
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
 
     mealListView.setCellFactory(new Callback<>() {
       @Override
