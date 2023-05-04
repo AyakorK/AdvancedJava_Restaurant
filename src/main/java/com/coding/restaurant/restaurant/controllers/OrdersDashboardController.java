@@ -109,8 +109,11 @@ public class OrdersDashboardController {
         setGraphic(null);
         timerLabel.setText("");
       } else {
-        setText(order.getOrderDate() + " " + order.getTable().getNumber() + " " + orderState(order) + " " + order.getTotal() + "€");
+        // Add space between each lines of text
+        setStyle("-fx-padding: 0 0 0 5;");
 
+        setText(order.getOrderDate() + " " + order.getTable().getNumber() + " " + orderState(order) + " " + order.getTotal() + "€");
+        setLineSpacing(10);
         totalGridPane.getChildren().clear();
 
         if (order.isWaiting()) {
