@@ -1,4 +1,3 @@
-/*
 package com.coding.restaurant.restaurant.controllers;
 
 import javafx.fxml.FXML;
@@ -59,4 +58,3 @@ public class NewMealController implements Initializable {
     });
   }
 }
-*/
