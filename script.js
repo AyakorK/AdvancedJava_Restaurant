@@ -117,7 +117,7 @@ function toggleGlobal(checkbox, selected, columns) {
         var id = t.parentElement.getAttribute("id");
         var selectedClass = id + "-tab" + selected;
         // if selected is empty string it selects all uncategorized entries
-        var selectUncategorized = !Boolean(selected);
+        var selectUncategorized = !selected;
         var visible = 0;
         document.querySelectorAll('div.' + id)
             .forEach(function(elem) {

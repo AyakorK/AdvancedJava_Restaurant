@@ -194,7 +194,7 @@ button {
     width:100%;
     clear:right;
     min-height:2.8em;
-    padding:10px 0 0 0;
+    padding:10px 0 0;
     overflow:hidden;
     font-size:0.857em;
 }
@@ -283,10 +283,10 @@ ul.sub-nav-list li {
     margin:10px 0;
 }
 .sub-title {
-    margin:5px 0 0 0;
+    margin:5px 0 0;
 }
 ul.contents-list {
-    margin: 0 0 15px 0;
+    margin: 0 0 15px;
     padding: 0;
     list-style: none;
 }
@@ -324,7 +324,7 @@ dl.notes > dt {
     font-family: var(--body-font-family);
     font-size:0.856em;
     font-weight:bold;
-    margin:10px 0 0 0;
+    margin:10px 0 0;
     color:var(--body-text-color);
 }
 dl.notes > dd {
@@ -364,7 +364,7 @@ ul.block-list,
 ul.details-list,
 ul.member-list,
 ul.summary-list {
-    margin:10px 0 10px 0;
+    margin:10px 0;
     padding:0;
 }
 ul.block-list > li,
@@ -435,7 +435,7 @@ ul.preview-feature-list {
 .caption span {
     font-weight:bold;
     white-space:nowrap;
-    padding:5px 12px 7px 12px;
+    padding:5px 12px 7px;
     display:inline-block;
     float:left;
     background-color:var(--selected-background-color);
@@ -444,12 +444,12 @@ ul.preview-feature-list {
 }
 div.table-tabs {
     padding:10px 0 0 1px;
-    margin:10px 0 0 0;
+    margin:10px 0 0;
 }
 div.table-tabs > button {
     border: none;
     cursor: pointer;
-    padding: 5px 12px 7px 12px;
+    padding: 5px 12px 7px;
     font-weight: bold;
     margin-right: 8px;
 }
@@ -828,7 +828,7 @@ div.table-tabs > button.table-tab {
     color: var(--navbar-text-color);
 }
 .page-search-header {
-    padding: 5px 12px 7px 12px;
+    padding: 5px 12px 7px;
     font-weight: bold;
     margin-right: 3px;
     background-color:var(--navbar-background-color);
@@ -852,7 +852,7 @@ span#page-search-link {
     z-index: 1;
 }
 .inherited-list {
-    margin: 10px 0 10px 0;
+    margin: 10px 0;
 }
 section.class-description {
     line-height: 1.4;
@@ -1103,7 +1103,7 @@ table.striped > tbody > tr > th {
         width: 40%;
         float:left;
         clear: left;
-        margin: 10px 0 0 0;
+        margin: 10px 0 0;
         padding: 0;
     }
     ul.nav-list li {
@@ -1120,7 +1120,7 @@ table.striped > tbody > tr > th {
         clear: right;
         background-color: var(--subnav-background-color);
         color: var(--body-text-color);
-        margin: 6px 0 0 0;
+        margin: 6px 0 0;
         padding: 0;
     }
     ul.sub-nav-list-small ul {
@@ -1166,7 +1166,7 @@ table.striped > tbody > tr > th {
         display: block;
         width: 24px;
         height: 3px;
-        margin: 1px 0 4px 0;
+        margin: 1px 0 4px;
         border-radius: 2px;
         transition: all 0.1s;
         background-color: var(--navbar-text-color);
@@ -1200,7 +1200,7 @@ table.striped > tbody > tr > th {
     }
     .summary section[class$="-summary"], .details section[class$="-details"],
     .class-uses .detail, .serialized-class-details {
-        padding: 0 8px 5px 8px;
+        padding: 0 8px 5px;
     }
     body {
         -webkit-text-size-adjust: none;
