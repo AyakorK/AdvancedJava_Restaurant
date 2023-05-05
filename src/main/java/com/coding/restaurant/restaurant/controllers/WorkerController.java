@@ -57,7 +57,7 @@ public class WorkerController implements Initializable {
 
   private ObservableList<Worker> observableWorkers;
 
-  // Call the method to add a worker
+  // Call the method to get all the workers
   public List<Worker> getWorkers() throws SQLException {
     DatabaseManager db = new DatabaseManager();
     return db.getWorkers();
@@ -84,7 +84,7 @@ public class WorkerController implements Initializable {
       observableWorkers = FXCollections.observableArrayList(workers);
       tvbWorkers.setItems(observableWorkers);
     } catch (SQLException e) {
-      throw new RuntimeException(e);
+      e.printStackTrace();
     }
   }
 
@@ -125,6 +125,7 @@ public class WorkerController implements Initializable {
         }
       }
     });
+    // Set the value of each column using the infos we have in the worker object
     colHours.setCellValueFactory(new PropertyValueFactory<>("hoursWorked"));
     colRole.setCellValueFactory(new PropertyValueFactory<>("role"));
     colArrived.setCellValueFactory(new PropertyValueFactory<>("arrivalDate"));
@@ -154,7 +155,7 @@ public class WorkerController implements Initializable {
             addWorkerToList();
 
           } catch (SQLException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
           }
         });
 
@@ -167,11 +168,12 @@ public class WorkerController implements Initializable {
             addWorkerToList();
 
           } catch (SQLException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
           }
         });
       }
 
+      // If the worker is not active, the btnActive button is removed
       @Override
       protected void updateItem(String item, boolean empty) {
         super.updateItem(item, empty);

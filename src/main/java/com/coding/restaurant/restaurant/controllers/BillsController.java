@@ -27,19 +27,17 @@ import javafx.scene.control.ListView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 
+/**
+ * This class is the controller of the Bills Dashboard
+ */
 public class BillsController {
-
-  @FXML
-  private Button allBillsButton;
 
   @FXML
   private ListView<Bill> billsListView;
 
   @FXML
-  private Button exportAllButton;
-
-  @FXML
   private AnchorPane acpInBill;
+
   @FXML
   private AnchorPane acpNewBill;
 
@@ -52,8 +50,10 @@ public class BillsController {
   @FXML
   Button exportButton;
 
-  private String exportMonth = "Exporter (Mois)";
+  private final String exportMonth = "Exporter (Mois)";
 
+
+  // Display All Bills that are in the database on this month
   public ObservableList<Bill> filteredBills() throws SQLException {
     DatabaseManager db = new DatabaseManager();
     List<Bill> bills = db.getBillsOfThisMonth().stream().sorted(Comparator.comparing(Bill::getBillDate)).toList();
@@ -66,6 +66,7 @@ public class BillsController {
     return filteredBill;
   }
 
+  // Display All Bills that are in the database
   public ObservableList<Bill> displayAllBills() throws SQLException {
     DatabaseManager db = new DatabaseManager();
     List<Bill> bills = db.getBills().stream().sorted(Comparator.comparing(Bill::getBillDate)).toList();
@@ -96,6 +97,8 @@ public class BillsController {
     displayCells();
   }
 
+
+  // Display the cells of the listview
   public void displayCells() {
     billsListView.setCellFactory(listView -> new ListCell<>() {
       @Override
@@ -111,6 +114,7 @@ public class BillsController {
   }
 
 
+  // Export bills into a pdf file (Global and for the month are available)
   public void exportBills() {
     try {
       // Initialize document

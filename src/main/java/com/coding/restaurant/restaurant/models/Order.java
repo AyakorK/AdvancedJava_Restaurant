@@ -4,6 +4,14 @@ import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * Model of the order
+ * @param table : table of the order (Table)
+ * @param isWaiting : is the order waiting (boolean)
+ * @param isDelivered : is the order delivered (boolean)
+ * @param orderDate : date of the order (Timestamp)
+ * @param meals : list of the meals of the order (List<HashMap>)
+ */
 public class Order {
   public Table getTable() {
     return table;
@@ -28,14 +36,6 @@ public class Order {
 
   public Timestamp getOrderDate() {
     return orderDate;
-  }
-
-  public void setOrderDate(Timestamp orderDate) {
-    this.orderDate = orderDate;
-  }
-
-  public List<HashMap> getMeals() {
-    return meals;
   }
 
   public double getTotal() {
@@ -63,10 +63,6 @@ public class Order {
     return String.format("%d:%d", diff / 1000 / 60, diff / 1000 % 60);
   }
 
-  public void setTable(Table table) {
-    this.table = table;
-  }
-
   public String getOrderUUID() {
     return orderUUID;
   }
@@ -81,18 +77,18 @@ public class Order {
 
 
   // 	UUID	TableID	isWaiting	isDelivered
-  private Table table;
+  private final Table table;
   private boolean isWaiting;
   private boolean isDelivered;
 
-  private Timestamp orderDate;
+  private final Timestamp orderDate;
 
 
-  private String orderUUID;
+  private final String orderUUID;
 
   private String status;
 
-  private List<HashMap> meals;
+  private final List<HashMap> meals;
 
   public Order(String orderUUID, Table table, boolean isWaiting, boolean isDelivered, List<HashMap> meals, Timestamp orderDate, String status) {
     this.orderUUID = orderUUID;

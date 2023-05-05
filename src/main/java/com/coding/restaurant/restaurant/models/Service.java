@@ -7,33 +7,26 @@ import java.sql.Timestamp;
 import java.sql.Date;
 import java.util.List;
 
+/**
+ * Model of the service
+ * @param serviceUUID : UUID of the service (String)
+ * @param beginDate : begin date of the service (Date)
+ * @param period : period of the service (String)
+ * @param workers : list of workers of the service (List<Worker>)
+ * @param isPaid : boolean to know if the service is paid (Boolean)
+ * @param createdAt : date of the creation of the service (Timestamp)
+ */
 public class Service {
   public Date getBeginDate() {
     return beginDate;
-  }
-
-  public void setBeginDate(Date beginDate) {
-    this.beginDate = beginDate;
   }
 
   public String getPeriod() {
     return period;
   }
 
-  public void setPeriod(String period) {
-    this.period = period;
-  }
-
   public List<Worker> getWorkers() {
     return workers;
-  }
-
-  public void setWorkers(List<Worker> workers) {
-    this.workers = workers;
-  }
-
-  public void setCreatedAt(Timestamp createdAt) {
-    this.createdAt = createdAt;
   }
 
   public Timestamp getCreatedAt() {

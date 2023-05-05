@@ -11,6 +11,9 @@ import java.sql.Timestamp;
 import java.sql.Date;
 import java.util.List;
 
+/**
+ * Controller of the home page
+ */
 public class HomeController {
   @FXML
   Label serviceTimeLeft;
@@ -23,6 +26,7 @@ public class HomeController {
     startTimerThread(service, serviceTimeLeft);
   }
 
+  // When arriving on the home page, start a new service
   public Service startService() throws SQLException {
     DatabaseManager db = new DatabaseManager();
     List<Worker> workers = db.getWorkers();
@@ -38,12 +42,14 @@ public class HomeController {
     return db.createService(new Service(DatabaseManager.generateUUID(), beginDate, createdAt, period, activeWorkers, isPaid));
   }
 
+  // Get the period of the day (midday or evening)
   public String getPeriod(Timestamp beginDate) {
     // If the beginDate is between 11:00 and 14:00, the period is midday and if between 18:00 and 21:00, the period is evening
     int hour = beginDate.getHours();
     return hour < 14 ? "midday" : "evening";
   }
 
+  // Start a thread to update the timer every second
   public void startTimerThread(Service service, Label serviceTimeLeft) {
     Thread timerThread = new Thread(() -> {
       while (true) {

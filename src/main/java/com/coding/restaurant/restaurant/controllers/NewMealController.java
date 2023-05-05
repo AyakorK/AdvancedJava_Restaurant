@@ -13,7 +13,10 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class NewMealController implements Initializable {
+/**
+ * Controller for the new meal view
+ */
+public class NewMealController implements Initializable, NewFormInterface {
 
   @FXML
   private Button btnValidateMeal;
@@ -39,11 +42,6 @@ public class NewMealController implements Initializable {
   @FXML
   private Button btnBack;
 
-
-  public void addMeal(String name, String description, Double price, String image, Boolean isActive, String type) {
-    DatabaseManager.addMeal(name, description, price, image, isActive, type);
-  }
-
   @Override
   public void initialize(URL location, ResourceBundle resources) {
     btnValidateMeal.setOnAction(event -> {
@@ -61,6 +59,12 @@ public class NewMealController implements Initializable {
     btnBack.setOnAction(event -> goBack());
   }
 
+  // Add a new meal to the database
+  public void addMeal(String name, String description, Double price, String image, Boolean isActive, String type) {
+    DatabaseManager.addMeal(name, description, price, image, isActive, type);
+  }
+
+  // Go back to the menu view
   public void goBack() {
     try {
       // Load the worker view & set it as the current view

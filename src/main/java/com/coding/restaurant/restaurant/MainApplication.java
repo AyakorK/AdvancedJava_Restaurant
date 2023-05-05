@@ -7,6 +7,9 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+/**
+ * Main Application
+ */
 public class MainApplication extends Application {
 
   @Override

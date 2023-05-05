@@ -16,7 +16,10 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.ResourceBundle;
 
-public class NewBillController implements Initializable {
+/**
+ * Controller of the NewBill Form
+ */
+public class NewBillController implements Initializable, NewFormInterface {
 
   private ToggleGroup toggleGroup;
 
@@ -49,18 +52,18 @@ public class NewBillController implements Initializable {
       goBack();
     });
 
-    // Initialisation du ToggleGroup et des autres éléments
+    // Initialize the ToggleGroup and other elements
     toggleGroup = new ToggleGroup();
 
-    // Associer les RadioButtons au ToggleGroup
+    // Match the RadioButtons to the ToggleGroup
     rdbBenef.setToggleGroup(toggleGroup);
     rdbDepense.setToggleGroup(toggleGroup);
 
-    // Mettre les valeurs retournées par les RadioButtons par 0 et 1
+    // Set the value of the RadioButtons
     rdbBenef.setUserData(1);
     rdbDepense.setUserData(0);
 
-    // Sélectionner un RadioButton par défaut
+    // Set the default value of the RadioButtons
     rdbBenef.setSelected(true);
 
     btnSave.setOnAction(event -> {
@@ -80,11 +83,13 @@ public class NewBillController implements Initializable {
 
   }
 
+  // Create a new bill redirecting to the database manager
   public void createBill(Double price, Boolean type) throws SQLException {
     DatabaseManager db = new DatabaseManager();
     db.createBill(price, type);
   }
 
+  // Go back to the bills view
   public void goBack() {
     try {
       // Load the worker view & set it as the current view

@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class NewTableController implements Initializable {
+public class NewTableController implements Initializable, NewFormInterface {
 
   @FXML
   private TextField txfTableNumber;
@@ -31,29 +31,6 @@ public class NewTableController implements Initializable {
   private Button btnSave;
   @FXML
   private Button btnBack;
-
-
-  // Call the method to add a table
-  public void addTable(int number, String location, int size, boolean isFull) {
-    DatabaseManager.addTable(number, location, size, isFull);
-  }
-
-
-  // Go back to the table view
-  public void goBack() {
-    try {
-      // Load the worker view & set it as the current view
-      FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/coding/restaurant/restaurant/table-view.fxml"));
-      Node workerView = loader.load();
-
-      AnchorPane acpTable = (AnchorPane) btnSave.getParent().getParent();
-
-      acpTable.getChildren().setAll(workerView);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-  }
-
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -86,6 +63,26 @@ public class NewTableController implements Initializable {
 
       goBack();
     });
+  }
 
+  // Call the method to add a table
+  public void addTable(int number, String location, int size, boolean isFull) {
+    DatabaseManager.addTable(number, location, size, isFull);
+  }
+
+
+  // Go back to the table view
+  public void goBack() {
+    try {
+      // Load the worker view & set it as the current view
+      FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/coding/restaurant/restaurant/table-view.fxml"));
+      Node workerView = loader.load();
+
+      AnchorPane acpTable = (AnchorPane) btnSave.getParent().getParent();
+
+      acpTable.getChildren().setAll(workerView);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 }

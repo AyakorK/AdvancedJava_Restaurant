@@ -2,6 +2,18 @@ package com.coding.restaurant.restaurant.models;
 
 import java.util.Date;
 
+/**
+ * Model of the worker
+ * @param name : name of the worker (String)
+ * @param firstName : first name of the worker (String)
+ * @param isActive : boolean to know if the worker is active (Boolean)
+ * @param hoursWorked : number of hours worked by the worker (int)
+ * @param role : role of the worker (String)
+ * @param arrivalDate : date of the arrival of the worker (Date)
+ * @param departureDate : date of the departure of the worker (Date)
+ * @param workerUUID : UUID of the worker (String)
+ * @param age : age of the worker (int)
+ */
 public class Worker {
   // Worker is composed by Name	FirstName	isActive	HoursWorked	Role	ArrivalDate
   private String name;
@@ -10,56 +22,28 @@ public class Worker {
     return name;
   }
 
-  public void setName(String name) {
-    this.name = name;
-  }
-
   public String getFirstName() {
     return firstName;
-  }
-
-  public void setFirstName(String firstName) {
-    this.firstName = firstName;
   }
 
   public boolean isActive() {
     return isActive;
   }
 
-  public void setActive(boolean active) {
-    isActive = active;
-  }
-
   public int getHoursWorked() {
     return hoursWorked;
-  }
-
-  public void setHoursWorked(int hoursWorked) {
-    this.hoursWorked = hoursWorked;
   }
 
   public String getRole() {
     return role;
   }
 
-  public void setRole(String role) {
-    this.role = role;
-  }
-
   public Date getArrivalDate() {
     return arrivalDate;
   }
 
-  public void setArrivalDate(Date arrivalDate) {
-    this.arrivalDate = arrivalDate;
-  }
-
   public Date getDepartureDate() {
     return departureDate;
-  }
-
-  public void setDepartureDate(Date departureDate) {
-    this.departureDate = departureDate;
   }
 
   public String getWorkerUUID() {
@@ -70,21 +54,17 @@ public class Worker {
     return age;
   }
 
-  public void setAge(int age) {
-    this.age = age;
-  }
+  private final String firstName;
 
-  private String firstName;
+  private final String workerUUID;
 
-  private String workerUUID;
+  private final boolean isActive;
+  private final int hoursWorked;
+  private final String role;
+  private final Date arrivalDate;
 
-  private boolean isActive;
-  private int hoursWorked;
-  private String role;
-  private Date arrivalDate;
-
-  private int age;
-  private Date departureDate;
+  private final int age;
+  private final Date departureDate;
 
   public Worker(String workerUUID, String name, String firstName, boolean isActive, int hoursWorked, String role, Date arrivalDate, Date departureDate, int age) {
     this.workerUUID = workerUUID;
