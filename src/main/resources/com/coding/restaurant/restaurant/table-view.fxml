@@ -10,22 +10,34 @@
 <?import javafx.scene.layout.VBox?>
 
 
-<VBox fx:id="vbxTable" alignment="CENTER" prefHeight="800.0" prefWidth="1040.0" spacing="20.0"
-      xmlns="http://javafx.com/javafx/19"
-      xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.coding.restaurant.restaurant.controllers.TableController">
-    <Label text="Tables"/>
-
-    <HBox alignment="TOP_CENTER" spacing="20">
-        <ToggleButton fx:id="toggleFreeTables" text="Voir les tables libres"/>
-        <ToggleButton fx:id="toggleIndoorTables" text="Tables en intérieur"/>
-        <ToggleButton fx:id="toggleTerraceTables" text="Tables en terrasse"/>
-        <Button fx:id="btnAddTable" text="Créer une table"/>
-    </HBox>
-
-    <ListView fx:id="listView"/>
-
-    <padding>
+<AnchorPane fx:id="acpTable" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+            prefHeight="800.0"
+            prefWidth="1040.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.coding.restaurant.restaurant.controllers.TableController">
+  <children>
+    <VBox fx:id="vbxTable" alignment="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="800.0" prefWidth="1040.0"
+          spacing="20.0">
+      <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
-    </padding>
-    <fx:include fx:id="acpTable" source="newTable-view.fxml"/>
-</VBox>
+      </padding>
+      <children>
+        <HBox alignment="TOP_CENTER" spacing="20">
+          <children>
+            <Button fx:id="createTable" onAction="#createTable" text="Créer une table" textFill="#411111" style="-fx-background-color: transparent; -fx-border-color: #411111; -fx-border-radius: 10px; -fx-border-width: 1px;"/>
+            <Button fx:id="btnCreateOrder" onAction="#createTable" text="Créer une commande" textFill="#411111" style="-fx-background-color: transparent; -fx-border-color: #411111; -fx-border-radius: 10px; -fx-border-width: 1px;"/>
+          </children>
+        </HBox>
+        <Label text="Tables"/>
+        <HBox alignment="TOP_CENTER" spacing="20">
+          <children>
+            <ToggleButton fx:id="toggleFreeTables" onAction="#showFreeTables" text="Voir les tables libres" textFill="#411111" style="-fx-background-color: transparent; -fx-border-color: #411111; -fx-border-radius: 10px; -fx-border-width: 1px;"/>
+            <ToggleButton fx:id="toggleIndoorTables" onAction="#showIndoorTables" text="Tables en intérieur" textFill="#411111" style="-fx-background-color: transparent; -fx-border-color: #411111; -fx-border-radius: 10px; -fx-border-width: 1px;"/>
+            <ToggleButton fx:id="toggleTerraceTables" onAction="#showOutdoorTables" text="Tables en terrasse" textFill="#411111" style="-fx-background-color: transparent; -fx-border-color: #411111; -fx-border-radius: 10px; -fx-border-width: 1px;"/>
+          </children>
+        </HBox>
+        <ListView fx:id="listView"/>
+      </children>
+    </VBox>
+  </children>
+  <fx:include fx:id="acpInWorker" source="createOrders-view.fxml"/>
+</AnchorPane>
