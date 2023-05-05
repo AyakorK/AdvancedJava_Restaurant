@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane fx:id="acpInBill" prefHeight="800.0" prefWidth="1040.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.coding.restaurant.restaurant.controllers.BillsController">
+    <children>
+        <VBox fx:id="vbxBill" alignment="CENTER" prefHeight="800.0" prefWidth="1040.0" spacing="20.0" >
+  <padding>
+    <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+  </padding>
+   <HBox alignment="TOP_CENTER" prefHeight="21.0" prefWidth="960.0">
+      <children>
+         <Button fx:id="monthBillsButton" onAction="#filteredBills" text="Factures de ce mois" style="-fx-background-color: transparent; -fx-border-color: #411111; -fx-border-radius: 10px; -fx-border-width: 1px;" textFill="#411111">
+            <font>
+               <Font size="20.0" />
+            </font>
+            <HBox.margin>
+               <Insets right="80.0" />
+            </HBox.margin>
+         </Button>
+      
+        <Button fx:id="allBillsButton" onAction="#displayAllBills" text="Toutes les factures" style="-fx-background-color: transparent; -fx-border-color: #411111; -fx-border-radius: 10px; -fx-border-width: 1px;" textFill="#411111">
+            <font>
+               <Font size="20.0" />
+            </font>
+         </Button>
+      </children>
+      <opaqueInsets>
+         <Insets />
+      </opaqueInsets>
+   </HBox>
+   <HBox alignment="TOP_CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="40.0" prefWidth="200.0">
+      <children>
+         <Button fx:id="btnNewBill" mnemonicParsing="false" text="Ajouter une Facture" style="-fx-background-color: transparent; -fx-border-color: #411111; -fx-border-radius: 10px; -fx-border-width: 1px;" textFill="#411111">
+            <font>
+               <Font size="20.0" />
+            </font>
+         </Button>
+      </children></HBox>
+
+  <Label text="Liste des factures" />
+  <ListView fx:id="billsListView" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="500.0" prefWidth="960.0" />
+   <HBox alignment="TOP_CENTER" prefHeight="24.0" prefWidth="960.0">
+      <children>
+                    <Button fx:id="exportButton" onAction="#exportBills" prefHeight="18.0" prefWidth="248.0" text="Exporter (Mois)" style="-fx-background-color: transparent; -fx-border-color: #411111; -fx-border-radius: 10px; -fx-border-width: 1px;" textFill="#411111">
+            <font>
+               <Font size="18.0" />
+            </font>
+            <HBox.margin>
+               <Insets right="40.0" />
+            </HBox.margin>
+         </Button>
+      </children>
+   </HBox>
+</VBox>
+        <fx:include fx:id="acpNewBill" source="newBill-view.fxml"  />
+    </children>
+</AnchorPane>

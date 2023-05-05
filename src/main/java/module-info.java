@@ -1,13 +1,22 @@
 module com.coding.restaurant.restaurant {
-    requires javafx.controls;
-    requires javafx.fxml;
-    requires javafx.web;
+  requires javafx.controls;
+  requires javafx.fxml;
+  requires javafx.web;
 
-    requires com.dlsc.formsfx;
-    requires net.synedra.validatorfx;
-    requires org.kordamp.bootstrapfx.core;
-    //requires eu.hansolo.tilesfx;
+  requires com.dlsc.formsfx;
+  requires net.synedra.validatorfx;
+  requires org.kordamp.bootstrapfx.core;
+  requires java.sql;
+  requires java.naming;
+  requires mysql.connector.java;
+  requires dotenv.java;
+  requires itextpdf;
+  requires javafx.graphics;
 
-    opens com.coding.restaurant.restaurant to javafx.fxml;
+  opens com.coding.restaurant.restaurant to javafx.fxml;
     exports com.coding.restaurant.restaurant;
+    exports com.coding.restaurant.restaurant.controllers;
+    exports com.coding.restaurant.restaurant.models;
+    opens com.coding.restaurant.restaurant.models to javafx.base;
+    opens com.coding.restaurant.restaurant.controllers to javafx.fxml;
 }

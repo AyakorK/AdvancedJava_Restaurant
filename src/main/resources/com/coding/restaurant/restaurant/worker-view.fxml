@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane fx:id="acpInWorker" prefHeight="800.0" prefWidth="1040.0" xmlns="http://javafx.com/javafx/17.0.2-ea"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.coding.restaurant.restaurant.controllers.WorkerController">
+    <children>
+        <VBox fx:id="vbxWorker" alignment="TOP_CENTER" prefHeight="800.0" prefWidth="1040.0" spacing="75.0">
+            <children>
+                <Button fx:id="btnNewWorker" alignment="CENTER" mnemonicParsing="false"
+                        style="-fx-background-color: transparent; -fx-border-color: #1f62ff; -fx-border-radius: 10px; -fx-border-width: 1px;"
+                        text="Ajouter un nouvel employé" textAlignment="CENTER" textFill="#1f62ff">
+                    <font>
+                        <Font name="Avenir Book" size="13.0"/>
+                    </font>
+                </Button>
+                <TableView fx:id="tvbWorkers" maxWidth="-Infinity" prefHeight="500.0" prefWidth="982.0">
+                    <columns>
+                        <TableColumn fx:id="colName" prefWidth="130.0"
+                                     style="-fx-alignment: center; -fx-font-family: Avenir Book" text="Nom"/>
+                        <TableColumn fx:id="colFirstName" prefWidth="130.0"
+                                     style="-fx-alignment: center; -fx-font-family: Avenir Book" text="Prénom"/>
+                        <TableColumn fx:id="colActive" prefWidth="75.0"
+                                     style="-fx-alignment: center; -fx-font-family: Avenir Book" text="Actif"/>
+                        <TableColumn fx:id="colHours" prefWidth="105.0"
+                                     style="-fx-alignment: center; -fx-font-family: Avenir Book"
+                                     text="Heures travailllées"/>
+                        <TableColumn fx:id="colRole" prefWidth="120.0"
+                                     style="-fx-alignment: center; -fx-font-family: Avenir Book" text="Poste"/>
+                        <TableColumn fx:id="colArrived" prefWidth="120.0"
+                                     style="-fx-alignment: center; -fx-font-family: Avenir Book" text="Date d'arrivée"/>
+                        <TableColumn fx:id="colDeparture" prefWidth="120.0"
+                                     style="-fx-alignment: center; -fx-font-family: Avenir Book" text="Date de départ"/>
+                        <TableColumn fx:id="colActions" prefWidth="180.0"
+                                     style="-fx-alignment: center; -fx-font-family: Avenir Book" text="Action"/>
+                        <TableColumn fx:id="colAge" prefWidth="75.0"
+                                     style="-fx-alignment: center; -fx-font-family: Avenir Book" text="Age"/>
+                    </columns>
+                    <VBox.margin>
+                        <Insets left="15.0" right="15.0"/>
+                    </VBox.margin>
+                </TableView>
+            </children>
+            <padding>
+                <Insets top="75.0"/>
+            </padding>
+        </VBox>
+        <fx:include fx:id="acpNewWorker" source="newWorker-view.fxml"/>
+    </children>
+</AnchorPane>
