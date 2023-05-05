@@ -4,6 +4,8 @@ import com.coding.restaurant.restaurant.models.*;
 
 import java.sql.*;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -436,7 +438,8 @@ public class DatabaseManager {
     try (PreparedStatement statement = this.db.prepareStatement("SELECT * FROM Service WHERE ServiceDate = ? AND ServicePeriod = ? OR ? > DATE_ADD(NOW(), INTERVAL 25 MINUTE)")) {
       statement.setDate(1, (java.sql.Date) service.getBeginDate());
       statement.setString(2, service.getPeriod());
-      statement.setTimestamp(3, service.getCreatedAt());
+      Timestamp getFinshedAt = new Timestamp(service.getCreatedAt().getTime() + 3 * 60 * 60 * 1000);
+      statement.setTimestamp(3, getFinshedAt);
       ResultSet result = statement.executeQuery();
       return result.next();
     } catch (SQLException e) {

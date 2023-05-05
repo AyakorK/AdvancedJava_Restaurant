@@ -134,6 +134,12 @@ public class TableController {
   public void initialize() throws IOException {
 
     try {
+      btnCreateOrder.setVisible(displayButton());
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+
+    try {
       listView.setItems(showTables());
     } catch (SQLException e) {
       e.printStackTrace();
@@ -154,12 +160,6 @@ public class TableController {
           hBox.setAlignment(Pos.CENTER_LEFT);
           hBox.setSpacing(10);
           String arialText = "Arial";
-
-          try {
-            btnCreateOrder.setVisible(displayButton());
-          } catch (SQLException e) {
-            e.printStackTrace();
-          }
 
           // Put the table's number in a Text
           Text tableNumber = new Text("Table " + item.getNumber());
