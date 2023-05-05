@@ -14,9 +14,9 @@
     <Label text="Tables"/>
 
     <HBox alignment="TOP_CENTER" spacing="20">
-        <ToggleButton fx:id="toggleFreeTables" onAction="#showFreeTables" text="Voir les tables libres"/>
-        <ToggleButton fx:id="toggleIndoorTables" onAction="#showIndoorTables" text="Tables en intérieur"/>
-        <ToggleButton fx:id="toggleTerraceTables" onAction="#showOutdoorTables" text="Tables en terrasse"/>
+        <ToggleButton fx:id="toggleFreeTables" text="Voir les tables libres"/>
+        <ToggleButton fx:id="toggleIndoorTables" text="Tables en intérieur"/>
+        <ToggleButton fx:id="toggleTerraceTables" text="Tables en terrasse"/>
         <Button fx:id="btnAddTable" text="Créer une table"/>
     </HBox>
 
