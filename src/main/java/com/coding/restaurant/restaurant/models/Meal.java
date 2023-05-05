@@ -2,11 +2,12 @@ package com.coding.restaurant.restaurant.models;
 
 /**
  * Model of the meal
- * @param name : name of the meal (String)
+ *
+ * @param name        : name of the meal (String)
  * @param description : description of the meal (String)
- * @param price : price of the meal (double)
- * @param image : image of the meal (String)
- * @param isActive : is the meal active (boolean)
+ * @param price       : price of the meal (double)
+ * @param image       : image of the meal (String)
+ * @param isActive    : is the meal active (boolean)
  */
 public class Meal {
   public String getName() {
@@ -17,8 +18,11 @@ public class Meal {
     return description;
   }
 
-  public
-  double getPrice() {
+  public void setDescription(String description) {
+    this.description = description;
+  }
+
+  public double getPrice() {
     return price;
   }
 
@@ -35,13 +39,19 @@ public class Meal {
   }
 
   private final String name;
-  private final String description;
+  private String description;
   private final double price;
   private final String image;
   private final boolean isActive;
 
+  private String mealUUID;
 
-  public Meal(String name, String description, double price, String image, boolean isActive) {
+  public String getMealUUID() {
+    return mealUUID;
+  }
+
+  public Meal(String name, String description, double price, String image, boolean isActive, String mealUUID) {
+    this.mealUUID = mealUUID;
     this.name = name;
     this.description = description;
     this.price = price;

@@ -11,8 +11,9 @@ module com.coding.restaurant.restaurant {
   requires mysql.connector.java;
   requires dotenv.java;
   requires itextpdf;
+  requires javafx.graphics;
 
-    opens com.coding.restaurant.restaurant to javafx.fxml;
+  opens com.coding.restaurant.restaurant to javafx.fxml;
     exports com.coding.restaurant.restaurant;
     exports com.coding.restaurant.restaurant.controllers;
     exports com.coding.restaurant.restaurant.models;

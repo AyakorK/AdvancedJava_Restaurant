@@ -1,16 +1,20 @@
 package com.coding.restaurant.restaurant.models;
 
+import com.coding.restaurant.restaurant.controllers.DatabaseManager;
+
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 
 /**
  * Model of the order
- * @param table : table of the order (Table)
- * @param isWaiting : is the order waiting (boolean)
+ *
+ * @param table       : table of the order (Table)
+ * @param isWaiting   : is the order waiting (boolean)
  * @param isDelivered : is the order delivered (boolean)
- * @param orderDate : date of the order (Timestamp)
- * @param meals : list of the meals of the order (List<HashMap>)
+ * @param orderDate   : date of the order (Timestamp)
+ * @param meals       : list of the meals of the order (List<HashMap>)
  */
 public class Order {
   public Table getTable() {
@@ -38,6 +42,24 @@ public class Order {
     return orderDate;
   }
 
+//  public void setOrderDate(Timestamp orderDate) {
+//    this.orderDate = orderDate;
+//  }
+
+  public List<HashMap> getMeals() {
+    return meals;
+  }
+
+//  addMeal
+
+  public void addMeal(Meal meal, int quantity) {
+    HashMap<String, Object> mealMap = new HashMap<>();
+    mealMap.put("meal", meal);
+    mealMap.put("quantity", quantity);
+    this.meals.add(mealMap);
+  }
+
+
   public double getTotal() {
     return this.meals.stream()
             .mapToDouble(meal -> ((Meal) meal.get("meal")).getPrice()
@@ -60,7 +82,12 @@ public class Order {
     // Else we calculate the difference between the maxTime and the nowTime
     long diff = maxTime - nowTime;
     // And we return the difference in minutes and seconds
-    return String.format("%d:%d", diff / 1000 / 60, diff / 1000 % 60);
+    String seconds = String.valueOf(diff / 1000 % 60);
+    if (seconds.length() == 1) seconds = "0" + seconds;
+    String minutes = String.valueOf(diff / (60 * 1000) % 60);
+    if (minutes.length() == 1) minutes = "0" + minutes;
+
+    return  minutes + ":" + seconds;
   }
 
   public String getOrderUUID() {

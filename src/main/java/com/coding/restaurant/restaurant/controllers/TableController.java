@@ -1,5 +1,6 @@
 package com.coding.restaurant.restaurant.controllers;
 
+import com.coding.restaurant.restaurant.models.Service;
 import com.coding.restaurant.restaurant.models.Table;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -47,6 +48,14 @@ public class TableController {
 
   @FXML
   private VBox vbxTable;
+
+  @FXML
+  private AnchorPane acpInWorker;
+  @FXML
+  private AnchorPane acpTable;
+
+  @FXML
+  private Button btnCreateOrder;
 
   // List all tables
   public ObservableList<Table> filterTables(boolean free, String location) throws SQLException {
@@ -118,7 +127,6 @@ public class TableController {
     });
 
     listView.setItems(showTables());
-
 
     vbxTable.getChildren().remove(acpTable);
 
@@ -210,9 +218,29 @@ public class TableController {
 
           // Print the BorderPane
           setGraphic(borderPane);
+
+          btnCreateOrder.setOnAction(event -> {
+            acpTable.getChildren().remove(vbxTable);
+            acpTable.getChildren().add(acpInWorker);
+          });
         }
       }
     });
+
+    acpTable.getChildren().remove(acpInWorker);
+
+  }
+
+  // Display the button to create an order
+  public boolean displayButton() throws SQLException {
+    HomeController homeController = new HomeController();
+    Service service = homeController.startService();
+    return isCurrent(service);
+  }
+
+  public boolean isCurrent(Service service) throws SQLException {
+    DatabaseManager db = new DatabaseManager();
+    return db.isCurrent(service);
   }
 }
 

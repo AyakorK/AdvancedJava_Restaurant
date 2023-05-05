@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane fx:id="acpInTable" prefHeight="800.0" prefWidth="1040.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.coding.restaurant.restaurant.controllers.CreateOrdersController">
+  <children>
+    <VBox fx:id="vbxTable" alignment="TOP_CENTER" prefHeight="800.0" prefWidth="1040.0" spacing="30.0">
+      <children>
+            <HBox alignment="CENTER" prefHeight="46.0" prefWidth="1040.0">
+               <children>
+            <Button fx:id="btnBack" mnemonicParsing="false" style="-fx-background-color: transparent; -fx-border-color: #411111; -fx-border-radius: 10px; -fx-border-width: 1px;" text="Go Back" textAlignment="CENTER" textFill="#411111" />
+               </children>
+            </HBox>
+        <HBox prefHeight="593.0" prefWidth="1040.0">
+          <children>
+
+            <VBox alignment="TOP_CENTER" prefHeight="593.0" prefWidth="545.0">
+              <children>
+                <Label prefHeight="30.0" prefWidth="30.0" text="Plats">
+                  <VBox.margin>
+                    <Insets bottom="10.0" />
+                  </VBox.margin>
+                </Label>
+                <TableView fx:id="tvbMeals" maxWidth="-Infinity" prefHeight="457.0" prefWidth="518.0">
+                  <columns>
+                    <TableColumn fx:id="colName" prefWidth="130.0" style="-fx-alignment: center" text="Nom" />
+                    <TableColumn fx:id="colPrice" prefWidth="130.0" style="-fx-alignment: center" text="Prix" />
+                    <TableColumn fx:id="colActive" prefWidth="93.56158447265625" style="-fx-alignment: center" text="Dispo" />
+                    <TableColumn fx:id="colActions" prefWidth="162.0" style="-fx-alignment: center" text="Actions" />
+                  </columns>
+                </TableView>
+              </children>
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+            </VBox>
+            <VBox alignment="TOP_CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="593.0" prefWidth="450.0">
+              <children>
+                <Label prefHeight="30.0" prefWidth="72.0" text="Commande">
+                  <VBox.margin>
+                    <Insets bottom="10.0" />
+                  </VBox.margin>
+                </Label>
+                <TableView fx:id="tvbOrder" maxWidth="-Infinity" prefHeight="457.0" prefWidth="352.0">
+                  <columns>
+                    <TableColumn fx:id="colOrderName" prefWidth="130.0" style="-fx-alignment: center" text="Nom" />
+                    <TableColumn fx:id="colOrderPrice" prefWidth="131.0" style="-fx-alignment: center" text="Prix" />
+                  </columns>
+                           <columnResizePolicy>
+                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                           </columnResizePolicy>
+                </TableView>
+                <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+                  <children>
+                    <ComboBox fx:id="cbxTable" prefWidth="150.0" />
+                    <Button fx:id="btnValidateOrder" mnemonicParsing="false" text="Valider la commande" />
+                  </children>
+                </HBox>
+              </children>
+            </VBox>
+          </children>
+          <VBox.margin>
+            <Insets left="10.0" right="10.0" />
+          </VBox.margin>
+        </HBox>
+      </children>
+      <padding>
+        <Insets top="75.0" />
+      </padding>
+    </VBox>
+    <!--        <fx:include fx:id="acpNewWorker" source="newWorker-view.fxml" />-->
+  </children>
+</AnchorPane>

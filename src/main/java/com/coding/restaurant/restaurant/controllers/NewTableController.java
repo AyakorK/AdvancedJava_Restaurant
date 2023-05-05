@@ -1,5 +1,6 @@
 package com.coding.restaurant.restaurant.controllers;
 
+import com.coding.restaurant.restaurant.models.Table;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -15,6 +16,8 @@ import javafx.scene.layout.VBox;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class NewTableController implements Initializable, NewFormInterface {
@@ -59,15 +62,22 @@ public class NewTableController implements Initializable, NewFormInterface {
       int capacity = Integer.parseInt(txfTableCapacity.getText());
       boolean isFull = false;
 
-      addTable(number, location, capacity, isFull);
+      try {
+        addTable(number, location, capacity, isFull);
+      } catch (SQLException e) {
+        throw new RuntimeException(e);
+      }
+
 
       goBack();
     });
   }
 
   // Call the method to add a table
-  public void addTable(int number, String location, int size, boolean isFull) {
+  public List<Table> addTable(int number, String location, int size, boolean isFull) throws SQLException {
     DatabaseManager.addTable(number, location, size, isFull);
+    DatabaseManager db = new DatabaseManager();
+    return db.getTables();
   }
 
 

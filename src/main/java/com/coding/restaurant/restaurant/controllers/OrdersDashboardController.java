@@ -82,40 +82,16 @@ public class OrdersDashboardController {
      * Constructor of the OrderListCell class
      * It creates a gridPane with the timerLabel, the validateButton and the cancelButton
      * It has been generated dynamically to match only this purpose but to simplify the usage and identification of functions
+     * Needs to be empty but can be used to add other elements
      */
     public OrderListCell() {
-
-      GridPane gridPane = new GridPane();
-      gridPane.add(timerLabel, 1, 0);
-      Button validateButton = new Button("Valider");
-      gridPane.add(validateButton, 2, 0);
-      Button cancelButton = new Button("Annuler");
-      gridPane.add(cancelButton, 3, 0);
-      totalGridPane.getChildren().add(gridPane);
-
-      // When the validateButton is clicked, the order is validated
-      validateButton.setOnAction(event -> {
-        try {
-          validateOrder(getItem());
-          filteredOrders();
-        } catch (SQLException e) {
-          e.printStackTrace();
-        }
-      });
-
-      // When the cancelButton is clicked, the order is cancelled
-      cancelButton.setOnAction(event -> {
-        try {
-          cancelOrder(getItem());
-        } catch (SQLException e) {
-          e.printStackTrace();
-        }
-      });
+      // This is empty because that's a constructor that is not useful for us
     }
 
 
     /**
      * Function to validate an order
+     *
      * @param order the order to validate
      * @throws SQLException
      */
@@ -146,6 +122,9 @@ public class OrdersDashboardController {
     // Generate the gridPane with the timerLabel, the validateButton and the cancelButton
     protected void generateGridPane(Order order) {
       GridPane gridPane = new GridPane();
+      // Set space on the grid pane
+      gridPane.setHgap(10);
+      gridPane.setVgap(10);
       gridPane.add(timerLabel, 1, 0);
       Button validateButton = new Button("Valider");
       gridPane.add(validateButton, 2, 0);
@@ -154,6 +133,24 @@ public class OrdersDashboardController {
       timerLabel.setText(order.getTimer());
       startTimerThread(order, timerLabel);
       totalGridPane.getChildren().add(gridPane);
+
+      validateButton.setOnAction(event -> {
+        try {
+          validateOrder(getItem());
+          filteredOrders();
+        } catch (SQLException e) {
+          e.printStackTrace();
+        }
+      });
+
+      // When the cancelButton is clicked, the order is cancelled
+      cancelButton.setOnAction(event -> {
+        try {
+          cancelOrder(getItem());
+        } catch (SQLException e) {
+          e.printStackTrace();
+        }
+      });
     }
 
     // Get the Order State
@@ -194,7 +191,6 @@ public class OrdersDashboardController {
     }
 
 
-
     // Update the order in the database
     private void updateOrderInDatabase(Order order) {
       try {
@@ -219,7 +215,7 @@ public class OrdersDashboardController {
             if (order.getTimer().equals(outOfTime)) {
               Thread.currentThread().interrupt();
             }
-            label.setText(order.getTimer());
+            label.setText(order.getTimer().equals(outOfTime) ? outOfTime : order.getTimer());
             checkColor(label, order);
           });
         }
