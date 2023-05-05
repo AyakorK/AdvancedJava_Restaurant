@@ -7,15 +7,6 @@ import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 
-/**
- * Model of the order
- *
- * @param table       : table of the order (Table)
- * @param isWaiting   : is the order waiting (boolean)
- * @param isDelivered : is the order delivered (boolean)
- * @param orderDate   : date of the order (Timestamp)
- * @param meals       : list of the meals of the order (List<HashMap>)
- */
 public class Order {
   public Table getTable() {
     return table;
@@ -52,6 +43,11 @@ public class Order {
 
 //  addMeal
 
+  /**
+   *
+   * @param meal
+   * @param quantity
+   */
   public void addMeal(Meal meal, int quantity) {
     HashMap<String, Object> mealMap = new HashMap<>();
     mealMap.put("meal", meal);
@@ -59,7 +55,10 @@ public class Order {
     this.meals.add(mealMap);
   }
 
-
+  /**
+   *
+   * @return
+   */
   public double getTotal() {
     return this.meals.stream()
             .mapToDouble(meal -> ((Meal) meal.get("meal")).getPrice()
@@ -67,6 +66,10 @@ public class Order {
             .reduce(0, Double::sum);
   }
 
+  /**
+   *
+   * @return
+   */
   public String getTimer() {
     // It should return the time between the order date and now (max 25 minutes after the order)
     Timestamp now = new Timestamp(System.currentTimeMillis());
@@ -90,18 +93,29 @@ public class Order {
     return  minutes + ":" + seconds;
   }
 
+  /**
+   *
+   * @return
+   */
   public String getOrderUUID() {
     return orderUUID;
   }
 
+  /**
+   *
+   * @param status
+   */
   public void setStatus(String status) {
     this.status = status;
   }
 
+  /**
+   *
+   * @return
+   */
   public String getStatus() {
     return this.status;
   }
-
 
   // 	UUID	TableID	isWaiting	isDelivered
   private final Table table;
@@ -117,6 +131,16 @@ public class Order {
 
   private final List<HashMap> meals;
 
+  /**
+   * 
+   * @param orderUUID
+   * @param table
+   * @param isWaiting
+   * @param isDelivered
+   * @param meals
+   * @param orderDate
+   * @param status
+   */
   public Order(String orderUUID, Table table, boolean isWaiting, boolean isDelivered, List<HashMap> meals, Timestamp orderDate, String status) {
     this.orderUUID = orderUUID;
     this.table = table;

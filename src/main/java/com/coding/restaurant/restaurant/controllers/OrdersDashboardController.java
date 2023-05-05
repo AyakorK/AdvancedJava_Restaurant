@@ -34,6 +34,12 @@ public class OrdersDashboardController {
   }
 
   // Filter the orders by the waiting ones and the most urgent ones first
+
+  /**
+   *
+   * @return
+   * @throws SQLException
+   */
   public ObservableList<Order> filteredOrders() throws SQLException {
     DatabaseManager db = new DatabaseManager();
     List<Order> orders = db.getOrders().stream().filter(Order::isWaiting).sorted(Comparator.comparing(Order::getTimer)).toList();
@@ -45,6 +51,12 @@ public class OrdersDashboardController {
   }
 
   // Filter the orders by the passed ones
+
+  /**
+   *
+   * @return
+   * @throws SQLException
+   */
   public ObservableList<Order> displayPassedOrders() throws SQLException {
     DatabaseManager db = new DatabaseManager();
     List<Order> orders = db.getOrders().stream().filter(order -> !order.isWaiting()).toList();
@@ -56,6 +68,12 @@ public class OrdersDashboardController {
   }
 
   // Filter the orders by the last 5 passed ones
+
+  /**
+   *
+   * @return
+   * @throws SQLException
+   */
   public ObservableList<Order> displayLastOrders() throws SQLException {
     List<Order> orders = displayPassedOrders().stream().limit(5).toList();
     ObservableList<Order> filteredOrder = FXCollections.observableArrayList();
@@ -69,7 +87,6 @@ public class OrdersDashboardController {
   public void displayCells() {
     ordersListView.setCellFactory(cell -> new OrderListCell());
   }
-
   private class OrderListCell extends ListCell<Order> {
 
     private final GridPane totalGridPane = new GridPane();
@@ -120,6 +137,11 @@ public class OrdersDashboardController {
     }
 
     // Generate the gridPane with the timerLabel, the validateButton and the cancelButton
+
+    /**
+     *
+     * @param order
+     */
     protected void generateGridPane(Order order) {
       GridPane gridPane = new GridPane();
       // Set space on the grid pane
@@ -133,6 +155,7 @@ public class OrdersDashboardController {
       timerLabel.setText(order.getTimer());
       startTimerThread(order, timerLabel);
       totalGridPane.getChildren().add(gridPane);
+
 
       validateButton.setOnAction(event -> {
         try {
@@ -154,16 +177,34 @@ public class OrdersDashboardController {
     }
 
     // Get the Order State
+
+    /**
+     *
+     * @param order
+     * @return
+     */
     private String orderState(Order order) {
       return order.isWaiting() ? "En Attente" : isDelivered(order);
     }
 
     // If not waiting get the Delivery State
+
+    /**
+     *
+     * @param order
+     * @return
+     */
     private String isDelivered(Order order) {
       return order.isDelivered() ? "Commande Servie" : "Commande annulée";
     }
 
     // Validate the order function
+
+    /**
+     *
+     * @param order
+     * @throws SQLException
+     */
     private void validateOrder(Order order) throws SQLException {
       order.setWaiting(false);
       order.setDelivered(true);
@@ -174,6 +215,12 @@ public class OrdersDashboardController {
     }
 
     // Cancel the order function
+
+    /**
+     *
+     * @param order
+     * @throws SQLException
+     */
     private void cancelOrder(Order order) throws SQLException {
       order.setWaiting(false);
       order.setDelivered(false);
@@ -183,6 +230,12 @@ public class OrdersDashboardController {
     }
 
     // Create the bill function
+
+    /**
+     *
+     * @param order
+     * @throws SQLException
+     */
     private void createBill(Order order) throws SQLException {
       boolean isLate = order.getTimer().equals(outOfTime);
       double price = isLate ? order.getTotal() / 1.3 : order.getTotal();
@@ -192,6 +245,11 @@ public class OrdersDashboardController {
 
 
     // Update the order in the database
+
+    /**
+     *
+     * @param order
+     */
     private void updateOrderInDatabase(Order order) {
       try {
         new DatabaseManager().updateOrder(order);
@@ -202,6 +260,12 @@ public class OrdersDashboardController {
     }
 
     // Start the timer thread to update the timerLabel each second
+
+    /**
+     *
+     * @param order
+     * @param label
+     */
     private void startTimerThread(Order order, Label label) {
       Thread thread = new Thread(() -> {
         while (order.isWaiting()) {
@@ -226,6 +290,12 @@ public class OrdersDashboardController {
     }
 
     // Change the color based on the timer value
+
+    /**
+     *
+     * @param label
+     * @param order
+     */
     private void checkColor(Label label, Order order) {
       if (order.getTimer().equals(outOfTime)) {
         label.setStyle("-fx-text-fill: red");
@@ -236,7 +306,10 @@ public class OrdersDashboardController {
       }
     }
 
-
+    /**
+     *
+     * @param e
+     */
     private void showError(SQLException e) {
       Alert alert = new Alert(Alert.AlertType.ERROR);
       alert.setTitle("Error");

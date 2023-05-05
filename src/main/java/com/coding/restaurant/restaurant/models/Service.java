@@ -7,15 +7,6 @@ import java.sql.Timestamp;
 import java.sql.Date;
 import java.util.List;
 
-/**
- * Model of the service
- * @param serviceUUID : UUID of the service (String)
- * @param beginDate : begin date of the service (Date)
- * @param period : period of the service (String)
- * @param workers : list of workers of the service (List<Worker>)
- * @param isPaid : boolean to know if the service is paid (Boolean)
- * @param createdAt : date of the creation of the service (Timestamp)
- */
 public class Service {
   public Date getBeginDate() {
     return beginDate;
@@ -54,6 +45,15 @@ public class Service {
 
   Timestamp createdAt;
 
+  /**
+   *
+   * @param serviceUUID
+   * @param beginDate
+   * @param createdAt
+   * @param period
+   * @param workers
+   * @param isPaid
+   */
   public Service(String serviceUUID, Date beginDate, Timestamp createdAt, String period, List<Worker> workers, Boolean isPaid) {
     this.serviceUUID = serviceUUID;
     this.beginDate = beginDate;
@@ -63,6 +63,12 @@ public class Service {
     this.isPaid = isPaid;
   }
 
+  /**
+   * 
+   * @param service
+   * @return
+   * @throws SQLException
+   */
   public String getTimer(Service service) throws SQLException {
     Timestamp now = new Timestamp(System.currentTimeMillis());
 

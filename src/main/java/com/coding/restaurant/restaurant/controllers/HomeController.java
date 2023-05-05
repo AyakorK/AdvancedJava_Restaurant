@@ -18,6 +18,10 @@ public class HomeController {
   @FXML
   Label serviceTimeLeft;
 
+  /**
+   *
+   * @throws SQLException
+   */
   public void initialize() throws SQLException {
     Service service = startService();
 
@@ -27,6 +31,12 @@ public class HomeController {
   }
 
   // When arriving on the home page, start a new service
+
+  /**
+   *
+   * @return
+   * @throws SQLException
+   */
   public Service startService() throws SQLException {
     DatabaseManager db = new DatabaseManager();
     List<Worker> workers = db.getWorkers();
@@ -43,6 +53,12 @@ public class HomeController {
   }
 
   // Get the period of the day (midday or evening)
+
+  /**
+   *
+   * @param beginDate
+   * @return
+   */
   public String getPeriod(Timestamp beginDate) {
     // If the beginDate is between 11:00 and 14:00, the period is midday and if between 18:00 and 21:00, the period is evening
     int hour = beginDate.getHours();
@@ -50,6 +66,12 @@ public class HomeController {
   }
 
   // Start a thread to update the timer every second
+
+  /**
+   *
+   * @param service
+   * @param serviceTimeLeft
+   */
   public void startTimerThread(Service service, Label serviceTimeLeft) {
     Thread timerThread = new Thread(() -> {
       while (true) {

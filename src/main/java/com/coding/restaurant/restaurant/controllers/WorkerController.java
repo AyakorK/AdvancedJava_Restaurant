@@ -58,18 +58,36 @@ public class WorkerController implements Initializable {
   private ObservableList<Worker> observableWorkers;
 
   // Call the method to get all the workers
+
+  /**
+   *
+   * @return
+   * @throws SQLException
+   */
   public List<Worker> getWorkers() throws SQLException {
     DatabaseManager db = new DatabaseManager();
     return db.getWorkers();
   }
 
   // Call the method to delete a worker
+
+  /**
+   *
+   * @param id
+   * @throws SQLException
+   */
   public void deleteWorker(String id) throws SQLException {
     DatabaseManager db = new DatabaseManager();
     db.deleteWorker(id);
   }
 
   // Call the method to activate a worker
+
+  /**
+   *
+   * @param id
+   * @throws SQLException
+   */
   public void activeWorker(String id) throws SQLException {
     DatabaseManager db = new DatabaseManager();
     db.activeWorker(id);
@@ -88,6 +106,16 @@ public class WorkerController implements Initializable {
     }
   }
 
+  /**
+   *
+   * @param url
+   * The location used to resolve relative paths for the root object, or
+   * {@code null} if the location is not known.
+   *
+   * @param resourceBundle
+   * The resources used to localize the root object, or {@code null} if
+   * the root object was not localized.
+   */
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
     acpInWorker.getChildren().remove(acpNewWorker);
@@ -174,6 +202,14 @@ public class WorkerController implements Initializable {
       }
 
       // If the worker is not active, the btnActive button is removed
+
+      /**
+       * 
+       * @param item The new item for the cell.
+       * @param empty whether or not this cell represents data from the list. If it
+       *        is empty, then it does not represent any domain data, but is a cell
+       *        being used to render an "empty" row.
+       */
       @Override
       protected void updateItem(String item, boolean empty) {
         super.updateItem(item, empty);

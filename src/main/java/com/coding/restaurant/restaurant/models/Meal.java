@@ -1,14 +1,5 @@
 package com.coding.restaurant.restaurant.models;
 
-/**
- * Model of the meal
- *
- * @param name        : name of the meal (String)
- * @param description : description of the meal (String)
- * @param price       : price of the meal (double)
- * @param image       : image of the meal (String)
- * @param isActive    : is the meal active (boolean)
- */
 public class Meal {
   public String getName() {
     return name;
@@ -50,6 +41,15 @@ public class Meal {
     return mealUUID;
   }
 
+  /**
+   * 
+   * @param name
+   * @param description
+   * @param price
+   * @param image
+   * @param isActive
+   * @param mealUUID
+   */
   public Meal(String name, String description, double price, String image, boolean isActive, String mealUUID) {
     this.mealUUID = mealUUID;
     this.name = name;

@@ -1,12 +1,5 @@
 package com.coding.restaurant.restaurant.models;
 
-/**
- * Model of the table
- * @param numero : number of the table (int)
- * @param location : location of the table (String)
- * @param size : size of the table (int)
- * @param isFull : is the table full (boolean)
- */
 public class Table {
     public int getNumber() {
         return numero;
@@ -35,6 +28,14 @@ public class Table {
 
     private String tableUUID;
 
+    /**
+     * 
+     * @param tableUUID
+     * @param numero
+     * @param location
+     * @param size
+     * @param isFull
+     */
     public Table(String tableUUID, int numero, String location, int size, boolean isFull) {
         this.tableUUID = tableUUID;
         this.numero = numero;
