@@ -32,6 +32,13 @@ import java.util.stream.Collectors;
 public class TableController {
   @FXML
   private AnchorPane acpTable;
+
+  @FXML
+  private AnchorPane acpInTable;
+
+  @FXML
+  private AnchorPane acpInOrders;
+
   @FXML
   private Button btnAddTable;
   @FXML
@@ -45,14 +52,6 @@ public class TableController {
 
   @FXML
   private ToggleButton toggleTerraceTables;
-
-  @FXML
-  private VBox vbxTable;
-
-  @FXML
-  private AnchorPane acpInWorker;
-  @FXML
-  private AnchorPane acpTable;
 
   @FXML
   private Button btnCreateOrder;
@@ -128,12 +127,18 @@ public class TableController {
 
     listView.setItems(showTables());
 
-    vbxTable.getChildren().remove(acpTable);
+    acpTable.getChildren().remove(acpInTable);
+    acpTable.getChildren().remove(acpInOrders);
 
     // When the button is clicked, the new table form is displayed
     btnAddTable.setOnMouseClicked(e -> {
-      vbxTable.getChildren().clear();
-      vbxTable.getChildren().add(acpTable);
+      acpTable.getChildren().clear();
+      acpTable.getChildren().add(acpInTable);
+    });
+
+    btnCreateOrder.setOnMouseClicked(e -> {
+      acpTable.getChildren().clear();
+      acpTable.getChildren().add(acpInOrders);
     });
 
     // Personalise the listView's appearance
@@ -220,14 +225,14 @@ public class TableController {
           setGraphic(borderPane);
 
           btnCreateOrder.setOnAction(event -> {
-            acpTable.getChildren().remove(vbxTable);
-            acpTable.getChildren().add(acpInWorker);
+            acpTable.getChildren().remove(acpTable);
+            acpTable.getChildren().add(acpInOrders);
           });
         }
       }
     });
 
-    acpTable.getChildren().remove(acpInWorker);
+    acpTable.getChildren().remove(acpInOrders);
 
   }
 
