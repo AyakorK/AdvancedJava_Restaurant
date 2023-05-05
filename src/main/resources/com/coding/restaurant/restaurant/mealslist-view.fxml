@@ -17,7 +17,7 @@
 
   <HBox alignment="CENTER_LEFT">
     <Label text="Rechercher:"/>
-    <TextField fx:id="txfSearch" prefWidth="200.0" onAction="#searchMeal"/>
+    <TextField fx:id="txfSearch" prefWidth="200.0"/>
   </HBox>
 
   <Label text="Liste des repas"/>

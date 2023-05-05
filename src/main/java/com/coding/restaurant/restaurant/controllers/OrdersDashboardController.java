@@ -122,6 +122,9 @@ public class OrdersDashboardController {
     // Generate the gridPane with the timerLabel, the validateButton and the cancelButton
     protected void generateGridPane(Order order) {
       GridPane gridPane = new GridPane();
+      // Set space on the grid pane
+      gridPane.setHgap(10);
+      gridPane.setVgap(10);
       gridPane.add(timerLabel, 1, 0);
       Button validateButton = new Button("Valider");
       gridPane.add(validateButton, 2, 0);
