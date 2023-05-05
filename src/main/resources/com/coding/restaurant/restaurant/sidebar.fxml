@@ -93,7 +93,7 @@
                 <fx:include fx:id="acpBills" source="bills-view.fxml"/>
                 <fx:include fx:id="acpWorker" source="worker-view.fxml"/>
                 <fx:include fx:id="acpCommand" source="orders-dashboard.fxml"/>
-                <fx:include fx:id="vbxTable" source="table-view.fxml"/>
+                <fx:include fx:id="acpTable" source="table-view.fxml"/>
             </children>
         </AnchorPane>
     </children>

@@ -49,7 +49,7 @@ public class SidebarController implements Initializable {
   private AnchorPane acpWorker;
 
   @FXML
-  private AnchorPane vbxTable;
+  private AnchorPane acpTable;
 
   @FXML
   private ImageView imgLogo;
@@ -62,14 +62,14 @@ public class SidebarController implements Initializable {
 
     // Make sure to navigate through the pages every page is present there
 
-    List<Node> pages = Arrays.asList(acpHome, acpMenu, acpCommand, acpWorker, acpBills, vbxTable);
+    List<Node> pages = Arrays.asList(acpHome, acpMenu, acpCommand, acpWorker, acpBills, acpTable);
     Map<Node, Node> pageButtonMap = new HashMap<>();
     pageButtonMap.put(imgLogo, acpHome);
     pageButtonMap.put(btnMenu, acpMenu);
     pageButtonMap.put(btnCommand, acpCommand);
     pageButtonMap.put(btnWorker, acpWorker);
     pageButtonMap.put(btnBills, acpBills);
-    pageButtonMap.put(btnTable, vbxTable);
+    pageButtonMap.put(btnTable, acpTable);
 
     acpCentre.getChildren().removeAll(pages);
     acpCentre.getChildren().add(acpHome);
