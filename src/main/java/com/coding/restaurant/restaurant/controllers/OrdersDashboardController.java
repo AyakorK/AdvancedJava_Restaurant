@@ -82,35 +82,10 @@ public class OrdersDashboardController {
      * Constructor of the OrderListCell class
      * It creates a gridPane with the timerLabel, the validateButton and the cancelButton
      * It has been generated dynamically to match only this purpose but to simplify the usage and identification of functions
+     * Needs to be empty but can be used to add other elements
      */
     public OrderListCell() {
-
-      GridPane gridPane = new GridPane();
-      gridPane.add(timerLabel, 1, 0);
-      Button validateButton = new Button("Valider");
-      gridPane.add(validateButton, 2, 0);
-      Button cancelButton = new Button("Annuler");
-      gridPane.add(cancelButton, 3, 0);
-      totalGridPane.getChildren().add(gridPane);
-
-      // When the validateButton is clicked, the order is validated
-      validateButton.setOnAction(event -> {
-        try {
-          validateOrder(getItem());
-          filteredOrders();
-        } catch (SQLException e) {
-          e.printStackTrace();
-        }
-      });
-
-      // When the cancelButton is clicked, the order is cancelled
-      cancelButton.setOnAction(event -> {
-        try {
-          cancelOrder(getItem());
-        } catch (SQLException e) {
-          e.printStackTrace();
-        }
-      });
+      // This is empty because that's a constructor that is not useful for us
     }
 
 
@@ -154,6 +129,24 @@ public class OrdersDashboardController {
       timerLabel.setText(order.getTimer());
       startTimerThread(order, timerLabel);
       totalGridPane.getChildren().add(gridPane);
+
+      validateButton.setOnAction(event -> {
+        try {
+          validateOrder(getItem());
+          filteredOrders();
+        } catch (SQLException e) {
+          e.printStackTrace();
+        }
+      });
+
+      // When the cancelButton is clicked, the order is cancelled
+      cancelButton.setOnAction(event -> {
+        try {
+          cancelOrder(getItem());
+        } catch (SQLException e) {
+          e.printStackTrace();
+        }
+      });
     }
 
     // Get the Order State
