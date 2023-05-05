@@ -48,6 +48,11 @@ public class TableController {
   @FXML
   private VBox vbxTable;
 
+  @FXML
+  private AnchorPane acpInWorker;
+  @FXML
+  private AnchorPane acpTable;
+
   public ObservableList<Table> showTables() throws SQLException {
     DatabaseManager db = new DatabaseManager();
     List<Table> tables = db.getTables();
@@ -118,7 +123,7 @@ public class TableController {
   }
 
 
-  public void initialize() {
+  public void initialize() throws IOException {
 
     try {
       listView.setItems(showTables());
@@ -208,9 +213,22 @@ public class TableController {
 
           // Afficher le conteneur BorderPane dans la cellule de la ListView
           setGraphic(borderPane);
+
+
+          addButton.setOnAction(event -> {
+            acpTable.getChildren().remove(vbxTable);
+            acpTable.getChildren().add(acpInWorker);
+            Table itemNumber = item; // 1ère étape
+            CreateOrdersController createOrderController = new CreateOrdersController(); // 2ème étape
+            createOrderController.setItemNumber(itemNumber); // 3ème étape
+//            System.out.println(item.getTableUUID());
+          });
         }
       }
     });
+
+    acpTable.getChildren().remove(acpInWorker);
+
   }
 }
 

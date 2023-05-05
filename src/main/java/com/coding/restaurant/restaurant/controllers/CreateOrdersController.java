@@ -79,9 +79,21 @@ public class CreateOrdersController implements Initializable {
     return db.getMeals();
   }
 
+  private Table tableFrom;
+
+  public void setItemNumber(Table itemNumber) {
+    // 4ème étape
+    // Utilisez la valeur de itemNumber selon vos besoins
+    System.out.println("table " + itemNumber);
+    System.out.println("table " + itemNumber.getTableUUID());
+    this.tableFrom = itemNumber;
+  }
+
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
+    System.out.println("table " + tableFrom);
     acpInWorker.getChildren().remove(acpNewWorker);
+
 
     btnNewWorker.setOnMouseClicked(e -> {
       acpInWorker.getChildren().remove(vbxWorker);
@@ -157,9 +169,9 @@ public class CreateOrdersController implements Initializable {
       meals.stream().forEach(System.out::println);
 
 
-      Table table = new Table("0d86ab6e-e9bd-11ed-a7c3-525400008e03", 1, "Terrasse", 4, false);
-
-      Order order = new Order(java.util.UUID.randomUUID().toString(), table, true, false, meals, new Timestamp(new Date().getTime()), null);
+//      Table table = new Table("0d86ab6e-e9bd-11ed-a7c3-525400008e03", 1, "Terrasse", 4, false);
+      System.out.println(tableFrom);
+      Order order = new Order(java.util.UUID.randomUUID().toString(), tableFrom, true, false, meals, new Timestamp(new Date().getTime()), null);
 
       try {
         DatabaseManager db = new DatabaseManager();
