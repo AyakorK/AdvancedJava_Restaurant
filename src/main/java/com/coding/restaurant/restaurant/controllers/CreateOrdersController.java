@@ -7,12 +7,16 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -22,20 +26,12 @@ import java.util.stream.Collectors;
 public class CreateOrdersController implements Initializable {
 
   @FXML
-  private Button btnNewWorker;
-
-  @FXML
-  private AnchorPane acpInWorker;
-  @FXML
-  private AnchorPane acpNewWorker;
-
-  @FXML
-  private VBox vbxWorker;
-
-  @FXML
   private TableView<Meal> tvbMeals;
   @FXML
   private TableView<Meal> tvbOrder;
+
+  @FXML
+  private Button btnBack;
 
   @FXML
   private TableColumn<Meal, String> colName;
@@ -43,14 +39,6 @@ public class CreateOrdersController implements Initializable {
   private TableColumn<Meal, String> colPrice;
   @FXML
   private TableColumn<Meal, String> colActive;
-  @FXML
-  private TableColumn<Meal, String> colHours;
-  @FXML
-  private TableColumn<Meal, String> colRole;
-  @FXML
-  private TableColumn<Meal, String> colArrived;
-  @FXML
-  private TableColumn<Meal, String> colDeparture;
   @FXML
   private TableColumn<Meal, String> colActions;
 
@@ -94,15 +82,10 @@ public class CreateOrdersController implements Initializable {
 
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
-    acpInWorker.getChildren().remove(acpNewWorker);
 
+    // When the button is clicked, go back to the worker view
+    btnBack.setOnAction(event -> goBack());
 
-    btnNewWorker.setOnMouseClicked(e -> {
-      acpInWorker.getChildren().remove(vbxWorker);
-      acpInWorker.getChildren().add(acpNewWorker);
-    });
-
-//    colFirstName.setCellValueFactory(new PropertyValueFactory<>("firstName"));
     colName.setCellValueFactory(new PropertyValueFactory<>("name"));
     colOrderName.setCellValueFactory(new PropertyValueFactory<>("name"));
     colPrice.setCellValueFactory(new PropertyValueFactory<>("price"));
@@ -197,7 +180,20 @@ public class CreateOrdersController implements Initializable {
       throw new RuntimeException(e);
     }
 
+  }
 
+  public void goBack() {
+    try {
+      // Load the order view & set it as the current view
+      FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/coding/restaurant/restaurant/table-view.fxml"));
+      Node tableView = loader.load();
+
+      AnchorPane acpInTable = (AnchorPane) btnValidateOrder.getParent().getParent().getParent().getParent().getParent();
+
+      acpInTable.getChildren().setAll(tableView);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
 }

@@ -21,14 +21,18 @@
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
       </padding>
       <children>
+        <HBox alignment="TOP_CENTER" spacing="20">
+          <children>
+            <Button fx:id="createTable" onAction="#createTable" text="Créer une table" textFill="#411111" style="-fx-background-color: transparent; -fx-border-color: #411111; -fx-border-radius: 10px; -fx-border-width: 1px;"/>
+            <Button fx:id="btnCreateOrder" onAction="#createTable" text="Créer une commande" textFill="#411111" style="-fx-background-color: transparent; -fx-border-color: #411111; -fx-border-radius: 10px; -fx-border-width: 1px;"/>
+          </children>
+        </HBox>
         <Label text="Tables"/>
         <HBox alignment="TOP_CENTER" spacing="20">
           <children>
-            <ToggleButton fx:id="toggleFreeTables" onAction="#showFreeTables" text="Voir les tables libres"/>
-            <ToggleButton fx:id="toggleIndoorTables" onAction="#showIndoorTables" text="Tables en intérieur"/>
-            <ToggleButton fx:id="toggleTerraceTables" onAction="#showOutdoorTables" text="Tables en terrasse"/>
-            <Button fx:id="createTable" onAction="#createTable" text="Créer une table"/>
-            <Button fx:id="btnCreateOrder" onAction="#createTable" text="Créer une commande"/>
+            <ToggleButton fx:id="toggleFreeTables" onAction="#showFreeTables" text="Voir les tables libres" textFill="#411111" style="-fx-background-color: transparent; -fx-border-color: #411111; -fx-border-radius: 10px; -fx-border-width: 1px;"/>
+            <ToggleButton fx:id="toggleIndoorTables" onAction="#showIndoorTables" text="Tables en intérieur" textFill="#411111" style="-fx-background-color: transparent; -fx-border-color: #411111; -fx-border-radius: 10px; -fx-border-width: 1px;"/>
+            <ToggleButton fx:id="toggleTerraceTables" onAction="#showOutdoorTables" text="Tables en terrasse" textFill="#411111" style="-fx-background-color: transparent; -fx-border-color: #411111; -fx-border-radius: 10px; -fx-border-width: 1px;"/>
           </children>
         </HBox>
         <ListView fx:id="listView"/>
