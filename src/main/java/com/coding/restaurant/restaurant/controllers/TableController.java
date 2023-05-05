@@ -24,12 +24,16 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Controller of the Table
  */
 public class TableController {
-
+  @FXML
+  private AnchorPane acpTable;
+  @FXML
+  private Button btnAddTable;
   @FXML
   private ListView<Table> listView;
 
@@ -43,9 +47,6 @@ public class TableController {
   private ToggleButton toggleTerraceTables;
 
   @FXML
-  private Button createTable;
-
-  @FXML
   private VBox vbxTable;
 
   @FXML
@@ -57,93 +58,83 @@ public class TableController {
   private Button btnCreateOrder;
 
   // List all tables
+  public ObservableList<Table> filterTables(boolean free, String location) throws SQLException {
+    DatabaseManager db = new DatabaseManager();
+    List<Table> tables = db.getTables();
+
+    // Filter by free tables if the corresponding toggle is selected
+    if (free) {
+      tables = tables.stream().filter(table -> !table.isFull()).collect(Collectors.toList());
+    }
+
+    // Filter by location if a location is specified
+    if (!location.isEmpty()) {
+      tables = tables.stream().filter(table -> table.getLocation().equalsIgnoreCase(location)).collect(Collectors.toList());
+    }
+
+    return FXCollections.observableArrayList(tables);
+  }
+
   public ObservableList<Table> showTables() throws SQLException {
     DatabaseManager db = new DatabaseManager();
     List<Table> tables = db.getTables();
-    ObservableList<Table> showTables = FXCollections.observableArrayList();
-    showTables.addAll(tables);
-    return showTables;
+    return FXCollections.observableArrayList(tables);
   }
 
-  // List all free tables
-  public void showFreeTables() {
-    if (toggleFreeTables.isSelected()) {
-      try {
-        listView.setItems(showTables().filtered(table -> !table.isFull()));
-      } catch (SQLException e) {
-        e.printStackTrace();
-      }
-    } else {
-      try {
-        listView.setItems(showTables());
-      } catch (SQLException e) {
-        e.printStackTrace();
-      }
+
+
+  // Update the list view with the current filters
+  public void updateTableList() {
+    try {
+      listView.setItems(filterTables(toggleFreeTables.isSelected(), toggleIndoorTables.isSelected() ? "Intérieur" : (toggleTerraceTables.isSelected() ? "Terrasse" : "")));
+    } catch (SQLException e) {
+      e.printStackTrace();
     }
   }
 
-  // List all tables located inside
-  public void showIndoorTables() {
+  public void toggleIndoorTables() {
     if (toggleIndoorTables.isSelected()) {
-      try {
-        listView.setItems(showTables().filtered(table -> table.getLocation().equalsIgnoreCase("Intérieur")));
-      } catch (SQLException e) {
-        e.printStackTrace();
-      }
+      toggleTerraceTables.setDisable(true);
     } else {
-      try {
-        listView.setItems(showTables());
-      } catch (SQLException e) {
-        e.printStackTrace();
-      }
+      toggleTerraceTables.setDisable(false);
     }
+    updateTableList();
   }
 
-  // List all tables located outside
-  public void showOutdoorTables() {
-    if (toggleTerraceTables.isSelected()) {
-      try {
-        listView.setItems(showTables().filtered(table -> table.getLocation().equals("Terrasse")));
-      } catch (SQLException e) {
-        e.printStackTrace();
+
+  public void toggleTerraceTables() {
+      if (toggleTerraceTables.isSelected()) {
+        toggleIndoorTables.setDisable(true);
+      } else {
+        toggleIndoorTables.setDisable(false);
       }
-    } else {
-      try {
-        listView.setItems(showTables());
-      } catch (SQLException e) {
-        e.printStackTrace();
-      }
-    }
+      updateTableList();
   }
 
-  // Create a new table in the database
-  public void createTable() throws IOException {
-    // Load the view newTable.fxml
-    FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/coding/restaurant/restaurant/newTable-view.fxml"));
-    Parent root = loader.load();
-
-    // Create a new stage
-    Stage stage = new Stage();
-    stage.setScene(new Scene(root));
-
-    // Show the stage
-    stage.show();
-  }
 
   // Initialize everything
-  public void initialize() throws IOException {
+  public void initialize() throws SQLException {
 
-    try {
-      btnCreateOrder.setVisible(displayButton());
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
+    // Update the list view when the filters are changed
+    toggleFreeTables.setOnAction(event -> updateTableList());
+    toggleIndoorTables.setOnAction(event -> {
+      updateTableList();
+      toggleIndoorTables();
+    });
+    toggleTerraceTables.setOnAction(event -> {
+      updateTableList();
+      toggleTerraceTables();
+    });
 
-    try {
-      listView.setItems(showTables());
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
+    listView.setItems(showTables());
+
+    vbxTable.getChildren().remove(acpTable);
+
+    // When the button is clicked, the new table form is displayed
+    btnAddTable.setOnMouseClicked(e -> {
+      vbxTable.getChildren().clear();
+      vbxTable.getChildren().add(acpTable);
+    });
 
     // Personalise the listView's appearance
     listView.setCellFactory(param -> new ListCell<>() {
@@ -185,7 +176,6 @@ public class TableController {
           Button deleteButton = new Button("Supprimer");
           deleteButton.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
           deleteButton.getStyleClass().add("btn-danger");
-//          Button addButton = new Button("Ajouter une commande");
 
           // Manage the events
           deleteButton.setOnAction(event -> {
