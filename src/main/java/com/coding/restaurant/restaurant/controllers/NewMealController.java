@@ -42,6 +42,16 @@ public class NewMealController implements Initializable, NewFormInterface {
   @FXML
   private Button btnBack;
 
+  /**
+   *
+   * @param location
+   * The location used to resolve relative paths for the root object, or
+   * {@code null} if the location is not known.
+   *
+   * @param resources
+   * The resources used to localize the root object, or {@code null} if
+   * the root object was not localized.
+   */
   @Override
   public void initialize(URL location, ResourceBundle resources) {
     btnValidateMeal.setOnAction(event -> {
@@ -60,6 +70,16 @@ public class NewMealController implements Initializable, NewFormInterface {
   }
 
   // Add a new meal to the database
+
+  /**
+   *
+   * @param name
+   * @param description
+   * @param price
+   * @param image
+   * @param isActive
+   * @param type
+   */
   public void addMeal(String name, String description, Double price, String image, Boolean isActive, String type) {
     DatabaseManager.addMeal(name, description, price, image, isActive, type);
   }

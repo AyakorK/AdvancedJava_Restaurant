@@ -35,6 +35,16 @@ public class NewTableController implements Initializable, NewFormInterface {
   @FXML
   private Button btnBack;
 
+  /**
+   *
+   * @param url
+   * The location used to resolve relative paths for the root object, or
+   * {@code null} if the location is not known.
+   *
+   * @param resourceBundle
+   * The resources used to localize the root object, or {@code null} if
+   * the root object was not localized.
+   */
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
 
@@ -74,6 +84,16 @@ public class NewTableController implements Initializable, NewFormInterface {
   }
 
   // Call the method to add a table
+
+  /**
+   * 
+   * @param number
+   * @param location
+   * @param size
+   * @param isFull
+   * @return
+   * @throws SQLException
+   */
   public List<Table> addTable(int number, String location, int size, boolean isFull) throws SQLException {
     DatabaseManager.addTable(number, location, size, isFull);
     DatabaseManager db = new DatabaseManager();

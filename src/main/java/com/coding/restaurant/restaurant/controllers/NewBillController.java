@@ -38,6 +38,16 @@ public class NewBillController implements Initializable, NewFormInterface {
   @FXML
   private Button btnBack;
 
+  /**
+   *
+   * @param location
+   * The location used to resolve relative paths for the root object, or
+   * {@code null} if the location is not known.
+   *
+   * @param resources
+   * The resources used to localize the root object, or {@code null} if
+   * the root object was not localized.
+   */
   @Override
   public void initialize(URL location, ResourceBundle resources) {
 
@@ -84,6 +94,13 @@ public class NewBillController implements Initializable, NewFormInterface {
   }
 
   // Create a new bill redirecting to the database manager
+
+  /**
+   * 
+   * @param price
+   * @param type
+   * @throws SQLException
+   */
   public void createBill(Double price, Boolean type) throws SQLException {
     DatabaseManager db = new DatabaseManager();
     db.createBill(price, type);

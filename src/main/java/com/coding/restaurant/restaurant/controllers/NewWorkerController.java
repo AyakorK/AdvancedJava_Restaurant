@@ -33,6 +33,16 @@ public class NewWorkerController implements Initializable, NewFormInterface {
   @FXML
   private Button btnBack;
 
+  /**
+   *
+   * @param url
+   * The location used to resolve relative paths for the root object, or
+   * {@code null} if the location is not known.
+   *
+   * @param resourceBundle
+   * The resources used to localize the root object, or {@code null} if
+   * the root object was not localized.
+   */
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
 
@@ -65,6 +75,18 @@ public class NewWorkerController implements Initializable, NewFormInterface {
   }
 
   // Call the method to add a worker
+
+  /**
+   * 
+   * @param name
+   * @param firstName
+   * @param isActive
+   * @param hoursWorked
+   * @param role
+   * @param arrivalDate
+   * @param departureDate
+   * @param age
+   */
   public void addWorker(String name, String firstName, Boolean isActive, Double hoursWorked, String role, Date arrivalDate, Date departureDate, Integer age) {
     DatabaseManager.addWorker(name, firstName, isActive, hoursWorked, role, arrivalDate, departureDate, age);
   }

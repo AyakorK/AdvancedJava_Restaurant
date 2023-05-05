@@ -34,7 +34,6 @@ public class BillsController {
 
   @FXML
   private ListView<Bill> billsListView;
-
   @FXML
   private AnchorPane acpInBill;
 
@@ -54,6 +53,12 @@ public class BillsController {
 
 
   // Display All Bills that are in the database on this month
+
+  /**
+   *`Display All Bills that are in the database on this month
+   * @return
+   * @throws SQLException
+   */
   public ObservableList<Bill> filteredBills() throws SQLException {
     DatabaseManager db = new DatabaseManager();
     List<Bill> bills = db.getBillsOfThisMonth().stream().sorted(Comparator.comparing(Bill::getBillDate)).toList();
@@ -67,6 +72,13 @@ public class BillsController {
   }
 
   // Display All Bills that are in the database
+
+  /**
+   * Display All Bills that are in the database
+   * @return
+   * @throws SQLException
+   * @see Bill
+   */
   public ObservableList<Bill> displayAllBills() throws SQLException {
     DatabaseManager db = new DatabaseManager();
     List<Bill> bills = db.getBills().stream().sorted(Comparator.comparing(Bill::getBillDate)).toList();
@@ -78,6 +90,9 @@ public class BillsController {
     return filteredBill;
   }
 
+  /**
+   * Initialize the controller
+   */
   public void initialize() {
 
     acpInBill.getChildren().remove(acpNewBill);
@@ -99,6 +114,10 @@ public class BillsController {
 
 
   // Display the cells of the listview
+
+  /**
+   * Display the cells of the listview
+   */
   public void displayCells() {
     billsListView.setCellFactory(listView -> new ListCell<>() {
       @Override
@@ -112,7 +131,6 @@ public class BillsController {
       }
     });
   }
-
 
   // Export bills into a pdf file (Global and for the month are available)
   public void exportBills() {

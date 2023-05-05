@@ -70,16 +70,37 @@ public class CreateOrdersController implements Initializable {
     return db.getMeals();
   }
 
+  /**
+   *
+   * @return
+   * @throws SQLException
+   */
   public List<Table> getTables() throws SQLException {
     DatabaseManager db = new DatabaseManager();
     return db.getTables();
   }
 
+  /**
+   *
+   * @param number
+   * @return
+   * @throws SQLException
+   */
   public List<Table> getTablesByNumber(int number) throws SQLException {
     DatabaseManager db = new DatabaseManager();
     return db.getTablesByNumber(number);
   }
 
+  /**
+   *
+   * @param url
+   * The location used to resolve relative paths for the root object, or
+   * {@code null} if the location is not known.
+   *
+   * @param resourceBundle
+   * The resources used to localize the root object, or {@code null} if
+   * the root object was not localized.
+   */
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
 
@@ -95,6 +116,7 @@ public class CreateOrdersController implements Initializable {
       String activeStatus = meal.isActive() ? "actif" : "inactif";
       return new SimpleStringProperty(activeStatus);
     });
+
     colActions.setCellFactory(param -> new TableCell<Meal, String>() {
       private final Button btnDelete = new Button("Ajouter");
 
@@ -111,6 +133,12 @@ public class CreateOrdersController implements Initializable {
         });
       }
 
+      /**
+       *
+       * @param tempMeal
+       * @param meals
+       * @throws SQLException
+       */
       protected void addMealToHash(Meal tempMeal, List<HashMap> meals) throws SQLException {
         HashMap<String, Object> mealMap = new HashMap<>();
 
@@ -124,6 +152,13 @@ public class CreateOrdersController implements Initializable {
         //tvbOrder.getItems().stream()
       }
 
+      /**
+       *
+       * @param mealMap
+       * @param meal
+       * @param mealAlreadyInList
+       * @param meals
+       */
       protected void addToHash(HashMap<String, Object> mealMap, Meal meal, boolean mealAlreadyInList, List<HashMap> meals) {
         if (mealAlreadyInList) {
           for (HashMap mealMap1 : meals) {
@@ -141,6 +176,13 @@ public class CreateOrdersController implements Initializable {
         observableOrder.add(meal);
       }
 
+      /**
+       *
+       * @param item The new item for the cell.
+       * @param empty whether this cell represents data from the list. If it
+       *        is empty, then it does not represent any domain data, but is a cell
+       *        being used to render an "empty" row.
+       */
       @Override
       protected void updateItem(String item, boolean empty) {
         super.updateItem(item, empty);
@@ -182,7 +224,7 @@ public class CreateOrdersController implements Initializable {
     }
 
   }
-
+  
   public void goBack() {
     try {
       // Load the order view & set it as the current view

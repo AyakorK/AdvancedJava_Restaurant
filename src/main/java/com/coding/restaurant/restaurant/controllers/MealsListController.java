@@ -49,6 +49,11 @@ public class MealsListController implements Initializable {
   @FXML
   private TextField txfSearch;
 
+    /**
+     *
+     * @return
+     * @throws SQLException
+     */
   public ObservableList<Meal> filteredMeals() throws SQLException {
     DatabaseManager db = new DatabaseManager();
     List<Meal> meals = db.getMeals().stream().filter(Meal::isActive).toList();
@@ -57,6 +62,11 @@ public class MealsListController implements Initializable {
     return filteredMeals;
   }
 
+    /**
+     *
+     * @param searchTerm
+     * @return
+     */
   private Predicate<Meal> createSearchFilter(String searchTerm) {
     return meal -> meal.getDescription().toLowerCase().contains(searchTerm.toLowerCase());
   }
@@ -72,6 +82,10 @@ public class MealsListController implements Initializable {
     }
   }
 
+    /**
+     *
+     * @param actionEvent
+     */
   public void sortAscending(ActionEvent actionEvent) {
     // trier les plats par prix croissant
     // afficher les plats triés
@@ -82,6 +96,10 @@ public class MealsListController implements Initializable {
     }
   }
 
+    /**
+     *
+     * @param actionEvent
+     */
   public void sortDescending(ActionEvent actionEvent) {
     // trier les plats par prix décroissant
     // afficher les plats triés
@@ -92,6 +110,10 @@ public class MealsListController implements Initializable {
     }
   }
 
+    /**
+     *
+     * @param actionEvent
+     */
   public void showTotalPrice(ActionEvent actionEvent) {
     // afficher le prix total des plats
     try {
@@ -102,7 +124,16 @@ public class MealsListController implements Initializable {
     }
   }
 
-
+    /**
+     *
+     * @param location
+     * The location used to resolve relative paths for the root object, or
+     * {@code null} if the location is not known.
+     *
+     * @param resources
+     * The resources used to localize the root object, or {@code null} if
+     * the root object was not localized.
+     */
   @Override
   public void initialize(URL location, ResourceBundle resources) {
 
@@ -117,6 +148,13 @@ public class MealsListController implements Initializable {
     mealListView.setCellFactory(listView -> new ListCell<Meal>() {
       private final ImageView imageView = new ImageView();
 
+      /**
+       *
+       * @param meal The new item for the cell.
+       * @param empty whether this cell represents data from the list. If it
+       *        is empty, then it does not represent any domain data, but is a cell
+       *        being used to render an "empty" row.
+       */
       @Override
       protected void updateItem(Meal meal, boolean empty) {
         super.updateItem(meal, empty);
@@ -153,8 +191,7 @@ public class MealsListController implements Initializable {
     searchThread[0].start();
   });
 
-
-
+  
     mealListView.setOnMouseClicked(event -> {
       if (event.getClickCount() == 2) {
         Meal selectedMeal = mealListView.getSelectionModel().getSelectedItem();

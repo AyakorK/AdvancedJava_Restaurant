@@ -18,6 +18,12 @@ public class ConnectDatabaseController {
   }
 
   // Add a method to get a connection to the database using the credentials and jdbc
+
+  /**
+   * 
+   * @return
+   * @throws SQLException
+   */
   public static Connection getConnection() throws SQLException {
     if (dataSource == null) {
       Dotenv dotenv = Dotenv.load();
