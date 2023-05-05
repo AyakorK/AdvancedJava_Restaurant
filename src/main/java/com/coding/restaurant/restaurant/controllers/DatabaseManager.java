@@ -375,23 +375,23 @@ public class DatabaseManager {
     return null;
   }
 
-    public static void addWorker(String name, String firstName, Boolean isActive, Double hoursWorked, String role, java.util.Date arrivalDate, java.util.Date departureDate, Integer age) {
-        try (Connection connexion = ConnectDatabaseController.getConnection();
-             PreparedStatement statement = connexion.prepareStatement("INSERT INTO Worker (UUID, name, firstName, isActive, hoursWorked, role, arrivalDate, departureDate, age ) VALUES (?,?, ?, ?, ?, ?, ?, ?, ?)")) {
-            statement.setString(1, DatabaseManager.generateUUID());
-            statement.setString(2, name);
-            statement.setString(3, firstName);
-            statement.setBoolean(4, isActive);
-            statement.setDouble(5, hoursWorked);
-            statement.setString(6, role);
-            statement.setTimestamp(7, new java.sql.Timestamp(arrivalDate.getTime()));
-            statement.setTimestamp(8, new java.sql.Timestamp(departureDate.getTime()));
-            statement.setInt(9, age);
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+  public static void addWorker(String name, String firstName, Boolean isActive, Double hoursWorked, String role, java.util.Date arrivalDate, java.util.Date departureDate, Integer age) {
+    try (Connection connexion = ConnectDatabaseController.getConnection();
+         PreparedStatement statement = connexion.prepareStatement("INSERT INTO Worker (UUID, name, firstName, isActive, hoursWorked, role, arrivalDate, departureDate, age ) VALUES (?,?, ?, ?, ?, ?, ?, ?, ?)")) {
+      statement.setString(1, DatabaseManager.generateUUID());
+      statement.setString(2, name);
+      statement.setString(3, firstName);
+      statement.setBoolean(4, isActive);
+      statement.setDouble(5, hoursWorked);
+      statement.setString(6, role);
+      statement.setTimestamp(7, new java.sql.Timestamp(arrivalDate.getTime()));
+      statement.setTimestamp(8, new java.sql.Timestamp(departureDate.getTime()));
+      statement.setInt(9, age);
+      statement.executeUpdate();
+    } catch (SQLException e) {
+      e.printStackTrace();
     }
+  }
 
   //  delete a worker
   public void deleteWorker(String workerUUID) {
@@ -414,9 +414,9 @@ public class DatabaseManager {
     }
   }
 
-    private boolean findActive(ResultSet result) throws SQLException {
-        return result.getBoolean("isActive");
-    }
+  private boolean findActive(ResultSet result) throws SQLException {
+    return result.getBoolean("isActive");
+  }
 
   public Service createService(Service service) {
     // Search if there is already a service with the same date and the same period AND that has been created more than 3h ago
@@ -513,5 +513,19 @@ public class DatabaseManager {
             });
   }
 
+  public List<Table> getTablesByNumber(int number) {
+    List<Table> tables = new ArrayList<>();
+    try (PreparedStatement statement = this.db.prepareStatement("SELECT * FROM TableRestaurant WHERE Numero = ?")) {
+      statement.setInt(1, number);
+      ResultSet result = statement.executeQuery();
+      while (result.next()) {
+        Table table = new Table(result.getString("UUID"), result.getInt("Numero"), result.getString("location"), result.getInt("size"), result.getBoolean("isFull"));
+        tables.add(table);
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    return tables;
+  }
 }
 

@@ -8,10 +8,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
@@ -69,6 +66,12 @@ public class CreateOrdersController implements Initializable {
   @FXML
   private Button btnValidateOrder;
 
+  @FXML
+  private ComboBox cbxTable;
+
+  @FXML
+  private Label selectedTableInfo = new Label();
+
   List<HashMap> meals = new ArrayList<>();
 
   private ObservableList<Meal> observableMeal;
@@ -77,6 +80,16 @@ public class CreateOrdersController implements Initializable {
   public List<Meal> getMeals() throws SQLException {
     DatabaseManager db = new DatabaseManager();
     return db.getMeals();
+  }
+
+  public List<Table> getTables() throws SQLException {
+    DatabaseManager db = new DatabaseManager();
+    return db.getTables();
+  }
+
+  public List<Table> getTablesByNumber(int number) throws SQLException {
+    DatabaseManager db = new DatabaseManager();
+    return db.getTablesByNumber(number);
   }
 
   private Table tableFrom;
@@ -168,12 +181,8 @@ public class CreateOrdersController implements Initializable {
       System.out.println("validate order");
       meals.stream().forEach(System.out::println);
 
-
-//      Table table = new Table("0d86ab6e-e9bd-11ed-a7c3-525400008e03", 1, "Terrasse", 4, false);
-      System.out.println(tableFrom);
-      Order order = new Order(java.util.UUID.randomUUID().toString(), tableFrom, true, false, meals, new Timestamp(new Date().getTime()), null);
-
       try {
+        Order order = new Order(java.util.UUID.randomUUID().toString(), getTablesByNumber(Integer.parseInt(selectedTableInfo.getText())).get(0), true, false, meals, new Timestamp(new Date().getTime()), null);
         DatabaseManager db = new DatabaseManager();
         db.addOrder(order);
       } catch (SQLException e) {
@@ -182,8 +191,26 @@ public class CreateOrdersController implements Initializable {
     });
 
     try {
+      List<Table> tables = getTables();
+      tables.stream().forEach(table -> cbxTable.getItems().add(table.getNumber() + " - " + table.getLocation()));
+
+      cbxTable.setOnAction(event -> {
+        System.out.println(cbxTable.getSelectionModel().getSelectedItem());
+        String selectedTable = (String) cbxTable.getSelectionModel().getSelectedItem();
+        String[] tableNumber = selectedTable.split(" - ");
+        System.out.println(tableNumber[0]);
+        selectedTableInfo.setText(tableNumber[0]);
+        try {
+          System.out.println(getTablesByNumber(Integer.parseInt(tableNumber[0])));
+        } catch (SQLException e) {
+          e.printStackTrace();
+        }
+      });
+
+
       List<Meal> meals = getMeals();
-      observableMeal = FXCollections.observableArrayList(meals);
+      List<Meal> activeMeals = meals.stream().filter(Meal::isActive).toList();
+      observableMeal = FXCollections.observableArrayList(activeMeals);
       observableOrder = FXCollections.observableArrayList();
       tvbMeals.setItems(observableMeal);
       tvbOrder.setItems(observableOrder);
