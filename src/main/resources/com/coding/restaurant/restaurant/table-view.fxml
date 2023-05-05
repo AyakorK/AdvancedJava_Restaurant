@@ -28,7 +28,7 @@
             <ToggleButton fx:id="toggleIndoorTables" onAction="#showIndoorTables" text="Tables en intérieur"/>
             <ToggleButton fx:id="toggleTerraceTables" onAction="#showOutdoorTables" text="Tables en terrasse"/>
             <Button fx:id="createTable" onAction="#createTable" text="Créer une table"/>
-            <Button fx:id="btnCreateOrder" onAction="#createTable" text="Créer une table"/>
+            <Button fx:id="btnCreateOrder" onAction="#createTable" text="Créer une commande"/>
           </children>
         </HBox>
         <ListView fx:id="listView"/>

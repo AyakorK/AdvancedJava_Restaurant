@@ -97,6 +97,7 @@ public class OrdersDashboardController {
      */
     @Override
     protected void updateItem(Order order, boolean empty) {
+
       super.updateItem(order, empty);
 
       if (empty || order == null) {
@@ -104,14 +105,17 @@ public class OrdersDashboardController {
         setGraphic(null);
         timerLabel.setText("");
       } else {
-        try {
-          setText(order.getOrderDate() + " " + order.getTable().getNumber() + " " + orderState(order) + " " + order.getTotal() + "€");
-        } catch (SQLException e) {
-          throw new RuntimeException(e);
+        // Add space between each lines of text
+        setStyle("-fx-padding: 0 0 0 5;");
+
+        setText(order.getOrderDate() + " " + order.getTable().getNumber() + " " + orderState(order) + " " + order.getTotal() + "€");
+        setLineSpacing(10);
+        totalGridPane.getChildren().clear();
+
+        if (order.isWaiting()) {
+          generateGridPane(order);
+          setGraphic(totalGridPane);
         }
-        timerLabel.setText(order.getTimer());
-        startTimerThread(order, timerLabel);
-        setGraphic(totalGridPane);
       }
     }
 
@@ -145,7 +149,7 @@ public class OrdersDashboardController {
         }
       });
     }
-    
+
     // Get the Order State
     private String orderState(Order order) {
       return order.isWaiting() ? "En Attente" : isDelivered(order);

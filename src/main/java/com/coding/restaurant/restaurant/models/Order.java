@@ -60,10 +60,9 @@ public class Order {
   }
 
 
-  public double getTotal() throws SQLException {
-    DatabaseManager db = new DatabaseManager();
+  public double getTotal() {
     return this.meals.stream()
-            .mapToDouble(meal -> db.getMeal(meal.get("meal").toString()).getPrice()
+            .mapToDouble(meal -> ((Meal) meal.get("meal")).getPrice()
                     * (Integer) meal.get("quantity"))
             .reduce(0, Double::sum);
   }
