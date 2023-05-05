@@ -28,7 +28,10 @@ import java.util.Optional;
  * Controller of the Table
  */
 public class TableController {
-
+  @FXML
+  private AnchorPane acpTable;
+  @FXML
+  private Button btnAddTable;
   @FXML
   private ListView<Table> listView;
 
@@ -130,6 +133,14 @@ public class TableController {
     } catch (SQLException e) {
       e.printStackTrace();
     }
+
+    vbxTable.getChildren().remove(acpTable);
+
+    // When the button is clicked, the new table form is displayed
+    btnAddTable.setOnMouseClicked(e -> {
+      vbxTable.getChildren().clear();
+      vbxTable.getChildren().add(acpTable);
+    });
 
     // Personalise the listView's appearance
     listView.setCellFactory(param -> new ListCell<>() {

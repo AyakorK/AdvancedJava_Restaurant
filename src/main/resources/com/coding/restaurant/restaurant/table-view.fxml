@@ -17,7 +17,7 @@
         <ToggleButton fx:id="toggleFreeTables" onAction="#showFreeTables" text="Voir les tables libres"/>
         <ToggleButton fx:id="toggleIndoorTables" onAction="#showIndoorTables" text="Tables en intérieur"/>
         <ToggleButton fx:id="toggleTerraceTables" onAction="#showOutdoorTables" text="Tables en terrasse"/>
-        <Button fx:id="createTable" onAction="#createTable" text="Créer une table"/>
+        <Button fx:id="btnAddTable" text="Créer une table"/>
     </HBox>
 
     <ListView fx:id="listView"/>
@@ -25,4 +25,5 @@
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
     </padding>
+    <fx:include fx:id="acpTable" source="newTable-view.fxml"/>
 </VBox>
