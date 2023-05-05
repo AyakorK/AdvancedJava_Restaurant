@@ -49,7 +49,7 @@ public class SidebarController implements Initializable {
   private AnchorPane acpWorker;
 
   @FXML
-  private VBox vbxTable;
+  private AnchorPane vbxTable;
 
   @FXML
   private ImageView imgLogo;

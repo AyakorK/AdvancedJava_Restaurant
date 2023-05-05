@@ -81,13 +81,35 @@ public class DatabaseManager {
         double price = result.getDouble("price");
         String image = result.getString("image");
         boolean isActiveMeal = findActive(result);
-        Meal meal = new Meal(name, description, price, image, isActiveMeal);
+        String mealUUID = result.getString("UUID");
+        Meal meal = new Meal(name, description, price, image, isActiveMeal, mealUUID);
         meals.add(meal);
       }
     } catch (SQLException e) {
       e.printStackTrace();
     }
     return meals;
+  }
+
+  // Get the meals (Meal)
+  public Meal getMeal(String mealUUID) {
+    Meal meal = null;
+    try (Connection connexion = ConnectDatabaseController.getConnection();
+         PreparedStatement statement = connexion.prepareStatement("SELECT * FROM Meal WHERE UUID = ?")) {
+      statement.setString(1, mealUUID);
+      ResultSet result = statement.executeQuery();
+      while (result.next()) {
+        String name = result.getString("name");
+        String description = result.getString("description");
+        double price = result.getDouble("price");
+        String image = result.getString("image");
+        boolean isActiveMeal = findActive(result);
+        meal = new Meal(name, description, price, image, isActiveMeal, mealUUID);
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    return meal;
   }
 
   // Create a new Meal
@@ -112,7 +134,7 @@ public class DatabaseManager {
     statement.setString(1, mealListUUID);
     ResultSet result = statement.executeQuery();
     while (result.next()) {
-      Meal meal = new Meal(result.getString("name"), result.getString("description"), result.getDouble("price"), result.getString("image"), findActive(result));
+      Meal meal = new Meal(result.getString("name"), result.getString("description"), result.getDouble("price"), result.getString("image"), findActive(result), result.getString("UUID"));
       mealsInList.add(meal);
     }
   }
@@ -145,6 +167,54 @@ public class DatabaseManager {
       e.printStackTrace();
     }
     return orders;
+  }
+
+  public void addOrder(Order order) {
+    try (PreparedStatement statement = this.db.prepareStatement("INSERT INTO Orders (UUID, TableUUID, isWaiting, isDelivered, dateCreation, finalStatus) VALUES (?, ?, ?, ?, ?, ?)")) {
+      statement.setString(1, order.getOrderUUID());
+      statement.setString(2, order.getTable().getTableUUID());
+      statement.setBoolean(3, order.isWaiting());
+      statement.setBoolean(4, order.isDelivered());
+      statement.setTimestamp(5, order.getOrderDate());
+      statement.setString(6, order.getStatus());
+      statement.executeUpdate();
+
+
+      addOrderItems(order);
+      setTableFull(order.getTable().getTableUUID());
+
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+
+  }
+
+  private void addOrderItems(Order order) {
+    try (PreparedStatement statement = this.db.prepareStatement("INSERT INTO OrdersItems (ordersUUID, mealUUID, quantity) VALUES (?, ?, ?)")) {
+
+      order.getMeals().stream().forEach(map -> {
+        try {
+          statement.setString(1, order.getOrderUUID());
+          statement.setString(2, ((String) map.get("meal")));
+          statement.setInt(3, (int) map.get("quantity"));
+          statement.executeUpdate();
+        } catch (SQLException e) {
+          e.printStackTrace();
+        }
+      });
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+  }
+
+  private void setTableFull(String tableUUID) {
+    try (PreparedStatement statement = this.db.prepareStatement("UPDATE TableRestaurant SET isFull = ? WHERE UUID = ?")) {
+      statement.setBoolean(1, true);
+      statement.setString(2, tableUUID);
+      statement.executeUpdate();
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
   }
 
   // Get the orders (Order) of this month only
@@ -253,6 +323,7 @@ public class DatabaseManager {
     }
   }
 
+
   // Get Workers (Worker)
   public List<Worker> getWorkers() {
     List<Worker> workers = new ArrayList<>();
@@ -279,22 +350,37 @@ public class DatabaseManager {
   }
 
   // Create a new Worker
-  public static void addWorker(String name, String firstName, Boolean isActive, Double hoursWorked, String role, java.util.Date arrivalDate, java.util.Date departureDate, Integer age) {
-      try (Connection connexion = ConnectDatabaseController.getConnection();
-           PreparedStatement statement = connexion.prepareStatement("INSERT INTO Worker (UUID, name, firstName, isActive, hoursWorked, role, arrivalDate, departureDate, age ) VALUES (?,?, ?, ?, ?, ?, ?, ?, ?)")) {
-          statement.setString(1, DatabaseManager.generateUUID());
-          statement.setString(2, name);
-          statement.setString(3, firstName);
-          statement.setBoolean(4, isActive);
-          statement.setDouble(5, hoursWorked);
-          statement.setString(6, role);
-          statement.setTimestamp(7, new java.sql.Timestamp(arrivalDate.getTime()));
-          statement.setTimestamp(8, new java.sql.Timestamp(departureDate.getTime()));
-          statement.setInt(9, age);
-          statement.executeUpdate();
-      } catch (SQLException e) {
-          e.printStackTrace();
+  public Worker getWorker(String name, String surname) {
+    try (PreparedStatement statement = this.db.prepareStatement("SELECT * FROM Worker WHERE name = ? AND firstName = ?")) {
+      statement.setString(1, name);
+      statement.setString(2, surname);
+      ResultSet result = statement.executeQuery();
+      if (result.next()) {
+        return new Worker(result.getString("UUID"), result.getString("Name"), result.getString(firstNameText), findActive(result), result.getInt(hoursWorkedText), result.getString("role"), result.getDate(arrivalDateText), result.getDate(departureDateText), result.getInt("Age"));
       }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    return null;
+  }
+
+
+  public static void addWorker(String name, String firstName, Boolean isActive, Double hoursWorked, String role, java.util.Date arrivalDate, java.util.Date departureDate, Integer age) {
+    try (Connection connexion = ConnectDatabaseController.getConnection();
+         PreparedStatement statement = connexion.prepareStatement("INSERT INTO Worker (UUID, name, firstName, isActive, hoursWorked, role, arrivalDate, departureDate, age ) VALUES (?,?, ?, ?, ?, ?, ?, ?, ?)")) {
+      statement.setString(1, DatabaseManager.generateUUID());
+      statement.setString(2, name);
+      statement.setString(3, firstName);
+      statement.setBoolean(4, isActive);
+      statement.setDouble(5, hoursWorked);
+      statement.setString(6, role);
+      statement.setTimestamp(7, new java.sql.Timestamp(arrivalDate.getTime()));
+      statement.setTimestamp(8, new java.sql.Timestamp(departureDate.getTime()));
+      statement.setInt(9, age);
+      statement.executeUpdate();
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
   }
 
   //  Delete a worker
@@ -321,7 +407,7 @@ public class DatabaseManager {
 
   // Get all "isActive" from results to avoid repetions
   private boolean findActive(ResultSet result) throws SQLException {
-      return result.getBoolean("isActive");
+    return result.getBoolean("isActive");
   }
 
   // Make sure that a Service is not already in the database
@@ -424,6 +510,21 @@ public class DatabaseManager {
                 e.printStackTrace();
               }
             });
+  }
+
+  public List<Table> getTablesByNumber(int number) {
+    List<Table> tables = new ArrayList<>();
+    try (PreparedStatement statement = this.db.prepareStatement("SELECT * FROM TableRestaurant WHERE Numero = ?")) {
+      statement.setInt(1, number);
+      ResultSet result = statement.executeQuery();
+      while (result.next()) {
+        Table table = new Table(result.getString("UUID"), result.getInt("Numero"), result.getString("location"), result.getInt("size"), result.getBoolean("isFull"));
+        tables.add(table);
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    return tables;
   }
 }
 

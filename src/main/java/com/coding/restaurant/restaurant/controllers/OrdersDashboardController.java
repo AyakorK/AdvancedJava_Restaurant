@@ -91,6 +91,7 @@ public class OrdersDashboardController {
 
     /**
      * Function to validate an order
+     *
      * @param order the order to validate
      * @throws SQLException
      */
@@ -185,7 +186,6 @@ public class OrdersDashboardController {
       DatabaseManager db = new DatabaseManager();
       db.createBill(price, true);
     }
-
 
 
     // Update the order in the database
