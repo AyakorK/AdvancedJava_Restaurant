@@ -321,22 +321,8 @@ public class DatabaseManager {
     } catch (SQLException e) {
       e.printStackTrace();
     }
-    return null;
   }
 
-  // Get the table (Table)
-  public Table getTable(String tableUUID) {
-    try (PreparedStatement statement = this.db.prepareStatement("SELECT * FROM TableRestaurant WHERE uuid = ?")) {
-      statement.setString(1, tableUUID);
-      ResultSet result = statement.executeQuery();
-      if (result.next()) {
-        return new Table(result.getString("UUID"), result.getInt("numero"), result.getString("location"), result.getInt("size"), result.getBoolean("isFull"));
-      }
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
-    return null;
-  }
 
   // Get Workers (Worker)
   public List<Worker> getWorkers() {
@@ -421,7 +407,7 @@ public class DatabaseManager {
 
   // Get all "isActive" from results to avoid repetions
   private boolean findActive(ResultSet result) throws SQLException {
-      return result.getBoolean("isActive");
+    return result.getBoolean("isActive");
   }
 
   // Make sure that a Service is not already in the database

@@ -192,7 +192,10 @@ public class CreateOrdersController implements Initializable {
 
     try {
       List<Table> tables = getTables();
-      tables.stream().forEach(table -> cbxTable.getItems().add(table.getNumber() + " - " + table.getLocation()));
+      tables.stream().filter(table -> !table.isFull()).forEach(table -> {
+        cbxTable.getItems().add(table.getNumber() + " - " + table.getLocation());
+      });
+//              .forEach(table -> cbxTable.getItems().add(table.getNumber() + " - " + table.getLocation()))
 
       cbxTable.setOnAction(event -> {
         System.out.println(cbxTable.getSelectionModel().getSelectedItem());

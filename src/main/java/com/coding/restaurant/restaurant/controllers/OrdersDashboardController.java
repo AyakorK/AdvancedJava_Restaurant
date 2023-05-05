@@ -91,6 +91,7 @@ public class OrdersDashboardController {
 
     /**
      * Function to validate an order
+     *
      * @param order the order to validate
      * @throws SQLException
      */
@@ -144,23 +145,7 @@ public class OrdersDashboardController {
         }
       });
     }
-
-    @Override
-    protected void updateItem(Order order, boolean empty) {
-      super.updateItem(order, empty);
-
-      if (empty || order == null) {
-        setText(null);
-        setGraphic(null);
-        timerLabel.setText("");
-      } else {
-        setText(order.getOrderDate() + " " + order.getTable().getNumber() + " " + orderState(order) + " " + order.getTotal() + "€");
-        timerLabel.setText(order.getTimer());
-        startTimerThread(order, timerLabel);
-        setGraphic(totalGridPane);
-      }
-    }
-
+    
     // Get the Order State
     private String orderState(Order order) {
       return order.isWaiting() ? "En Attente" : isDelivered(order);
@@ -197,7 +182,6 @@ public class OrdersDashboardController {
       DatabaseManager db = new DatabaseManager();
       db.createBill(price, true);
     }
-
 
 
     // Update the order in the database

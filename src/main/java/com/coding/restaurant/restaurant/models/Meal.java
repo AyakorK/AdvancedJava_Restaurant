@@ -2,11 +2,12 @@ package com.coding.restaurant.restaurant.models;
 
 /**
  * Model of the meal
- * @param name : name of the meal (String)
+ *
+ * @param name        : name of the meal (String)
  * @param description : description of the meal (String)
- * @param price : price of the meal (double)
- * @param image : image of the meal (String)
- * @param isActive : is the meal active (boolean)
+ * @param price       : price of the meal (double)
+ * @param image       : image of the meal (String)
+ * @param isActive    : is the meal active (boolean)
  */
 public class Meal {
   public String getName() {
@@ -38,7 +39,7 @@ public class Meal {
   }
 
   private final String name;
-  private final String description;
+  private String description;
   private final double price;
   private final String image;
   private final boolean isActive;

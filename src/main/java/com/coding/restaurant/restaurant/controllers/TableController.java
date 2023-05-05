@@ -52,6 +52,9 @@ public class TableController {
   @FXML
   private AnchorPane acpTable;
 
+  @FXML
+  private Button btnCreateOrder;
+
   // List all tables
   public ObservableList<Table> showTables() throws SQLException {
     DatabaseManager db = new DatabaseManager();
@@ -175,7 +178,7 @@ public class TableController {
           Button deleteButton = new Button("Supprimer");
           deleteButton.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
           deleteButton.getStyleClass().add("btn-danger");
-          Button addButton = new Button("Ajouter une commande");
+//          Button addButton = new Button("Ajouter une commande");
 
           // Manage the events
           deleteButton.setOnAction(event -> {
@@ -207,7 +210,7 @@ public class TableController {
           HBox buttonBox = new HBox();
           buttonBox.setAlignment(Pos.CENTER);
           buttonBox.setSpacing(10);
-          buttonBox.getChildren().addAll(deleteButton, addButton);
+          buttonBox.getChildren().addAll(deleteButton);
 
           // Add the Hbox and the Vbox to a BorderPane
           BorderPane borderPane = new BorderPane();
@@ -220,7 +223,7 @@ public class TableController {
           setGraphic(borderPane);
 
 
-          addButton.setOnAction(event -> {
+          btnCreateOrder.setOnAction(event -> {
             acpTable.getChildren().remove(vbxTable);
             acpTable.getChildren().add(acpInWorker);
             Table itemNumber = item; // 1ère étape
