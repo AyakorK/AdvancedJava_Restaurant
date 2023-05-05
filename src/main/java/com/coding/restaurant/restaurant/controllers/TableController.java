@@ -226,10 +226,6 @@ public class TableController {
           btnCreateOrder.setOnAction(event -> {
             acpTable.getChildren().remove(vbxTable);
             acpTable.getChildren().add(acpInWorker);
-            Table itemNumber = item; // 1ère étape
-            CreateOrdersController createOrderController = new CreateOrdersController(); // 2ème étape
-            createOrderController.setItemNumber(itemNumber); // 3ème étape
-//            System.out.println(item.getTableUUID());
           });
         }
       }

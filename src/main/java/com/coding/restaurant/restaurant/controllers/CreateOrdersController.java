@@ -92,19 +92,8 @@ public class CreateOrdersController implements Initializable {
     return db.getTablesByNumber(number);
   }
 
-  private Table tableFrom;
-
-  public void setItemNumber(Table itemNumber) {
-    // 4ème étape
-    // Utilisez la valeur de itemNumber selon vos besoins
-    System.out.println("table " + itemNumber);
-    System.out.println("table " + itemNumber.getTableUUID());
-    this.tableFrom = itemNumber;
-  }
-
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
-    System.out.println("table " + tableFrom);
     acpInWorker.getChildren().remove(acpNewWorker);
 
 
@@ -129,7 +118,6 @@ public class CreateOrdersController implements Initializable {
       {
         btnDelete.setOnAction(event -> {
           Meal meal = getTableView().getItems().get(getIndex());
-          System.out.println("Ajout de " + meal.getMealUUID());
 
           try {
             addMealToHash(meal, meals);
@@ -150,7 +138,6 @@ public class CreateOrdersController implements Initializable {
         // Search in tvbOrder if meal is already in the list, if yes, increment quantity
         // if no, add new meal
         //tvbOrder.getItems().stream()
-        System.out.println(meals);
       }
 
       protected void addToHash(HashMap<String, Object> mealMap, Meal meal, boolean mealAlreadyInList, List<HashMap> meals) {
@@ -178,8 +165,6 @@ public class CreateOrdersController implements Initializable {
     });
 
     btnValidateOrder.setOnAction(event -> {
-      System.out.println("validate order");
-      meals.stream().forEach(System.out::println);
 
       try {
         Order order = new Order(java.util.UUID.randomUUID().toString(), getTablesByNumber(Integer.parseInt(selectedTableInfo.getText())).get(0), true, false, meals, new Timestamp(new Date().getTime()), null);
@@ -192,22 +177,13 @@ public class CreateOrdersController implements Initializable {
 
     try {
       List<Table> tables = getTables();
-      tables.stream().filter(table -> !table.isFull()).forEach(table -> {
-        cbxTable.getItems().add(table.getNumber() + " - " + table.getLocation());
-      });
+      tables.stream().filter(table -> !table.isFull()).forEach(table -> cbxTable.getItems().add(table.getNumber() + " - " + table.getLocation()));
 //              .forEach(table -> cbxTable.getItems().add(table.getNumber() + " - " + table.getLocation()))
 
       cbxTable.setOnAction(event -> {
-        System.out.println(cbxTable.getSelectionModel().getSelectedItem());
         String selectedTable = (String) cbxTable.getSelectionModel().getSelectedItem();
         String[] tableNumber = selectedTable.split(" - ");
-        System.out.println(tableNumber[0]);
         selectedTableInfo.setText(tableNumber[0]);
-        try {
-          System.out.println(getTablesByNumber(Integer.parseInt(tableNumber[0])));
-        } catch (SQLException e) {
-          e.printStackTrace();
-        }
       });
 
 
