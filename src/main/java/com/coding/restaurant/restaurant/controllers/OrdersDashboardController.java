@@ -14,6 +14,9 @@ import java.util.List;
 
 import static java.lang.Integer.parseInt;
 
+/**
+ * Controller of the Orders Dashboard
+ */
 public class OrdersDashboardController {
   @FXML
   public Button allOrdersButton;
@@ -30,6 +33,7 @@ public class OrdersDashboardController {
     displayCells();
   }
 
+  // Filter the orders by the waiting ones and the most urgent ones first
   public ObservableList<Order> filteredOrders() throws SQLException {
     DatabaseManager db = new DatabaseManager();
     List<Order> orders = db.getOrders().stream().filter(Order::isWaiting).sorted(Comparator.comparing(Order::getTimer)).toList();
@@ -40,9 +44,10 @@ public class OrdersDashboardController {
     return filteredOrder;
   }
 
+  // Filter the orders by the passed ones
   public ObservableList<Order> displayPassedOrders() throws SQLException {
     DatabaseManager db = new DatabaseManager();
-    List<Order> orders = db.getOrders().stream().filter(order -> !order.isWaiting()).sorted(Comparator.comparing(Order::getTimer)).toList();
+    List<Order> orders = db.getOrders().stream().filter(order -> !order.isWaiting()).toList();
     ObservableList<Order> filteredOrder = FXCollections.observableArrayList();
     filteredOrder.addAll(orders);
 
@@ -50,6 +55,17 @@ public class OrdersDashboardController {
     return filteredOrder;
   }
 
+  // Filter the orders by the last 5 passed ones
+  public ObservableList<Order> displayLastOrders() throws SQLException {
+    List<Order> orders = displayPassedOrders().stream().limit(5).toList();
+    ObservableList<Order> filteredOrder = FXCollections.observableArrayList();
+    filteredOrder.addAll(orders);
+
+    ordersListView.setItems(filteredOrder);
+    return filteredOrder;
+  }
+
+  // Display all the orders into cells
   public void displayCells() {
     ordersListView.setCellFactory(cell -> new OrderListCell());
   }
@@ -62,33 +78,22 @@ public class OrdersDashboardController {
 
     String outOfTime = "Out of time";
 
+    /**
+     * Constructor of the OrderListCell class
+     * It creates a gridPane with the timerLabel, the validateButton and the cancelButton
+     * It has been generated dynamically to match only this purpose but to simplify the usage and identification of functions
+     * Needs to be empty but can be used to add other elements
+     */
     public OrderListCell() {
-      GridPane gridPane = new GridPane();
-      gridPane.add(timerLabel, 1, 0);
-      Button validateButton = new Button("Valider");
-      gridPane.add(validateButton, 2, 0);
-      Button cancelButton = new Button("Annuler");
-      gridPane.add(cancelButton, 3, 0);
-      totalGridPane.getChildren().add(gridPane);
-
-      validateButton.setOnAction(event -> {
-        try {
-          validateOrder(getItem());
-          filteredOrders();
-        } catch (SQLException e) {
-          e.printStackTrace();
-        }
-      });
-
-      cancelButton.setOnAction(event -> {
-        try {
-          cancelOrder(getItem());
-        } catch (SQLException e) {
-          e.printStackTrace();
-        }
-      });
+      // This is empty because that's a constructor that is not useful for us
     }
 
+
+    /**
+     * Function to validate an order
+     * @param order the order to validate
+     * @throws SQLException
+     */
     @Override
     protected void updateItem(Order order, boolean empty) {
       super.updateItem(order, empty);
@@ -109,14 +114,64 @@ public class OrdersDashboardController {
       }
     }
 
+    // Generate the gridPane with the timerLabel, the validateButton and the cancelButton
+    protected void generateGridPane(Order order) {
+      GridPane gridPane = new GridPane();
+      gridPane.add(timerLabel, 1, 0);
+      Button validateButton = new Button("Valider");
+      gridPane.add(validateButton, 2, 0);
+      Button cancelButton = new Button("Annuler");
+      gridPane.add(cancelButton, 3, 0);
+      timerLabel.setText(order.getTimer());
+      startTimerThread(order, timerLabel);
+      totalGridPane.getChildren().add(gridPane);
+
+      validateButton.setOnAction(event -> {
+        try {
+          validateOrder(getItem());
+          filteredOrders();
+        } catch (SQLException e) {
+          e.printStackTrace();
+        }
+      });
+
+      // When the cancelButton is clicked, the order is cancelled
+      cancelButton.setOnAction(event -> {
+        try {
+          cancelOrder(getItem());
+        } catch (SQLException e) {
+          e.printStackTrace();
+        }
+      });
+    }
+
+    @Override
+    protected void updateItem(Order order, boolean empty) {
+      super.updateItem(order, empty);
+
+      if (empty || order == null) {
+        setText(null);
+        setGraphic(null);
+        timerLabel.setText("");
+      } else {
+        setText(order.getOrderDate() + " " + order.getTable().getNumber() + " " + orderState(order) + " " + order.getTotal() + "€");
+        timerLabel.setText(order.getTimer());
+        startTimerThread(order, timerLabel);
+        setGraphic(totalGridPane);
+      }
+    }
+
+    // Get the Order State
     private String orderState(Order order) {
       return order.isWaiting() ? "En Attente" : isDelivered(order);
     }
 
+    // If not waiting get the Delivery State
     private String isDelivered(Order order) {
       return order.isDelivered() ? "Commande Servie" : "Commande annulée";
     }
 
+    // Validate the order function
     private void validateOrder(Order order) throws SQLException {
       order.setWaiting(false);
       order.setDelivered(true);
@@ -126,6 +181,7 @@ public class OrdersDashboardController {
       filteredOrders();
     }
 
+    // Cancel the order function
     private void cancelOrder(Order order) throws SQLException {
       order.setWaiting(false);
       order.setDelivered(false);
@@ -134,6 +190,7 @@ public class OrdersDashboardController {
       filteredOrders();
     }
 
+    // Create the bill function
     private void createBill(Order order) throws SQLException {
       boolean isLate = order.getTimer().equals(outOfTime);
       double price = isLate ? order.getTotal() / 1.3 : order.getTotal();
@@ -143,6 +200,7 @@ public class OrdersDashboardController {
 
 
 
+    // Update the order in the database
     private void updateOrderInDatabase(Order order) {
       try {
         new DatabaseManager().updateOrder(order);
@@ -152,6 +210,7 @@ public class OrdersDashboardController {
       }
     }
 
+    // Start the timer thread to update the timerLabel each second
     private void startTimerThread(Order order, Label label) {
       Thread thread = new Thread(() -> {
         while (order.isWaiting()) {
@@ -175,6 +234,7 @@ public class OrdersDashboardController {
       thread.start();
     }
 
+    // Change the color based on the timer value
     private void checkColor(Label label, Order order) {
       if (order.getTimer().equals(outOfTime)) {
         label.setStyle("-fx-text-fill: red");

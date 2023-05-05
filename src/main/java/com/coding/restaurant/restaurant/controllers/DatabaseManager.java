@@ -9,6 +9,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * This class is the controller of the Database and used to get the data from the database
+ */
 public class DatabaseManager {
 
   Connection db;
@@ -22,6 +25,7 @@ public class DatabaseManager {
     this.db = ConnectDatabaseController.getConnection();
   }
 
+  // Get the bills (Bill)
   public List<Bill> getBills() {
     List<Bill> bills = new ArrayList<>();
     try (PreparedStatement statement = this.db.prepareStatement("SELECT * FROM Bill");
@@ -36,6 +40,7 @@ public class DatabaseManager {
     return bills;
   }
 
+  // Get the Bills of this month only
   public List<Bill> getBillsOfThisMonth() {
     List<Bill> bills = new ArrayList<>();
     // Get the bills of this month only
@@ -51,6 +56,7 @@ public class DatabaseManager {
     return bills;
   }
 
+  // Create a new Bill
   public void createBill(double price, boolean type) {
     try (Connection connexion = ConnectDatabaseController.getConnection();
          PreparedStatement statement = connexion.prepareStatement("INSERT INTO Bill (UUID, type, amount, billDate) VALUES (?,?,?, ?)")) {
@@ -106,6 +112,7 @@ public class DatabaseManager {
     return meal;
   }
 
+  // Create a new Meal
   public static void addMeal(String name, String description, Double price, String image, Boolean isActive, String type) {
     try (Connection connexion = ConnectDatabaseController.getConnection();
          PreparedStatement statement = connexion.prepareStatement("INSERT INTO Meal (UUID, name, description, price, image, isActive,Type) VALUES (?,?,?, ?, ?, ?, ?)")) {
@@ -122,36 +129,7 @@ public class DatabaseManager {
     }
   }
 
-  //    // Get the meals list (MealsList)
-  public List<MealsList> getMealsList() {
-    List<MealsList> mealsLists = new ArrayList<>();
-    try (PreparedStatement statement = this.db.prepareStatement("SELECT * FROM MealsList");
-         ResultSet result = statement.executeQuery()) {
-      while (result.next()) {
-        Date menuDate = result.getDate("MenuDate");
-        String mealListUUID = result.getString("UUID");
-        List<Meal> meals = getMealsItems(mealListUUID);
-        MealsList mealList = new MealsList(meals, menuDate);
-        mealsLists.add(mealList);
-      }
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
-    return mealsLists;
-  }
-
-  // Get the meals items (Meal[])
-
-  public List<Meal> getMealsItems(String mealListUUID) {
-    List<Meal> mealsInList = new ArrayList<>();
-    try (PreparedStatement statement = this.db.prepareStatement("SELECT * FROM Meal WHERE uuid IN (SELECT mealUUID FROM MealsListItems WHERE mealsListUUID = ?)")) {
-      searchItems(mealListUUID, mealsInList, statement);
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
-    return mealsInList;
-  }
-
+  // Search for the items Meal in the OrderList
   private void searchItems(String mealListUUID, List<Meal> mealsInList, PreparedStatement statement) throws SQLException {
     statement.setString(1, mealListUUID);
     ResultSet result = statement.executeQuery();
@@ -239,6 +217,7 @@ public class DatabaseManager {
     }
   }
 
+  // Get the orders (Order) of this month only
   private List<Integer> getOrdersItemsQuantity(String orderUUID) {
     List<Integer> itemsQuantity = new ArrayList<>();
     try (PreparedStatement statement = this.db.prepareStatement("SELECT quantity FROM OrdersItems WHERE ordersUUID = ?")) {
@@ -275,9 +254,16 @@ public class DatabaseManager {
       statement.setString(4, order.getOrderUUID());
       statement.executeUpdate();
     }
+
+    // Update the table (Table) to be free
+    try (PreparedStatement statement = this.db.prepareStatement("UPDATE TableRestaurant SET isFull = ? WHERE UUID = ?")) {
+      statement.setBoolean(1, false);
+      statement.setString(2, order.getTable().getTableUUID());
+      statement.executeUpdate();
+    }
   }
 
-  //    // Get the tables (Table)
+  // Get the tables (Table)
   public List<Table> getTables() {
     List<Table> tables = new ArrayList<>();
     try (PreparedStatement statement = this.db.prepareStatement("SELECT * FROM TableRestaurant");
@@ -297,6 +283,21 @@ public class DatabaseManager {
     return tables;
   }
 
+  // Get a table from its UUID (Table)
+  public Table getTable(String tableUUID) {
+    try (PreparedStatement statement = this.db.prepareStatement("SELECT * FROM TableRestaurant WHERE uuid = ?")) {
+      statement.setString(1, tableUUID);
+      ResultSet result = statement.executeQuery();
+      if (result.next()) {
+        return new Table(result.getString("UUID"), result.getInt("numero"), result.getString("location"), result.getInt("size"), result.getBoolean("isFull"));
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    return null;
+  }
+
+  // Create a new Table
   public static void addTable(int number, String location, int size, boolean isFull) {
     try (Connection connexion = ConnectDatabaseController.getConnection();
          PreparedStatement statement = connexion.prepareStatement("INSERT INTO TableRestaurant (uuid, numero, location, size, isFull) VALUES (?, ?, ?, ?, ?)")) {
@@ -311,11 +312,12 @@ public class DatabaseManager {
     }
   }
 
-  public Table deleteTable(int number) {
+  // Delete a table (Table)
+  public void deleteTable(int number) {
     try (PreparedStatement statement = this.db.prepareStatement("DELETE FROM TableRestaurant WHERE numero = ?")) {
       statement.setInt(1, number);
       statement.executeUpdate();
-      return new Table(DatabaseManager.generateUUID(), number, null, 0, false);
+      new Table(DatabaseManager.generateUUID(), number, null, 0, false);
     } catch (SQLException e) {
       e.printStackTrace();
     }
@@ -336,7 +338,7 @@ public class DatabaseManager {
     return null;
   }
 
-  // Get Workers
+  // Get Workers (Worker)
   public List<Worker> getWorkers() {
     List<Worker> workers = new ArrayList<>();
     try (PreparedStatement statement = this.db.prepareStatement("SELECT * FROM Worker")) {
@@ -361,6 +363,7 @@ public class DatabaseManager {
     return workers;
   }
 
+  // Create a new Worker
   public Worker getWorker(String name, String surname) {
     try (PreparedStatement statement = this.db.prepareStatement("SELECT * FROM Worker WHERE name = ? AND firstName = ?")) {
       statement.setString(1, name);
@@ -374,6 +377,7 @@ public class DatabaseManager {
     }
     return null;
   }
+
 
   public static void addWorker(String name, String firstName, Boolean isActive, Double hoursWorked, String role, java.util.Date arrivalDate, java.util.Date departureDate, Integer age) {
     try (Connection connexion = ConnectDatabaseController.getConnection();
@@ -393,7 +397,7 @@ public class DatabaseManager {
     }
   }
 
-  //  delete a worker
+  //  Delete a worker
   public void deleteWorker(String workerUUID) {
     // update isActive in false & update departureDate to now
     try (PreparedStatement statement = this.db.prepareStatement("UPDATE Worker SET isActive = false, departureDate = NOW() WHERE UUID = ?")) {
@@ -404,6 +408,7 @@ public class DatabaseManager {
     }
   }
 
+  // Turn an inactive worker into an active worker
   public void activeWorker(String workerUUID) {
     // update isActive in true
     try (PreparedStatement statement = this.db.prepareStatement("UPDATE Worker SET isActive = true WHERE UUID = ?")) {
@@ -414,10 +419,12 @@ public class DatabaseManager {
     }
   }
 
+  // Get all "isActive" from results to avoid repetions
   private boolean findActive(ResultSet result) throws SQLException {
-    return result.getBoolean("isActive");
+      return result.getBoolean("isActive");
   }
 
+  // Make sure that a Service is not already in the database
   public Service createService(Service service) {
     // Search if there is already a service with the same date and the same period AND that has been created more than 3h ago
     try (PreparedStatement statement = this.db.prepareStatement("SELECT * FROM Service WHERE ServiceDate = ? AND ServicePeriod = ? OR ? < DATE_SUB(NOW(), INTERVAL 3 HOUR)")) {
@@ -438,6 +445,7 @@ public class DatabaseManager {
     return null;
   }
 
+  // Sub function of createService to create it
   private void createNewService(Service service) throws SQLException {
     try (PreparedStatement statement = this.db.prepareStatement("INSERT INTO Service (UUID, ServiceDate, CreatedAt, ServicePeriod) VALUES (?, ?, ?, ?)")) {
       statement.setString(1, service.getServiceUUID());
@@ -463,6 +471,7 @@ public class DatabaseManager {
     return workersInService;
   }
 
+  // Sub function of getServiceWorkers to search the workers in the database
   private void searchWorkers(String serviceUUID, List<Worker> workersInService, PreparedStatement statement) throws SQLException {
     statement.setString(1, serviceUUID);
     ResultSet result = statement.executeQuery();
@@ -472,6 +481,7 @@ public class DatabaseManager {
     }
   }
 
+  // Add the Workers to the ServiceWorkers related to the service
   private void addWorkersToService(String uuid, List<Worker> workers) {
     try (PreparedStatement statement = this.db.prepareStatement("INSERT INTO ServiceWorkers (serviceUUID, workerUUID) VALUES (?, ?)")) {
       for (Worker worker : workers) {
@@ -484,10 +494,7 @@ public class DatabaseManager {
     }
   }
 
-  public static String generateUUID() {
-    return java.util.UUID.randomUUID().toString();
-  }
-
+  // End a service
   public void endService(Service service) {
     try (PreparedStatement statement = this.db.prepareStatement("UPDATE Service SET isPaid = ? WHERE UUID = ?")) {
       statement.setBoolean(1, service.isPaid());
@@ -499,6 +506,12 @@ public class DatabaseManager {
     }
   }
 
+  // Generate a UUID (Unique ID) available for the database
+  public static String generateUUID() {
+    return java.util.UUID.randomUUID().toString();
+  }
+
+  // Update the hours worked of the workers in the service
   private void updateWorkersHours(Service service) {
     service.getWorkers().stream()
             .filter(Worker::isActive)

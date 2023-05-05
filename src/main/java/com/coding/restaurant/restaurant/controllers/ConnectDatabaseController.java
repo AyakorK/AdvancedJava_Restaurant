@@ -6,6 +6,9 @@ import java.sql.SQLException;
 import com.mysql.cj.jdbc.MysqlDataSource;
 import io.github.cdimascio.dotenv.Dotenv;
 
+/**
+ * This class is used to connect to the database
+ */
 public class ConnectDatabaseController {
 
 
@@ -14,6 +17,7 @@ public class ConnectDatabaseController {
   private ConnectDatabaseController() {
   }
 
+  // Add a method to get a connection to the database using the credentials and jdbc
   public static Connection getConnection() throws SQLException {
     if (dataSource == null) {
       Dotenv dotenv = Dotenv.load();

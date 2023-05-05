@@ -11,13 +11,16 @@ import javafx.scene.layout.VBox;
 import java.net.URL;
 import java.util.*;
 
+/**
+ * Controller of the Menu
+ */
 public class SidebarController implements Initializable {
 
   @FXML
   public AnchorPane acpCommand;
 
   @FXML
-  public VBox acpBills;
+  public AnchorPane acpBills;
 
   @FXML
   private Button btnBills;
@@ -30,6 +33,10 @@ public class SidebarController implements Initializable {
 
   @FXML
   private Button btnWorker;
+
+  @FXML
+  private Button btnTable;
+
   @FXML
   private AnchorPane acpCentre;
 
@@ -42,6 +49,9 @@ public class SidebarController implements Initializable {
   private AnchorPane acpWorker;
 
   @FXML
+  private VBox vbxTable;
+
+  @FXML
   private ImageView imgLogo;
 
   @FXML
@@ -50,24 +60,25 @@ public class SidebarController implements Initializable {
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
 
+    // Make sure to navigate through the pages every page is present there
 
-
-    List<Node> pages = Arrays.asList(acpHome, acpMenu, acpCommand, acpWorker, acpBills);
+    List<Node> pages = Arrays.asList(acpHome, acpMenu, acpCommand, acpWorker, acpBills, vbxTable);
     Map<Node, Node> pageButtonMap = new HashMap<>();
     pageButtonMap.put(imgLogo, acpHome);
     pageButtonMap.put(btnMenu, acpMenu);
     pageButtonMap.put(btnCommand, acpCommand);
     pageButtonMap.put(btnWorker, acpWorker);
     pageButtonMap.put(btnBills, acpBills);
+    pageButtonMap.put(btnTable, vbxTable);
 
     acpCentre.getChildren().removeAll(pages);
     acpCentre.getChildren().add(acpHome);
 
     pageButtonMap.keySet().stream().forEach(button ->
-      button.setOnMouseClicked(event -> {
-        acpCentre.getChildren().removeAll(pages);
-        acpCentre.getChildren().add(pageButtonMap.get(button));
-      })
+            button.setOnMouseClicked(event -> {
+              acpCentre.getChildren().removeAll(pages);
+              acpCentre.getChildren().add(pageButtonMap.get(button));
+            })
     );
   }
 }

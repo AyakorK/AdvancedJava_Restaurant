@@ -9,6 +9,9 @@ import javafx.scene.layout.VBox;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Controller of the Menu
+ */
 public class MenuController {
   @FXML
   private Button btnNewMeal;
@@ -23,6 +26,7 @@ public class MenuController {
   private VBox vBoxMenu;
 
   public void initialize() {
+    // Make sure to navigate through the pages
     List<Node> pages = Arrays.asList(acpNewMeal, vBoxMenu);
     acpMenu.getChildren().removeAll(pages);
     acpMenu.getChildren().add(vBoxMenu);

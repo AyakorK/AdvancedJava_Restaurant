@@ -1,10 +1,8 @@
 package com.coding.restaurant.restaurant.controllers;
 
-import com.coding.restaurant.restaurant.models.Meal;
 import com.coding.restaurant.restaurant.models.Table;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -14,11 +12,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import org.kordamp.bootstrapfx.BootstrapFX;
 
@@ -28,6 +24,9 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Controller of the Table
+ */
 public class TableController {
 
   @FXML
@@ -53,6 +52,7 @@ public class TableController {
   @FXML
   private AnchorPane acpTable;
 
+  // List all tables
   public ObservableList<Table> showTables() throws SQLException {
     DatabaseManager db = new DatabaseManager();
     List<Table> tables = db.getTables();
@@ -61,10 +61,11 @@ public class TableController {
     return showTables;
   }
 
+  // List all free tables
   public void showFreeTables() {
     if (toggleFreeTables.isSelected()) {
       try {
-        listView.setItems(showTables().filtered(Table -> !Table.isFull()));
+        listView.setItems(showTables().filtered(table -> !table.isFull()));
       } catch (SQLException e) {
         e.printStackTrace();
       }
@@ -77,6 +78,7 @@ public class TableController {
     }
   }
 
+  // List all tables located inside
   public void showIndoorTables() {
     if (toggleIndoorTables.isSelected()) {
       try {
@@ -93,7 +95,8 @@ public class TableController {
     }
   }
 
-  public void showOutdoorTables(ActionEvent actionEvent) {
+  // List all tables located outside
+  public void showOutdoorTables() {
     if (toggleTerraceTables.isSelected()) {
       try {
         listView.setItems(showTables().filtered(table -> table.getLocation().equals("Terrasse")));
@@ -109,20 +112,21 @@ public class TableController {
     }
   }
 
-  public void createTable(ActionEvent actionEvent) throws IOException {
-    // Charge la vue newTable.fxml
+  // Create a new table in the database
+  public void createTable() throws IOException {
+    // Load the view newTable.fxml
     FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/coding/restaurant/restaurant/newTable-view.fxml"));
     Parent root = loader.load();
 
-    // Crée une nouvelle fenêtre pour la vue newTable.fxml
+    // Create a new stage
     Stage stage = new Stage();
     stage.setScene(new Scene(root));
 
-    // Affiche la nouvelle fenêtre
+    // Show the stage
     stage.show();
   }
 
-
+  // Initialize everything
   public void initialize() throws IOException {
 
     try {
@@ -131,7 +135,7 @@ public class TableController {
       e.printStackTrace();
     }
 
-    // Personnaliser l'apparence de chaque cellule de la ListView
+    // Personalise the listView's appearance
     listView.setCellFactory(param -> new ListCell<>() {
       @Override
       protected void updateItem(Table item, boolean empty) {
@@ -141,45 +145,46 @@ public class TableController {
           setText(null);
           setGraphic(null);
         } else {
-          // Créer un conteneur HBox pour contenir les informations de la table et les boutons
+          // Create a HBox that will contain the table's information
           HBox hBox = new HBox();
           hBox.setAlignment(Pos.CENTER_LEFT);
           hBox.setSpacing(10);
+          String arialText = "Arial";
 
-          // Mettre le numéro de la table dans un Text
+          // Put the table's number in a Text
           Text tableNumber = new Text("Table " + item.getNumber());
-          tableNumber.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+          tableNumber.setFont(Font.font(arialText, FontWeight.BOLD, 20));
 
-          // Mettre le nombre de places dans un Text
+          // Put the table's size in a Text
           Text tableSeats = new Text(item.getSize() + " places");
-          tableSeats.setFont(Font.font("Arial", FontWeight.BOLD, 15));
+          tableSeats.setFont(Font.font(arialText, FontWeight.BOLD, 15));
 
-          // Mettre l'emplacement de la table dans un Text
+          // Put the table's location in a Text
           Text tableLocation = new Text(item.getLocation());
-          tableLocation.setFont(Font.font("Arial", FontWeight.BOLD, 15));
+          tableLocation.setFont(Font.font(arialText, FontWeight.BOLD, 15));
 
-          // Mettre le statut de la table dans un Text
+          // Put the table's status in a Text
           Text tableStatus = new Text(item.isFull() ? "Occupée" : "Libre");
-          tableStatus.setFont(Font.font("Arial", FontWeight.BOLD, 15));
+          tableStatus.setFont(Font.font(arialText, FontWeight.BOLD, 15));
           tableStatus.setFill(item.isFull() ? Color.RED : Color.GREEN);
 
-          // Ajouter les Texts à la HBox
+          // Add the Texts to the HBox
           hBox.getChildren().addAll(tableNumber, tableSeats, tableLocation, tableStatus);
 
-          // Créer les boutons de suppression et d'ajout de commande
+          // Create the Buttons to delete and add a command
           Button deleteButton = new Button("Supprimer");
           deleteButton.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
           deleteButton.getStyleClass().add("btn-danger");
           Button addButton = new Button("Ajouter une commande");
 
-          // Ajouter les gestionnaires d'événements pour les boutons
+          // Manage the events
           deleteButton.setOnAction(event -> {
-            // Demander à l'utilisateur de confirmer la suppression
+            // Ask for confirmation
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Confirmation de suppression");
             alert.setHeaderText("Supprimer la table " + item.getNumber() + " ?");
             alert.setContentText("Êtes-vous sûr de vouloir supprimer la table " + item.getNumber() + " ?");
-            // avec un bouton SUPPRIMER en btn-danger et un bouton ANNULER
+            // With a button confirm and delete
             ButtonType deleteButtonType = new ButtonType("Supprimer", ButtonBar.ButtonData.OK_DONE);
             ButtonType cancelButtonType = new ButtonType("Annuler", ButtonBar.ButtonData.CANCEL_CLOSE);
             alert.getButtonTypes().setAll(deleteButtonType, cancelButtonType);
@@ -198,20 +203,20 @@ public class TableController {
             }
           });
 
-          // Créer un conteneur VBox pour contenir les boutons
+          // Create a Hbox for the buttons
           HBox buttonBox = new HBox();
           buttonBox.setAlignment(Pos.CENTER);
           buttonBox.setSpacing(10);
           buttonBox.getChildren().addAll(deleteButton, addButton);
 
-          // Ajouter la HBox et la VBox dans un conteneur BorderPane pour les positionner correctement
+          // Add the Hbox and the Vbox to a BorderPane
           BorderPane borderPane = new BorderPane();
           borderPane.setLeft(hBox);
           borderPane.setRight(buttonBox);
           BorderPane.setAlignment(buttonBox, Pos.CENTER_RIGHT);
           BorderPane.setMargin(hBox, new Insets(5, 0, 5, 5));
 
-          // Afficher le conteneur BorderPane dans la cellule de la ListView
+          // Print the BorderPane
           setGraphic(borderPane);
 
 

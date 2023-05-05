@@ -1,47 +1,37 @@
 package com.coding.restaurant.restaurant.models;
 
+/**
+ * Model of the table
+ * @param numero : number of the table (int)
+ * @param location : location of the table (String)
+ * @param size : size of the table (int)
+ * @param isFull : is the table full (boolean)
+ */
 public class Table {
     public int getNumber() {
         return numero;
-    }
-
-    public void setNumber(int numero) {
-        this.numero = numero;
     }
 
     public String getLocation() {
         return location;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
     public int getSize() {
         return size;
-    }
-
-    public void setSize(int size) {
-        this.size = size;
     }
 
     public boolean isFull() {
         return isFull;
     }
 
-    public void setFull(boolean full) {
-        isFull = full;
-    }
-
-    // UUID	Numero	Location	Size	isFull
-    private int numero;
-    private String location;
-    private int size;
-    private boolean isFull;
-
     public String getTableUUID() {
         return tableUUID;
     }
+
+    private final int numero;
+    private final String location;
+    private final int size;
+    private final boolean isFull;
 
     private String tableUUID;
 
