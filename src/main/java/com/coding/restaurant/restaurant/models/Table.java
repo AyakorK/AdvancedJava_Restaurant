@@ -24,12 +24,19 @@ public class Table {
         return isFull;
     }
 
+    public String getTableUUID() {
+        return tableUUID;
+    }
+
     private final int numero;
     private final String location;
     private final int size;
     private final boolean isFull;
 
-    public Table(int numero, String location, int size, boolean isFull) {
+    private String tableUUID;
+
+    public Table(String tableUUID, int numero, String location, int size, boolean isFull) {
+        this.tableUUID = tableUUID;
         this.numero = numero;
         this.location = location;
         this.size = size;

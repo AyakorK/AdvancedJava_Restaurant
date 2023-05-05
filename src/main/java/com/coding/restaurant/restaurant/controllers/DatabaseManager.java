@@ -184,6 +184,13 @@ public class DatabaseManager {
       statement.setString(4, order.getOrderUUID());
       statement.executeUpdate();
     }
+
+    // Update the table (Table) to be free
+    try (PreparedStatement statement = this.db.prepareStatement("UPDATE TableRestaurant SET isFull = ? WHERE UUID = ?")) {
+      statement.setBoolean(1, false);
+      statement.setString(2, order.getTable().getTableUUID());
+      statement.executeUpdate();
+    }
   }
 
   // Get the tables (Table)
@@ -192,11 +199,12 @@ public class DatabaseManager {
     try (PreparedStatement statement = this.db.prepareStatement("SELECT * FROM TableRestaurant");
          ResultSet result = statement.executeQuery()) {
       while (result.next()) {
+        String tableUUID = result.getString("UUID");
         int number = result.getInt("numero");
         String location = result.getString("location");
         int size = result.getInt("size");
         boolean isFull = result.getBoolean("isFull");
-        Table table = new Table(number, location, size, isFull);
+        Table table = new Table(tableUUID, number, location, size, isFull);
         tables.add(table);
       }
     } catch (SQLException e) {
@@ -211,7 +219,7 @@ public class DatabaseManager {
       statement.setString(1, tableUUID);
       ResultSet result = statement.executeQuery();
       if (result.next()) {
-        return new Table(result.getInt("numero"), result.getString("location"), result.getInt("size"), result.getBoolean("isFull"));
+        return new Table(result.getString("UUID"), result.getInt("numero"), result.getString("location"), result.getInt("size"), result.getBoolean("isFull"));
       }
     } catch (SQLException e) {
       e.printStackTrace();
@@ -239,7 +247,7 @@ public class DatabaseManager {
     try (PreparedStatement statement = this.db.prepareStatement("DELETE FROM TableRestaurant WHERE numero = ?")) {
       statement.setInt(1, number);
       statement.executeUpdate();
-      new Table(number, null, 0, false);
+      new Table(DatabaseManager.generateUUID(), number, null, 0, false);
     } catch (SQLException e) {
       e.printStackTrace();
     }
