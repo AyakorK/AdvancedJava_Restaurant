@@ -27,7 +27,10 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
 
-
+//
+  /**
+   * Controller to manage the meals list view
+   **/
 public class MealsListController implements Initializable {
 
   @FXML

@@ -2,35 +2,29 @@ package com.coding.restaurant.restaurant.models;
 
 import java.util.Date;
 
+/**
+ * Model of the bill
+ * @param type : type of the bill (true = paid, false = dropped)
+ * @param amount : amount of the bill (double)
+ * @param billDate : date of the bill (Date)
+ */
 public class Bill {
   public Boolean getType() {
     return type;
-  }
-
-  public void setType(Boolean type) {
-    this.type = type;
   }
 
   public double getAmount() {
     return amount;
   }
 
-  public void setAmount(double amount) {
-    this.amount = amount;
-  }
-
   public Date getBillDate() {
     return billDate;
   }
 
-  public void setBillDate(Date billDate) {
-    this.billDate = billDate;
-  }
-
   // 	UUID	Type	Amount	BillDate
-  private Boolean type;
-  private double amount;
-  private Date billDate;
+  private final Boolean type;
+  private final double amount;
+  private final Date billDate;
 
   public Bill(Boolean type, double amount, Date billDate) {
     this.type = type;
