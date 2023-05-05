@@ -4,6 +4,8 @@ import com.coding.restaurant.restaurant.models.*;
 
 import java.sql.*;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -414,7 +416,7 @@ public class DatabaseManager {
   public Service createService(Service service) {
     // Search if there is already a service with the same date and the same period AND that has been created more than 3h ago
     try (PreparedStatement statement = this.db.prepareStatement("SELECT * FROM Service WHERE ServiceDate = ? AND ServicePeriod = ? OR ? < DATE_SUB(NOW(), INTERVAL 3 HOUR)")) {
-      statement.setDate(1, service.getBeginDate());
+      statement.setDate(1, (java.sql.Date) service.getBeginDate());
       statement.setString(2, service.getPeriod());
       statement.setTimestamp(3, service.getCreatedAt());
       ResultSet result = statement.executeQuery();
@@ -429,6 +431,41 @@ public class DatabaseManager {
       e.printStackTrace();
     }
     return null;
+  }
+
+  public boolean isCurrent(Service service) {
+    // If the service ends in less than 25 minutes return false else return true
+    try (PreparedStatement statement = this.db.prepareStatement("SELECT * FROM Service WHERE ServiceDate = ? AND ServicePeriod = ? OR ? > DATE_ADD(NOW(), INTERVAL 25 MINUTE)")) {
+      statement.setDate(1, (java.sql.Date) service.getBeginDate());
+      statement.setString(2, service.getPeriod());
+      Timestamp getFinshedAt = new Timestamp(service.getCreatedAt().getTime() + 3 * 60 * 60 * 1000);
+      statement.setTimestamp(3, getFinshedAt);
+      ResultSet result = statement.executeQuery();
+      return result.next();
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    return false;
+  }
+
+  public List<Service> getServices() throws SQLException {
+    List<Service> services = new ArrayList<>();
+    try (PreparedStatement statement = this.db.prepareStatement("SELECT * FROM Service")) {
+      ResultSet result = statement.executeQuery();
+      while (result.next()) {
+        String serviceUUID = result.getString("UUID");
+        Date serviceDate = result.getDate("ServiceDate");
+        Timestamp createdAt = result.getTimestamp("CreatedAt");
+        String servicePeriod = result.getString("ServicePeriod");
+        List<Worker> workers = getServiceWorkers(serviceUUID);
+        boolean isPaid = result.getBoolean("isPaid");
+        Service service = new Service(serviceUUID, (java.sql.Date) serviceDate, createdAt, servicePeriod, workers, isPaid);
+        services.add(service);
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    return services;
   }
 
   // Sub function of createService to create it

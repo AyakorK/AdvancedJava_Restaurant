@@ -82,7 +82,12 @@ public class Order {
     // Else we calculate the difference between the maxTime and the nowTime
     long diff = maxTime - nowTime;
     // And we return the difference in minutes and seconds
-    return String.format("%d:%d", diff / 1000 / 60, diff / 1000 % 60);
+    String seconds = String.valueOf(diff / 1000 % 60);
+    if (seconds.length() == 1) seconds = "0" + seconds;
+    String minutes = String.valueOf(diff / (60 * 1000) % 60);
+    if (minutes.length() == 1) minutes = "0" + minutes;
+
+    return  minutes + ":" + seconds;
   }
 
   public String getOrderUUID() {

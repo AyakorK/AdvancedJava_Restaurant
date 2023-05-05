@@ -215,7 +215,7 @@ public class OrdersDashboardController {
             if (order.getTimer().equals(outOfTime)) {
               Thread.currentThread().interrupt();
             }
-            label.setText(order.getTimer());
+            label.setText(order.getTimer().equals(outOfTime) ? outOfTime : order.getTimer());
             checkColor(label, order);
           });
         }

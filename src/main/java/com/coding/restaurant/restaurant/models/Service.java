@@ -80,6 +80,13 @@ public class Service {
     }
 
     long diff = maxTime - nowTime;
-    return String.format("%d:%d:%d", diff / (60 * 60 * 1000) % 24, diff / (60 * 1000) % 60, diff / 1000 % 60);
+    String seconds = String.valueOf(diff / 1000 % 60);
+    if (seconds.length() == 1) seconds = "0" + seconds;
+    String minutes = String.valueOf(diff / (60 * 1000) % 60);
+    if (minutes.length() == 1) minutes = "0" + minutes;
+    String hours = String.valueOf(diff / (60 * 60 * 1000) % 24);
+    if (hours.length() == 1) hours = "0" + hours;
+
+    return hours + ":" + minutes + ":" + seconds;
   }
 }
