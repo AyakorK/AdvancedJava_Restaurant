@@ -1,16 +1,20 @@
 package com.coding.restaurant.restaurant.models;
 
+import com.coding.restaurant.restaurant.controllers.DatabaseManager;
+
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 
 /**
  * Model of the order
- * @param table : table of the order (Table)
- * @param isWaiting : is the order waiting (boolean)
+ *
+ * @param table       : table of the order (Table)
+ * @param isWaiting   : is the order waiting (boolean)
  * @param isDelivered : is the order delivered (boolean)
- * @param orderDate : date of the order (Timestamp)
- * @param meals : list of the meals of the order (List<HashMap>)
+ * @param orderDate   : date of the order (Timestamp)
+ * @param meals       : list of the meals of the order (List<HashMap>)
  */
 public class Order {
   public Table getTable() {
@@ -37,6 +41,24 @@ public class Order {
   public Timestamp getOrderDate() {
     return orderDate;
   }
+
+//  public void setOrderDate(Timestamp orderDate) {
+//    this.orderDate = orderDate;
+//  }
+
+  public List<HashMap> getMeals() {
+    return meals;
+  }
+
+//  addMeal
+
+  public void addMeal(Meal meal, int quantity) {
+    HashMap<String, Object> mealMap = new HashMap<>();
+    mealMap.put("meal", meal);
+    mealMap.put("quantity", quantity);
+    this.meals.add(mealMap);
+  }
+
 
   public double getTotal() {
     return this.meals.stream()

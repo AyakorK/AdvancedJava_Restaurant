@@ -25,6 +25,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import java.util.ResourceBundle;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Predicate;
 
 //
@@ -60,10 +61,11 @@ public class MealsListController implements Initializable {
     return meal -> meal.getDescription().toLowerCase().contains(searchTerm.toLowerCase());
   }
 
-  public void searchMeal(ActionEvent actionEvent) {
-    // filtrer les plats selon leurs descriptions
-    // afficher les plats filtrés
+  public void searchMeal() {
+// Filter the meals by the search term into the description
     try {
+      // Empty mealListView
+      mealListView.setItems(null);
       mealListView.setItems(filteredMeals().filtered(createSearchFilter(txfSearch.getText())));
     } catch (SQLException e) {
       e.printStackTrace();
@@ -131,6 +133,26 @@ public class MealsListController implements Initializable {
         }
       }
     });
+
+    final Thread[] searchThread = {null};
+
+  txfSearch.setOnKeyPressed((e) -> {
+    // Do it 1 second after the user stopped typing (reset the timer if the user types again) using a Thread
+    if (searchThread[0] != null && searchThread[0] != null) {
+      searchThread[0].interrupt();
+    }
+    searchThread[0] = (new Thread(() -> {
+      try {
+        Thread.sleep(500);
+        searchMeal();
+      } catch (InterruptedException interruptedException) {
+        interruptedException.printStackTrace();
+      }
+    }));
+    searchThread[0].setDaemon(true);
+    searchThread[0].start();
+  });
+
 
 
     mealListView.setOnMouseClicked(event -> {
