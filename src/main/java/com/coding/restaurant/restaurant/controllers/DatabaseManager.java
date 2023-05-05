@@ -431,6 +431,20 @@ public class DatabaseManager {
     return null;
   }
 
+  public boolean isCurrent(Service service) {
+    // If the service ends in less than 25 minutes return false else return true
+    try (PreparedStatement statement = this.db.prepareStatement("SELECT * FROM Service WHERE ServiceDate = ? AND ServicePeriod = ? OR ? > DATE_ADD(NOW(), INTERVAL 25 MINUTE)")) {
+      statement.setDate(1, (java.sql.Date) service.getBeginDate());
+      statement.setString(2, service.getPeriod());
+      statement.setTimestamp(3, service.getCreatedAt());
+      ResultSet result = statement.executeQuery();
+      return result.next();
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    return false;
+  }
+
   public List<Service> getServices() throws SQLException {
     List<Service> services = new ArrayList<>();
     try (PreparedStatement statement = this.db.prepareStatement("SELECT * FROM Service")) {
