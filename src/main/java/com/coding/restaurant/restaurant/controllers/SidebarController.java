@@ -11,6 +11,9 @@ import javafx.scene.layout.VBox;
 import java.net.URL;
 import java.util.*;
 
+/**
+ * Controller of the Menu
+ */
 public class SidebarController implements Initializable {
 
   @FXML
@@ -57,6 +60,7 @@ public class SidebarController implements Initializable {
   @Override
   public void initialize(URL url, ResourceBundle resourceBundle) {
 
+    // Make sure to navigate through the pages every page is present there
 
     List<Node> pages = Arrays.asList(acpHome, acpMenu, acpCommand, acpWorker, acpBills, vbxTable);
     Map<Node, Node> pageButtonMap = new HashMap<>();
